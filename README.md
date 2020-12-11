@@ -46,6 +46,9 @@ tag /*foo=true*/ bar=false
 But kdl changes a few details:
 
 ```kdl
+// Files must be utf8 encoded!
+smile "�"
+
 // Instead of anonymous nodes, nodes and properties can be wrapped
 // in "" for arbitrary node names.
 "!@#$@$%Q#$%~@!40" "1.2.3" "!!!!!"=true
