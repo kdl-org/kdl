@@ -27,6 +27,20 @@ contents {
 		paragraph "This is the second paragraph"
 	}
 }
+
+// Nodes can be separated into multiple lines
+title \
+	"Some title"
+
+// Comment formats:
+
+// C++ style
+
+/*
+C style multiline
+*/
+
+tag /*foo=true*/ bar=false
 ```
 
 But kdl changes a few details:
@@ -64,6 +78,18 @@ my-hex 0xdeadbeef
 my-octal 0o755
 my-binary 0b10101101
 ```
+
+The following SDLang features are removed altogether:
+
+* "Anonymous" nodes
+* Binary data literals
+* Date/time formats
+* `on` and `off` booleans
+* Backtick strings
+* Semicolons
+* Namespaces with `:`
+* Shell style (`#`) and Lua-style (`--`) comments
+* Distinction between 32/64/128-bit numbers. There's just integers and floats.
 
 ## Design and Discussion
 
