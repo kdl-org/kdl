@@ -47,7 +47,7 @@ But kdl changes a few details:
 
 ```kdl
 // Files must be utf8 encoded!
-smile "�"
+smile "😁"
 
 // Instead of anonymous nodes, nodes and properties can be wrapped
 // in "" for arbitrary node names.
@@ -122,17 +122,17 @@ value := string | raw-string | number | boolean | 'null'
 
 string := '"' (TODO LOL) '"'
 
-raw-string := 'r' '#'* '"' (TODO LOL) '"' '#'*
+raw-string := 'r' '#'*n '"' (TODO LOL) '"' '#'*n
 
 number := decimal | hex | octal | binary
 
 decimal := TODO LOL
 
-hex := '0x' [0-9a-fA-F_]+
+hex := '0x' [0-9a-fA-F] [0-9a-fA-F_]*
 
-octal := '0o' [0-7_]+
+octal := '0o' [0-7] [0-7_]*
 
-binary := '0b' ('0' | '1' | '_')+
+binary := '0b' ('0' | '1') ('0' | '1' | '_')*
 
 boolean := 'true' | 'false'
 
