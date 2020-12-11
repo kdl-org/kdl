@@ -1,0 +1,5 @@
+[package]
+name = "kdl"
+version = "0.0.0"
+authors = ["Kat Marchán <kzm@zkat.tech>"]
+edition = "2018"
