@@ -51,7 +51,7 @@ But kdl changes a few details:
 "!@#$@$%Q#$%~@!40" "1.2.3" "!!!!!"=true
 
 // The following is a legal bare identifier:
-foo123~!@#$%^&*.:'|<> "weeee"
+foo123~!@#$%^&*.:'|<>/?+ "weeee"
 
 // kdl specifically allows properties and values to be
 // interspersed with each other, much like CLI commands.
@@ -73,10 +73,13 @@ other-raw r#"hello"world"#
 // There is a single decimal number type, much like JSON's.
 num 1.234e-42
 
+// Numbers can have underscores to help readability:
+bignum 1_000_000
+
 // There is additional support for literal hexadecimal, octal, and binary input.
 my-hex 0xdeadbeef
 my-octal 0o755
-my-binary 0b10101101
+my-binary 0b1010_1101
 ```
 
 The following SDLang features are removed altogether:
@@ -89,10 +92,50 @@ The following SDLang features are removed altogether:
 * Semicolons
 * Namespaces with `:`
 * Shell style (`#`) and Lua-style (`--`) comments
-* Distinction between 32/64/128-bit numbers. There's just integers and floats.
+* Distinction between 32/64/128-bit numbers. There's just numbers.
 
 ## Design and Discussion
 
 kdl is still extremely new, and discussion about the format should happen over
 on the [discussions page](https://github.com/zkat/kdl/discussions). Feel free
 to jump in and give us your 2 cents!
+
+## Grammar
+
+```
+document := linespace* node (ws* linespace* document)
+
+// TODO: this is broken, please fix it
+node := identifier ws+ (prop | value)*
+	(ws+ escline* ws* (prop | value))*
+	ws* ('{' linespace* document linespace* '}')?
+	newline
+
+identifier := [a-zA-Z] [a-zA-Z0-9~!@#$%&*-_+.:?/|]* | string
+
+prop := identifier '=' value
+
+value := string | raw-string | number | boolean | 'null'
+
+string := '"' (TODO LOL) '"'
+
+raw-string := 'r' '#'* '"' (TODO LOL) '"' '#'*
+
+number := decimal | hex | octal | binary
+
+decimal := TODO LOL
+
+hex := '0x' [0-9a-fA-F_]+
+
+octal := '0o' [0-7_]+
+
+binary := '0b' ('0' | '1' | '_')+
+
+boolean := 'true' | 'false'
+
+escline := '\' newline
+
+linespace := newline | ws
+
+newline := (CR LF) | LF
+```
