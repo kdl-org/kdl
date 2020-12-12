@@ -22,15 +22,15 @@ author "Alex Monad" email="alex@example.com" active=true
 
 // Nodes can be arbitrarily nested
 contents {
-	section "First section" {
-		paragraph "This is the first paragraph"
-		paragraph "This is the second paragraph"
-	}
+  section "First section" {
+    paragraph "This is the first paragraph"
+    paragraph "This is the second paragraph"
+  }
 }
 
 // Nodes can be separated into multiple lines
 title \
-	"Some title"
+  "Some title"
 
 // Comment formats:
 
