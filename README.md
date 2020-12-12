@@ -141,4 +141,6 @@ escline := '\' newline
 linespace := newline | ws
 
 newline := (CR LF) | LF
+
+ws := bom | whitespace-chars (todo)
 ```
