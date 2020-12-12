@@ -106,41 +106,44 @@ to jump in and give us your 2 cents!
 ## Grammar
 
 ```
-document := linespace* node (ws* linespace* document)
+document := linespace* (node (newline document)?)?
 
-// TODO: this is broken, please fix it
-node := identifier ws+ (prop | value)*
-	(ws+ escline* ws* (prop | value))*
-	ws* ('{' linespace* document linespace* '}')?
-	newline
+node := identifier (node-space node-argument)* (node-space node-document)?
+node-argument := prop | value
+node-document := '{' linespace* document linespace* '}'
+node-space := ws* escline ws* | ws+
 
-identifier := [a-zA-Z] [a-zA-Z0-9~!@#$%&*-_+.:?/|]* | string
-
+identifier := [a-zA-Z] [a-zA-Z0-9!#$%&'*+\-./:<>?@\^_|~]* | string
 prop := identifier '=' value
+value := string | raw_string | number | boolean | 'null'
 
-value := string | raw-string | number | boolean | 'null'
+string := '"' ('\\' ["\\] | [^"])* '"'
 
-string := '"' (TODO LOL) '"'
-
-raw-string := 'r' '#'*n '"' (TODO LOL) '"' '#'*n
+raw-string := 'r' raw-string-hash
+raw-string-hash := '#' raw-string-hash '#' | raw-string-quotes
+raw-string-quotes := '"' .* '"'
 
 number := decimal | hex | octal | binary
 
-decimal := TODO LOL
+decimal := integer ('.' [0-9]+)? exponent?
+exponent := ('e' | 'E') integer
+integer := sign? [1-9] [0-9_]*
+sign := '+' | '-'
 
 hex := '0x' [0-9a-fA-F] [0-9a-fA-F_]*
-
 octal := '0o' [0-7] [0-7_]*
-
 binary := '0b' ('0' | '1') ('0' | '1' | '_')*
 
 boolean := 'true' | 'false'
 
-escline := '\' newline
+escline := '\\' newline
 
-linespace := newline | ws
+linespace := newline | ws | single-line-comment
 
-newline := (CR LF) | LF
+newline := ('\r' '\n') | '\n'
 
-ws := bom | whitespace-chars (todo)
+ws := bom | ' ' | '\t' | multi-line-comment
+
+single-line-comment := '//' ('\r' [^\n] | [^\r\n])* newline
+multi-line-comment := '/*' ('*' [^\/] | [^*])* '*/'
 ```
