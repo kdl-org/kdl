@@ -1,7 +1,7 @@
 use nom::error::{ContextError, ParseError};
 
 use thiserror::Error;
-#[derive(Debug, Clone, Error)]
+#[derive(Debug, Clone, Eq, PartialEq, Error)]
 #[error("Error parsing document. {kind}")]
 pub struct Error {
     pub input: String,
@@ -9,7 +9,7 @@ pub struct Error {
     pub kind: ErrorKind,
 }
 
-#[derive(Debug, Clone, Error)]
+#[derive(Debug, Clone, Eq, PartialEq, Error)]
 pub enum ErrorKind {
     #[error("Failed to parse {0} component of semver string.")]
     Context(&'static str),
@@ -19,7 +19,7 @@ pub enum ErrorKind {
     Other,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub(crate) struct NodeParseError<I> {
     pub(crate) input: I,
     pub(crate) context: Option<&'static str>,

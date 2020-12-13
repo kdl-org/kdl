@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Node {
     pub name: String,
     pub values: Vec<NodeValue>,
@@ -8,5 +8,11 @@ pub struct Node {
     pub children: Vec<Node>,
 }
 
-#[derive(Debug, Clone)]
-pub enum NodeValue {}
+#[derive(Debug, Clone, PartialEq)]
+pub enum NodeValue {
+    Int(i64),
+    Float(f64),
+    String(String),
+    Boolean(bool),
+    Null,
+}
