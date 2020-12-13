@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use nom::branch::alt;
 use nom::bytes::complete::{is_not, tag, take_until};
-use nom::character::complete::{alpha1, alphanumeric1, anychar, one_of};
+use nom::character::complete::{alpha1, alphanumeric1, char, one_of};
 use nom::combinator::{eof, map, opt, recognize, value};
 use nom::multi::{many0, many1};
 use nom::sequence::{delimited, pair, preceded};
@@ -106,22 +106,18 @@ fn string(_input: &str) -> IResult<&str, &str, NodeParseError<&str>> {
     todo!()
 }
 
+// TODO: this is clever but... I don't like the recursion here.
 /// `raw-string := 'r' raw-string-hash`
-fn raw_string(input: &str) -> IResult<&str, &str, NodeParseError<&str>> {
-    preceded(tag("r"), raw_string_hash)(input)
-}
-
 /// `raw-string-hash := '#' raw-string-hash '#' | raw-string-quotes`
-fn raw_string_hash(input: &str) -> IResult<&str, &str, NodeParseError<&str>> {
-    alt((
-        delimited(tag("#"), raw_string_hash, tag("#")),
-        raw_string_quotes,
-    ))(input)
-}
-
 /// `raw-string-quotes := '"' .* '"'`
-fn raw_string_quotes(input: &str) -> IResult<&str, &str, NodeParseError<&str>> {
-    delimited(tag("\""), recognize(many0(anychar)), tag("\""))(input)
+fn raw_string(input: &str) -> IResult<&str, &str, NodeParseError<&str>> {
+    let (input, _) = char('r')(input)?;
+    let (input, hashes) = recognize(many0(char('#')))(input)?;
+    let (input, _) = char('"')(input)?;
+    let close = format!("\"{}", hashes);
+    let (input, string) = take_until(&close[..])(input)?;
+    let (input, _) = tag(&close[..])(input)?;
+    Ok((input, string))
 }
 
 /// `number := decimal | hex | octal | binary`
@@ -184,6 +180,16 @@ fn newline(input: &str) -> IResult<&str, &str, NodeParseError<&str>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_raw_string() {
+        assert_eq!(raw_string(r#"r"foo""#), Ok(("", "foo")));
+        assert_eq!(raw_string("r\"foo\nbar\""), Ok(("", "foo\nbar")));
+        assert_eq!(raw_string(r##"r#"foo"#"##), Ok(("", "foo")));
+        assert_eq!(raw_string(r###"r##"foo"##"###), Ok(("", "foo")));
+        assert_eq!(raw_string(r#"r"\nfoo\r""#), Ok(("", r"\nfoo\r")));
+        assert!(raw_string(r###"r##"foo"#"###).is_err());
+    }
 
     #[test]
     fn test_boolean() {
