@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
 use nom::branch::alt;
-use nom::bytes::complete::{is_not, tag, take_until};
-use nom::character::complete::{alpha1, alphanumeric1, char, one_of};
-use nom::combinator::{eof, map, map_res, opt, recognize, value};
-use nom::multi::{many0, many1};
+use nom::bytes::complete::{is_not, tag, take_until, take_while_m_n};
+use nom::character::complete::{alpha1, alphanumeric1, char, none_of, one_of};
+use nom::combinator::{eof, map, map_opt, map_res, opt, recognize, value};
+use nom::multi::{fold_many0, many0, many1};
 use nom::sequence::{delimited, pair, preceded, terminated, tuple};
 use nom::IResult;
 
@@ -17,9 +17,9 @@ pub(crate) fn nodes(input: &str) -> IResult<&str, Vec<Node>, KdlParseError<&str>
 }
 
 #[derive(Clone)]
-enum NodeArg<'a> {
+enum NodeArg {
     Value(NodeValue),
-    Property(&'a str, NodeValue),
+    Property(String, NodeValue),
 }
 
 /// `node := identifier (node-space node-argument)* (node-space node-document)?`
@@ -33,7 +33,7 @@ pub(crate) fn node(input: &str) -> IResult<&str, Node, KdlParseError<&str>> {
     Ok((
         input,
         Node {
-            name: tag.into(),
+            name: tag,
             children: children.unwrap_or_else(Vec::new),
             values: values
                 .into_iter()
@@ -45,7 +45,7 @@ pub(crate) fn node(input: &str) -> IResult<&str, Node, KdlParseError<&str>> {
             properties: properties.into_iter().fold(HashMap::new(), |mut acc, arg| {
                 match arg {
                     NodeArg::Property(key, value) => {
-                        acc.insert(String::from(key), value);
+                        acc.insert(key, value);
                     }
                     _ => unreachable!(),
                 }
@@ -56,15 +56,15 @@ pub(crate) fn node(input: &str) -> IResult<&str, Node, KdlParseError<&str>> {
 }
 
 /// `identifier := [a-zA-Z_] [a-zA-Z0-9!$%&'*+\-./:<>?@\^_|~]* | string`
-fn identifier(input: &str) -> IResult<&str, &str, KdlParseError<&str>> {
+fn identifier(input: &str) -> IResult<&str, String, KdlParseError<&str>> {
     alt((
-        recognize(pair(
-            alt((alpha1, tag("_"))),
-            many0(alt((
-                alphanumeric1,
-                recognize(one_of("~!@$%^&*-_+./:<>?")),
-            ))),
-        )),
+        map(
+            recognize(pair(
+                alt((alpha1, tag("_"))),
+                many0(alt((alphanumeric1, recognize(one_of("~!@$%^&*-_+./:<>?"))))),
+            )),
+            String::from,
+        ),
         string,
     ))(input)
 }
@@ -77,7 +77,7 @@ fn node_arg(input: &str) -> IResult<&str, NodeArg, KdlParseError<&str>> {
 }
 
 /// `prop := identifier '=' value`
-fn property(input: &str) -> IResult<&str, (&str, NodeValue), KdlParseError<&str>> {
+fn property(input: &str) -> IResult<&str, (String, NodeValue), KdlParseError<&str>> {
     let (input, key) = identifier(input)?;
     let (input, _) = tag("=")(input)?;
     let (input, val) = node_value(input)?;
@@ -87,7 +87,7 @@ fn property(input: &str) -> IResult<&str, (&str, NodeValue), KdlParseError<&str>
 /// `value := string | raw_string | number | boolean | 'null'`
 fn node_value(input: &str) -> IResult<&str, NodeValue, KdlParseError<&str>> {
     alt((
-        map(string, |s| NodeValue::String(s.into())),
+        map(string, NodeValue::String),
         map(raw_string, |s| NodeValue::String(s.into())),
         number,
         boolean,
@@ -100,10 +100,46 @@ fn node_children(input: &str) -> IResult<&str, Vec<Node>, KdlParseError<&str>> {
     delimited(tag("{"), nodes, tag("}"))(input)
 }
 
-// TODO: This should be much more specific about what escapes are allowed.
-/// `string := '"' ('\\' ["\\] | [^"])* '"'`
-fn string(_input: &str) -> IResult<&str, &str, KdlParseError<&str>> {
-    todo!()
+/// `string := '"' character* '"'`
+fn string(input: &str) -> IResult<&str, String, KdlParseError<&str>> {
+    delimited(
+        char('"'),
+        fold_many0(character, String::new(), |mut acc, ch| {
+            acc.push(ch);
+            acc
+        }),
+        char('"'),
+    )(input)
+}
+
+/// `character := '\' escape | [^\"]`
+fn character(input: &str) -> IResult<&str, char, KdlParseError<&str>> {
+    alt((preceded(char('\\'), escape), none_of("\\\"")))(input)
+}
+
+/// `escape := ["\\/bfnrt] | 'u{' hex-digit{1, 6} '}'`
+fn escape(input: &str) -> IResult<&str, char, KdlParseError<&str>> {
+    alt((
+        delimited(tag("u{"), unicode, char('}')),
+        value('"', char('"')),
+        value('\\', char('\\')),
+        value('/', char('/')),
+        value('\u{08}', char('b')),
+        value('\u{0C}', char('f')),
+        value('\n', char('n')),
+        value('\r', char('r')),
+        value('\t', char('t')),
+    ))(input)
+}
+
+fn unicode(input: &str) -> IResult<&str, char, KdlParseError<&str>> {
+    map_opt(
+        map_res(
+            take_while_m_n(1, 6, |c: char| c.is_ascii_hexdigit()),
+            |hex| u32::from_str_radix(hex, 16),
+        ),
+        std::char::from_u32,
+    )(input)
 }
 
 /// `raw-string := 'r' raw-string-hash`
@@ -276,6 +312,21 @@ fn newline(input: &str) -> IResult<&str, (), KdlParseError<&str>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_string() {
+        assert_eq!(string("\"\""), Ok(("", "".into())));
+        assert_eq!(string("\"hello\""), Ok(("", "hello".into())));
+        assert_eq!(string("\"hello\nworld\""), Ok(("", "hello\nworld".into())));
+        assert_eq!(string("\"\u{10FFF}\""), Ok(("", "\u{10FFF}".into())));
+        assert_eq!(
+            string(r#""\"\\\/\b\f\n\r\t""#),
+            Ok(("", "\"\\/\u{08}\u{0C}\n\r\t".into()))
+        );
+        assert_eq!(string(r#""\u{10}""#), Ok(("", "\u{10}".into())));
+        assert!(string(r#""\i""#).is_err());
+        assert!(string(r#""\u{c0ffee}""#).is_err());
+    }
 
     #[test]
     fn test_float() {
