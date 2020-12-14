@@ -113,7 +113,7 @@ node-argument := prop | value
 node-children := '{' nodes '}'
 node-space := ws* escline ws* | ws+
 
-identifier := [a-zA-Z] [a-zA-Z0-9!#$%&'*+\-./:<>?@\^_|~]* | string
+identifier := [a-zA-Z] [a-zA-Z0-9!$%&'*+\-./:<>?@\^_|~]* | string
 prop := identifier '=' value
 value := string | raw_string | number | boolean | 'null'
 

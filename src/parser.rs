@@ -55,14 +55,14 @@ pub(crate) fn node(input: &str) -> IResult<&str, Node, KdlParseError<&str>> {
     ))
 }
 
-/// `identifier := [a-zA-Z_] [a-zA-Z0-9!#$%&'*+\-./:<>?@\^_|~]* | string`
+/// `identifier := [a-zA-Z_] [a-zA-Z0-9!$%&'*+\-./:<>?@\^_|~]* | string`
 fn identifier(input: &str) -> IResult<&str, &str, KdlParseError<&str>> {
     alt((
         recognize(pair(
             alt((alpha1, tag("_"))),
             many0(alt((
                 alphanumeric1,
-                recognize(one_of("~!@#$%^&*-_+./:<>?")),
+                recognize(one_of("~!@$%^&*-_+./:<>?")),
             ))),
         )),
         string,
