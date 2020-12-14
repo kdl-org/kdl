@@ -28,7 +28,7 @@ jobs {
     strategy {
       matrix {
         rust "1.46.0" "stable"
-        os "ubuntu-latest", "macOS-latest", "windows-latest"
+        os "ubuntu-latest" "macOS-latest" "windows-latest"
       }
     }
 
