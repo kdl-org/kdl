@@ -147,3 +147,8 @@ ws := bom | ' ' | '\t' | multi-line-comment
 single-line-comment := '//' ('\r' [^\n] | [^\r\n])* newline
 multi-line-comment := '/*' ('*' [^\/] | [^*])* '*/'
 ```
+
+## LICENSE
+
+The above grammar/spec is licensed CC-BY-SA. The included [LICENSE.md
+file](LICENSE.md) in this repository only covers this implementation.
