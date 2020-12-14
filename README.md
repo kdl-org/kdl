@@ -17,7 +17,7 @@ title "Hello, World"
 // Multiple values are supported, too
 bookmarks 12 15 188 1234
 
-// Nodes can have attributes
+// Nodes can have properties
 author "Alex Monad" email="alex@example.com" active=true
 
 // Nodes can be arbitrarily nested
@@ -117,7 +117,10 @@ identifier := [a-zA-Z] [a-zA-Z0-9!#$%&'*+\-./:<>?@\^_|~]* | string
 prop := identifier '=' value
 value := string | raw_string | number | boolean | 'null'
 
-string := '"' ('\\' ["\\] | [^"])* '"'
+string := '"' character* '"'
+character := '\' escape | [^\"]
+escape := ["\\/bfnrt] | 'u{' hex-digit{1, 6} '}'
+hex-digit := [0-9a-fA-F]
 
 raw-string := 'r' raw-string-hash
 raw-string-hash := '#' raw-string-hash '#' | raw-string-quotes
@@ -130,7 +133,7 @@ exponent := ('e' | 'E') integer
 integer := sign? [0-9] [0-9_]*
 sign := '+' | '-'
 
-hex := '0x' [0-9a-fA-F] [0-9a-fA-F_]*
+hex := '0x' hex-digit (hex-digit | '_')*
 octal := '0o' [0-7] [0-7_]*
 binary := '0b' ('0' | '1') ('0' | '1' | '_')*
 
