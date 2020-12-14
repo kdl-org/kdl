@@ -2,13 +2,13 @@ use nom::combinator::all_consuming;
 use nom::Err;
 
 pub use crate::error::{KdlError, KdlErrorKind};
-pub use crate::node::Node;
+pub use crate::node::KdlNode;
 
 mod error;
 mod node;
 mod parser;
 
-pub fn parse_document<I>(input: I) -> Result<Vec<Node>, KdlError>
+pub fn parse_document<I>(input: I) -> Result<Vec<KdlNode>, KdlError>
 where
     I: AsRef<str>,
 {

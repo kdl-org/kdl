@@ -9,21 +9,21 @@ use nom::sequence::{delimited, pair, preceded, terminated, tuple};
 use nom::IResult;
 
 use crate::error::KdlParseError;
-use crate::node::{Node, NodeValue};
+use crate::node::{KdlNode, KdlNodeValue};
 
 /// `nodes := linespace* (node (newline document)?)?`
-pub(crate) fn nodes(input: &str) -> IResult<&str, Vec<Node>, KdlParseError<&str>> {
+pub(crate) fn nodes(input: &str) -> IResult<&str, Vec<KdlNode>, KdlParseError<&str>> {
     many0(delimited(many0(linespace), node, newline))(input)
 }
 
 #[derive(Clone)]
 enum NodeArg {
-    Value(NodeValue),
-    Property(String, NodeValue),
+    Value(KdlNodeValue),
+    Property(String, KdlNodeValue),
 }
 
 /// `node := identifier (node-space node-argument)* (node-space node-document)?`
-pub(crate) fn node(input: &str) -> IResult<&str, Node, KdlParseError<&str>> {
+pub(crate) fn node(input: &str) -> IResult<&str, KdlNode, KdlParseError<&str>> {
     let (input, tag) = identifier(input)?;
     let (input, args) = many0(preceded(node_space, node_arg))(input)?;
     let (input, children) = opt(preceded(node_space, node_children))(input)?;
@@ -32,7 +32,7 @@ pub(crate) fn node(input: &str) -> IResult<&str, Node, KdlParseError<&str>> {
         .partition(|arg| matches!(arg, NodeArg::Value(_)));
     Ok((
         input,
-        Node {
+        KdlNode {
             name: tag,
             children: children.unwrap_or_else(Vec::new),
             values: values
@@ -77,7 +77,7 @@ fn node_arg(input: &str) -> IResult<&str, NodeArg, KdlParseError<&str>> {
 }
 
 /// `prop := identifier '=' value`
-fn property(input: &str) -> IResult<&str, (String, NodeValue), KdlParseError<&str>> {
+fn property(input: &str) -> IResult<&str, (String, KdlNodeValue), KdlParseError<&str>> {
     let (input, key) = identifier(input)?;
     let (input, _) = tag("=")(input)?;
     let (input, val) = node_value(input)?;
@@ -85,18 +85,18 @@ fn property(input: &str) -> IResult<&str, (String, NodeValue), KdlParseError<&st
 }
 
 /// `value := string | raw_string | number | boolean | 'null'`
-fn node_value(input: &str) -> IResult<&str, NodeValue, KdlParseError<&str>> {
+fn node_value(input: &str) -> IResult<&str, KdlNodeValue, KdlParseError<&str>> {
     alt((
-        map(string, NodeValue::String),
-        map(raw_string, |s| NodeValue::String(s.into())),
+        map(string, KdlNodeValue::String),
+        map(raw_string, |s| KdlNodeValue::String(s.into())),
         number,
         boolean,
-        value(NodeValue::Null, tag("null")),
+        value(KdlNodeValue::Null, tag("null")),
     ))(input)
 }
 
 /// `node-children := '{' nodes '}'`
-fn node_children(input: &str) -> IResult<&str, Vec<Node>, KdlParseError<&str>> {
+fn node_children(input: &str) -> IResult<&str, Vec<KdlNode>, KdlParseError<&str>> {
     delimited(tag("{"), nodes, tag("}"))(input)
 }
 
@@ -156,13 +156,13 @@ fn raw_string(input: &str) -> IResult<&str, &str, KdlParseError<&str>> {
 }
 
 /// `number := decimal | hex | octal | binary`
-fn number(input: &str) -> IResult<&str, NodeValue, KdlParseError<&str>> {
+fn number(input: &str) -> IResult<&str, KdlNodeValue, KdlParseError<&str>> {
     alt((
-        map(integer, NodeValue::Int),
-        map(hexadecimal, NodeValue::Int),
-        map(octal, NodeValue::Int),
-        map(binary, NodeValue::Int),
-        map(float, NodeValue::Float),
+        map(integer, KdlNodeValue::Int),
+        map(hexadecimal, KdlNodeValue::Int),
+        map(octal, KdlNodeValue::Int),
+        map(binary, KdlNodeValue::Int),
+        map(float, KdlNodeValue::Float),
     ))(input)
 }
 
@@ -250,10 +250,10 @@ fn binary(input: &str) -> IResult<&str, i64, KdlParseError<&str>> {
 }
 
 /// `boolean := 'true' | 'false'`
-fn boolean(input: &str) -> IResult<&str, NodeValue, KdlParseError<&str>> {
+fn boolean(input: &str) -> IResult<&str, KdlNodeValue, KdlParseError<&str>> {
     alt((
-        value(NodeValue::Boolean(true), tag("true")),
-        value(NodeValue::Boolean(false), tag("false")),
+        value(KdlNodeValue::Boolean(true), tag("true")),
+        value(KdlNodeValue::Boolean(false), tag("false")),
     ))(input)
 }
 
@@ -412,8 +412,8 @@ mod tests {
 
     #[test]
     fn test_boolean() {
-        assert_eq!(boolean("true"), Ok(("", NodeValue::Boolean(true))));
-        assert_eq!(boolean("false"), Ok(("", NodeValue::Boolean(false))));
+        assert_eq!(boolean("true"), Ok(("", KdlNodeValue::Boolean(true))));
+        assert_eq!(boolean("false"), Ok(("", KdlNodeValue::Boolean(false))));
         assert!(boolean("blah").is_err());
     }
 
