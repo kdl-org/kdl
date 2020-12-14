@@ -106,11 +106,11 @@ to jump in and give us your 2 cents!
 ## Grammar
 
 ```
-document := linespace* (node (newline document)? linespace*)?
+nodes := linespace* (node (newline nodes)? linespace*)?
 
 node := identifier (node-space node-argument)* (node-space node-document)? single-line-comment?
 node-argument := prop | value
-node-document := '{' document '}'
+node-children := '{' nodes '}'
 node-space := ws* escline ws* | ws+
 
 identifier := [a-zA-Z] [a-zA-Z0-9!#$%&'*+\-./:<>?@\^_|~]* | string

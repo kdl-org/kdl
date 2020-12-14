@@ -1,14 +1,14 @@
 use nom::combinator::all_consuming;
 use nom::Err;
 
-pub use crate::error::{Error, ErrorKind};
+pub use crate::error::{KdlError, KdlErrorKind};
 pub use crate::node::Node;
 
 mod error;
 mod node;
 mod parser;
 
-pub fn parse_document<I>(input: I) -> Result<Vec<Node>, Error>
+pub fn parse_document<I>(input: I) -> Result<Vec<Node>, KdlError>
 where
     I: AsRef<str>,
 {
@@ -16,21 +16,21 @@ where
     match all_consuming(parser::nodes)(input) {
         Ok((_, arg)) => Ok(arg),
         Err(err) => Err(match err {
-            Err::Error(e) | Err::Failure(e) => Error {
+            Err::Error(e) | Err::Failure(e) => KdlError {
                 input: input.into(),
                 offset: e.input.as_ptr() as usize - input.as_ptr() as usize,
                 kind: if let Some(kind) = e.kind {
                     kind
                 } else if let Some(ctx) = e.context {
-                    ErrorKind::Context(ctx)
+                    KdlErrorKind::Context(ctx)
                 } else {
-                    ErrorKind::Other
+                    KdlErrorKind::Other
                 },
             },
-            Err::Incomplete(_) => Error {
+            Err::Incomplete(_) => KdlError {
                 input: input.into(),
                 offset: input.len() - 1,
-                kind: ErrorKind::IncompleteInput,
+                kind: KdlErrorKind::IncompleteInput,
             },
         }),
     }
