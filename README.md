@@ -8,7 +8,7 @@ language, and is relatively light on syntax compared to XML.
 
 ## Intro
 
-Most of the syntax is basically the same as SDLang:
+The basic syntax is similar to SDLang:
 
 ```kdl
 // This is a node with a single string value
