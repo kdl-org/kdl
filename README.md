@@ -127,7 +127,7 @@ number := decimal | hex | octal | binary
 
 decimal := integer ('.' [0-9]+)? exponent?
 exponent := ('e' | 'E') integer
-integer := sign? [1-9] [0-9_]*
+integer := sign? [0-9] [0-9_]*
 sign := '+' | '-'
 
 hex := '0x' [0-9a-fA-F] [0-9a-fA-F_]*

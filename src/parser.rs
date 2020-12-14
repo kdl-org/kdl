@@ -297,6 +297,7 @@ mod tests {
 
     #[test]
     fn test_integer() {
+        assert_eq!(integer("0"), Ok(("", 0)));
         assert_eq!(integer("0123456789"), Ok(("", 123456789)));
         assert_eq!(integer("0123_456_789"), Ok(("", 123456789)));
         assert_eq!(integer("0123_456_789_"), Ok(("", 123456789)));
