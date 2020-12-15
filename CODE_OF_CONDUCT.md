@@ -2,7 +2,7 @@
 
 ## When Something Happens
 
-If you see behavoir that makes you feel unsafe or unwelcome or otherwise uncomfortable, follow these steps:
+If you see behavior that makes you feel unsafe or unwelcome or otherwise uncomfortable, follow these steps:
 
 1. Let the person know that what they did is not appropriate and ask them to stop and/or edit their message(s) or commits.
 2. That person should immediately stop the behavior and correct the issue.
