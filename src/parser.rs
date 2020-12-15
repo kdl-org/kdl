@@ -166,7 +166,7 @@ fn number(input: &str) -> IResult<&str, KdlNodeValue, KdlParseError<&str>> {
     ))(input)
 }
 
-/// ```ignore
+/// ```text
 /// decimal := integer ('.' [0-9]+)? exponent?
 /// exponent := ('e' | 'E') integer
 /// integer := sign? [1-9] [0-9_]*
@@ -188,7 +188,7 @@ fn float(input: &str) -> IResult<&str, f64, KdlParseError<&str>> {
     )(input)
 }
 
-/// ```ignore
+/// ```text
 /// decimal := integer ('.' [0-9]+)? exponent?
 /// exponent := ('e' | 'E') integer
 /// integer := sign? [1-9] [0-9_]*
