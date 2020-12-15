@@ -14,6 +14,10 @@ kdl is still extremely new, and discussion about the format should happen over
 on the [discussions page](https://github.com/kdoclang/kdl/discussions). Feel free
 to jump in and give us your 2 cents!
 
+## Implementations
+
+* Rust: [kdl-rs](https://github.com/kdoclang/kdl-rs)
+
 ## Overview
 
 The basic syntax is similar to SDLang:
