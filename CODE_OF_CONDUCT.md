@@ -23,12 +23,6 @@ This Code of Conduct applies both within spaces involving this project and in ot
 
 Depending on the violation, the maintainers may decide that violations of this code of conduct that have happened outside of the scope of the community may deem an individual unwelcome, and take appropriate action to maintain the comfort and safety of its members.
 
-### Other Community Standards
-
-As a project on GitHub, this project is additionally covered by the [GitHub Community Guidelines](https://help.github.com/articles/github-community-guidelines/).
-
-Enforcement of those guidelines after violations overlapping with the above are the responsibility of the entities, and enforcement may happen in any or all of the services/communities.
-
 ## Contacting Maintainers
 
 - [Kat Marchán <coc@zkat.tech>](mailto:coc@zkat.tech)
@@ -52,7 +46,7 @@ Members expelled from events or venues with any sort of paid attendance will not
 
 Maintainers and other leaders who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership. These may include anything from removal from the maintainer team to a permanent ban from the community.
 
-Additionally, as a project hosted on both GitHub and npm, [their own Codes of Conducts may be applied against maintainers of this project](#other-community-standards), externally of this project's procedures.
+Additionally, as a project hosted on both GitHub, [their Community Guidielines may be applied to maintainers of this project](https://help.github.com/articles/github-community-guidelines/), externally of this project's procedures.
 
 ## Enforcement Examples
 
