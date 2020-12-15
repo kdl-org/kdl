@@ -95,6 +95,22 @@ bignum 1_000_000
 my-hex 0xdeadbeef
 my-octal 0o755
 my-binary 0b1010_1101
+
+// You can comment out individual nodes with /-. In the case below, everything
+// up until the closing `}` becomes commented.
+/-mynode "foo" key=1 {
+  a
+  b
+  c
+}
+
+// You can apply /- ("slashdash") comments to individual values, properties,
+// or child blocks, too:
+mynode /-"commented" "not commented" /-key="value" /-{
+  a
+  b
+}
+
 ```
 
 The following SDLang features are removed altogether:

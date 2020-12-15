@@ -45,8 +45,9 @@ linespace := newline | ws | single-line-comment
 
 newline := ('\r' '\n') | '\n'
 
-ws := bom | ' ' | '\t' | multi-line-comment
+ws := bom | ' ' | '\t' | multi-line-comment | slashdash-comment
 
 single-line-comment := '//' ('\r' [^\n] | [^\r\n])* newline
 multi-line-comment := '/*' ('*' [^\/] | [^*])* '*/'
+slashdash-comment := '/-' (node | value | prop | node-children)
 ```
