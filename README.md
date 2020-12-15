@@ -16,7 +16,7 @@ to jump in and give us your 2 cents!
 
 ## Implementations
 
-* Rust: [kdl-rs](https://github.com/kdoclang/kdl-rs)
+* Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs)
 
 ## Overview
 
