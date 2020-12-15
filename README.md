@@ -6,7 +6,15 @@ xml-like semantics that looks like you're invoking a bunch of CLI commands!
 It's meant to be used both as a serialization format and a configuration
 language, and is relatively light on syntax compared to XML.
 
-## Intro
+This repository is the place for discussing the [specification](SPEC.md).
+
+## Design and Discussion
+
+kdl is still extremely new, and discussion about the format should happen over
+on the [discussions page](https://github.com/kdoclang/kdl/discussions). Feel free
+to jump in and give us your 2 cents!
+
+## Overview
 
 The basic syntax is similar to SDLang:
 
@@ -97,61 +105,10 @@ The following SDLang features are removed altogether:
 * Shell style (`#`) and Lua-style (`--`) comments
 * Distinction between 32/64/128-bit numbers. There's just numbers.
 
-## Design and Discussion
-
-kdl is still extremely new, and discussion about the format should happen over
-on the [discussions page](https://github.com/zkat/kdl/discussions). Feel free
-to jump in and give us your 2 cents!
-
-## Grammar
-
-```
-nodes := linespace* (node (newline nodes)? linespace*)?
-
-node := identifier (node-space node-argument)* (node-space node-document)? single-line-comment?
-node-argument := prop | value
-node-children := '{' nodes '}'
-node-space := ws* escline ws* | ws+
-
-identifier := [a-zA-Z] [a-zA-Z0-9!$%&'*+\-./:<>?@\^_|~]* | string
-prop := identifier '=' value
-value := string | raw_string | number | boolean | 'null'
-
-string := '"' character* '"'
-character := '\' escape | [^\"]
-escape := ["\\/bfnrt] | 'u{' hex-digit{1, 6} '}'
-hex-digit := [0-9a-fA-F]
-
-raw-string := 'r' raw-string-hash
-raw-string-hash := '#' raw-string-hash '#' | raw-string-quotes
-raw-string-quotes := '"' .* '"'
-
-number := decimal | hex | octal | binary
-
-decimal := integer ('.' [0-9]+)? exponent?
-exponent := ('e' | 'E') integer
-integer := sign? [0-9] [0-9_]*
-sign := '+' | '-'
-
-hex := '0x' hex-digit (hex-digit | '_')*
-octal := '0o' [0-7] [0-7_]*
-binary := '0b' ('0' | '1') ('0' | '1' | '_')*
-
-boolean := 'true' | 'false'
-
-escline := '\\' ws* (single-line-comment | newline)
-
-linespace := newline | ws | single-line-comment
-
-newline := ('\r' '\n') | '\n'
-
-ws := bom | ' ' | '\t' | multi-line-comment
-
-single-line-comment := '//' ('\r' [^\n] | [^\r\n])* newline
-multi-line-comment := '/*' ('*' [^\/] | [^*])* '*/'
-```
-
 ## LICENSE
 
-The above grammar/spec is licensed CC-BY-SA. The included [LICENSE.md
-file](LICENSE.md) in this repository only covers this implementation.
+This specification is covered under the [CC-BY-SA]() license. You are free to
+write tools that handle KDL without worrying about licensing weirdness. If you
+fork KDL into your own language and base it on this specification, though,
+please make sure to publish that fork and clearly attribute/link to this
+project.
