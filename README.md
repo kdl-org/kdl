@@ -109,11 +109,7 @@ The following SDLang features are removed altogether:
 * Shell style (`#`) and Lua-style (`--`) comments
 * Distinction between 32/64/128-bit numbers. There's just numbers.
 
-## LICENSE
+## License
 
-This specification is covered under the
-[CC-BY-SA](https://creativecommons.org/licenses/by-sa/2.0/) license. You are
-free to write tools that handle KDL without worrying about licensing
-weirdness. If you fork KDL into your own language and base it on this
-specification, though, please make sure to publish that fork and clearly
-attribute/link to this project.
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+
