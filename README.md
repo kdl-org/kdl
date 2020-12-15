@@ -111,8 +111,9 @@ The following SDLang features are removed altogether:
 
 ## LICENSE
 
-This specification is covered under the [CC-BY-SA]() license. You are free to
-write tools that handle KDL without worrying about licensing weirdness. If you
-fork KDL into your own language and base it on this specification, though,
-please make sure to publish that fork and clearly attribute/link to this
-project.
+This specification is covered under the
+[CC-BY-SA](https://creativecommons.org/licenses/by-sa/2.0/) license. You are
+free to write tools that handle KDL without worrying about licensing
+weirdness. If you fork KDL into your own language and base it on this
+specification, though, please make sure to publish that fork and clearly
+attribute/link to this project.
