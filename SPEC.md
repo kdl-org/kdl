@@ -102,12 +102,38 @@ my-node 1 2 \  // this is a comment
         3 4    // This is the actual end of the Node.
 ```
 
+### Whitespace
+
+The following characters should be treated as non-[Newline](#newline) [white
+space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
+
+| Name                 | Code Pt |
+|----------------------|---------|
+| Character Tabulation | `0009`  |
+| Space                | `0020`  |
+| No-Break Space       | `00A0`  |
+| Ogham Space Mark     | `1680`  |
+| En Quad              | `2000`  |
+| Em Quad              | `2001`  |
+| En Space             | `2002`  |
+| Em Space             | `2003`  |
+| Three-Per-Em Space   | `2004`  |
+| Four-Per-Em Space    | `2005`  |
+| Six-Per-Em Space     | `2006`  |
+| Figure Space         | `2007`  |
+| Punctuation Space    | `2008`  |
+| Thin Space           | `2009`  |
+| Hair Space           | `200A`  |
+| Narrow No-Break Space| `202F`  |
+| Medium Mathematical Space | `205F`  |
+| Ideographic Space    | `3000`  |
+
 ### Newline
 
 The following characters [should be treated as new
 lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 
-| Acronym | Name            | Unicode |
+| Acronym | Name            | Code Pt |
 |---------|-----------------|---------|
 | CR      | Carriage Return | `000D`  |
 | LF      | Line Feed       | `000A`  |
@@ -165,7 +191,9 @@ linespace := newline | ws | single-line-comment
 
 newline := `000D` | `000A` | `000D` `000A` | `0085` | `000B` | `000C` | `2028` | `2029`
 
-ws := bom | ' ' | '\t' | multi-line-comment | slashdash-comment
+ws := bom | unicode-space | multi-line-comment | slashdash-comment
+
+unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
 single-line-comment := '//' ('\r' [^\n] | [^\r\n])* newline
 multi-line-comment := '/*' ('*' [^\/] | [^*])* '*/'
