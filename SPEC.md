@@ -102,6 +102,24 @@ my-node 1 2 \  // this is a comment
         3 4    // This is the actual end of the Node.
 ```
 
+### Newline
+
+The following characters [should be treated as new
+lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
+
+| Acronym | Name            | Unicode |
+|---------|-----------------|---------|
+| CR      | Carriage Return | `000D`  |
+| LF      | Line Feed       | `000A`  |
+| CRLF    | Carriage Return and Line Feed | `000D` + `000A` |
+| NEL     | Next Line       | `0085`  |
+| VT      | Vertical Tab    | `000B`  |
+| FF      | Form Feed       | `000C`  |
+| LS      | Line Separator  | `2028`  |
+| PS      | Paragraph Separator | `2029` |
+
+Note that for the purpose of new lines, CRLF is considered _a single newline_.
+
 ## Full Grammar
 
 ```
@@ -145,8 +163,7 @@ escline := '\\' ws* (single-line-comment | newline)
 
 linespace := newline | ws | single-line-comment
 
-// FIXME: This needs to support all unicode newline chars. See #27
-newline := ('\r' '\n') | '\n'
+newline := `000D` | `000A` | `000D` `000A` | `0085` | `000B` | `000C` | `2028` | `2029`
 
 ws := bom | ' ' | '\t' | multi-line-comment | slashdash-comment
 
