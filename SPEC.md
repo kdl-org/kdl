@@ -90,13 +90,16 @@ The following characters cannot be used anywhere in a bare [Identifier](#identif
 ## Full Grammar
 
 ```
+// FIXME: I don't... think this is quite right?
 nodes := linespace* (node (newline nodes)? linespace*)?
 
+// FIXME: This is missing the newline at the end? And is the single-line-comment thing correct?
 node := identifier (node-space node-argument)* (node-space node-document)? single-line-comment?
 node-argument := prop | value
 node-children := '{' nodes '}'
 node-space := ws* escline ws* | ws+
 
+// FIXME: This needs adjustment to the new, unicode-friendly version
 identifier := [a-zA-Z] [a-zA-Z0-9!$%&'*+\-./:<>?@\^_|~]* | string
 prop := identifier '=' value
 value := string | raw_string | number | boolean | 'null'
@@ -127,6 +130,7 @@ escline := '\\' ws* (single-line-comment | newline)
 
 linespace := newline | ws | single-line-comment
 
+// FIXME: This needs to support all unicode newline chars. See #27
 newline := ('\r' '\n') | '\n'
 
 ws := bom | ' ' | '\t' | multi-line-comment | slashdash-comment
