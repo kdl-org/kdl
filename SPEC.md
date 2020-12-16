@@ -139,7 +139,6 @@ lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 | LF      | Line Feed       | `000A`  |
 | CRLF    | Carriage Return and Line Feed | `000D` + `000A` |
 | NEL     | Next Line       | `0085`  |
-| VT      | Vertical Tab    | `000B`  |
 | FF      | Form Feed       | `000C`  |
 | LS      | Line Separator  | `2028`  |
 | PS      | Paragraph Separator | `2029` |
@@ -189,7 +188,7 @@ escline := '\\' ws* (single-line-comment | newline)
 
 linespace := newline | ws | single-line-comment
 
-newline := `000D` | `000A` | `000D` `000A` | `0085` | `000B` | `000C` | `2028` | `2029`
+newline := `000D` | `000A` | `000D` `000A` | `0085` | `000C` | `2028` | `2029`
 
 ws := bom | unicode-space | multi-line-comment | slashdash-comment
 
