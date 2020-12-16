@@ -152,9 +152,9 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 nodes := linespace* (node (newline nodes)? linespace*)?
 
 // FIXME: This is missing the newline at the end? And is the single-line-comment thing correct?
-node := identifier (node-space node-argument)* (node-space node-document)? single-line-comment?
-node-argument := prop | value
-node-children := '{' nodes '}'
+node := '/-'? identifier (node-space node-argument)* (node-space node-document)? single-line-comment?
+node-argument := '/-'? prop | value
+node-children := '/-'? '{' nodes '}'
 node-space := ws* escline ws* | ws+
 
 // FIXME: This needs adjustment to the new, unicode-friendly version
@@ -190,11 +190,10 @@ linespace := newline | ws | single-line-comment
 
 newline := `000D` | `000A` | `000D` `000A` | `0085` | `000C` | `2028` | `2029`
 
-ws := bom | unicode-space | multi-line-comment | slashdash-comment
+ws := bom | unicode-space | multi-line-comment
 
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
 single-line-comment := '//' ('\r' [^\n] | [^\r\n])* newline
 multi-line-comment := '/*' ('*' [^\/] | [^*])* '*/'
-slashdash-comment := '/-' (node | value | prop | node-children)
 ```
