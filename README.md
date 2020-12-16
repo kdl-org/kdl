@@ -14,6 +14,20 @@ kdl is still extremely new, and discussion about the format should happen over
 on the [discussions page](https://github.com/kdoclang/kdl/discussions). Feel free
 to jump in and give us your 2 cents!
 
+## Design Principles
+
+1. Maintainability
+1. Flexibility
+1. Cognitive simplicity
+1. Ease of de/serialization
+1. Ease of implementation
+
+These are the guiding principles behind the design of KDL, in order of
+importance. These principles will hopefully be useful in tie-breaking and
+otherwise directing specific decisions when it comes down to it. They are
+intentionally vague when it comes to specifics, but more concrete definitions
+for each one will be settled on as the project matures.
+
 ## Implementations
 
 * Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs)

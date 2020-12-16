@@ -42,7 +42,7 @@ file/stream (an `EOF`).
 
 When present in the list of Properties and Values, plain Values (those not
 attached to a Property), each "anonymous" value should be treated as a
-Property whose key is its current index among _anonymous values_ in the same
+Property whose key is its current index among _values_ in the same
 node, starting from 0, as a string. Named properties do not count towarrds
 this index.
 
