@@ -194,7 +194,7 @@ linespace := newline | ws | single-line-comment
 
 newline := `000D` | `000A` | `000D` `000A` | `0085` | `000C` | `2028` | `2029`
 
-ws := bom |unicode-space | multi-line-comment
+ws := bom | unicode-space | multi-line-comment
 
 bom := `FFEF`
 
