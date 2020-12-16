@@ -18,7 +18,7 @@ to jump in and give us your 2 cents!
 
 1. Maintainability
 1. Flexibility
-1. Cognitive simplicity
+1. Cognitive simplicity and Learnability
 1. Ease of de/serialization
 1. Ease of implementation
 

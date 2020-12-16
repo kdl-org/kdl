@@ -33,10 +33,18 @@ Being a node-oriented language means that the real core component of any KDL
 document is the "node". Every node must have a name, which is either a legal
 [Identifier](#identifier), or a quoted [String](#string).
 
-Following the name are zero or more whitespace-separated [Values](#value) or
-[Properties](#property). Values and Properties may be interspersed in any
-order, much like is common with positional arguments vs options in command
-line tools.
+Following the name are zero or more [Values](#value) or
+[Properties](#property), separated by either [whitespace](#whitespace) or [a
+slash-escaped line continuation](#line-continuation). Values and Properties
+may be interspersed in any order, much like is common with positional
+arguments vs options in command line tools.
+
+Values are ordered relative to each other and that order must be
+preserved in order to maintain the semantics.
+
+By contrast, Property order _should not matter_ to implementations.
+[Children](#children-block) should be used if an order-sensitive key/value
+data structure must be represented in KDL.
 
 Finally, a node is terminated by either a [Newline](#newline), a [Children
 Block](#children-block), a semicolon (`;`) or the end of the file/stream (an
@@ -76,6 +84,23 @@ The following characters cannot be used anywhere in a bare
 * Any codepoint with hexadecimal value `0x20` or below.
 * Any codepoint with hexadecimal value higher than `0x10FFF`.
 * Any of "\\{};[]=,"
+
+### Line Continuation
+
+Line continuations allow [Nodes](#node) to be spread across multiple lines.
+
+A line continuation is one or more [whitespace](#whitespace) characters,
+followed by a `/` character. This character can then be followed by more
+[whitespace](#whitespace) and must be terminated by a [Newline](#newline)
+(including the Newline that is part of single-line comments).
+
+Following a line continuation, processing of a Node can continue as usual.
+
+#### Example
+```kdl
+my-node 1 2 \  // this is a comment
+        3 4    // This is the actual end of the Node.
+```
 
 ## Full Grammar
 
