@@ -33,25 +33,14 @@ Being a node-oriented language means that the real core component of any KDL
 document is the "node". Every node must have a name, which is either a legal
 [Identifier](#identifier), or a quoted [String](#string).
 
-Following the name are one or more [Whitespace](#whitespace) components,
-followed by zero or more whitespace-separated [Values](#value) or
-[Properties](#property). Finally, a node is terminated by either a
-[Newline](#newline), a [Children Block](#children-block), a semicolon (`;`) or
-the end of the
-file/stream (an `EOF`).
+Following the name are zero or more whitespace-separated [Values](#value) or
+[Properties](#property). Values and Properties may be interspersed in any
+order, much like is common with positional arguments vs options in command
+line tools.
 
-When present in the list of Properties and Values, plain Values (those not
-attached to a Property), each "anonymous" value should be treated as a
-Property whose key is its current index among _values_ in the same
-node, starting from 0, as a string. Named properties do not count towarrds
-this index.
-
-That is, the following two nodes are semantically equivalent:
-
-```kdl
-foo 1 key="val" 2
-foo "0"=1 "1"=2 key="val"
-```
+Finally, a node is terminated by either a [Newline](#newline), a [Children
+Block](#children-block), a semicolon (`;`) or the end of the file/stream (an
+`EOF`).
 
 #### Example
 
@@ -81,7 +70,8 @@ The following characters cannot be the first character in a bare
 
 ### Non-identifier characters
 
-The following characters cannot be used anywhere in a bare [Identifier](#identifier):
+The following characters cannot be used anywhere in a bare
+[Identifier](#identifier):
 
 * Any codepoint with hexadecimal value `0x20` or below.
 * Any codepoint with hexadecimal value higher than `0x10FFF`.
