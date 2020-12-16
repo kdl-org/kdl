@@ -13,8 +13,16 @@ language, and a data exchange or storage format, if you so choose.
 
 ### Document
 
-The toplevel concept of KDL is a Document. A Document is composed of one or more
-[Nodes](#node), separated by newlines and whitespace, and eventually terminated by an EOF.
+The toplevel concept of KDL is a Document. A Document is composed of zero or
+more [Nodes](#node), separated by newlines and whitespace, and eventually
+terminated by an EOF.
+
+All KDL documents should:
+
+* Be UTF-8 encoded
+* Ignore UTF-8 byte order marks ("BOM") anywhere in the file, even when it's
+  not the first set of bytes in a stream.
+* Conform to the specifications in this document.
 
 #### Example
 
@@ -190,7 +198,7 @@ linespace := newline | ws | single-line-comment
 
 newline := `000D` | `000A` | `000D` `000A` | `0085` | `000C` | `2028` | `2029`
 
-ws := bom | unicode-space | multi-line-comment
+ws := unicode-space | multi-line-comment
 
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
