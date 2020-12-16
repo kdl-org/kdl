@@ -113,24 +113,24 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 
 | Name                 | Code Pt |
 |----------------------|---------|
-| Character Tabulation | `0009`  |
-| Space                | `0020`  |
-| No-Break Space       | `00A0`  |
-| Ogham Space Mark     | `1680`  |
-| En Quad              | `2000`  |
-| Em Quad              | `2001`  |
-| En Space             | `2002`  |
-| Em Space             | `2003`  |
-| Three-Per-Em Space   | `2004`  |
-| Four-Per-Em Space    | `2005`  |
-| Six-Per-Em Space     | `2006`  |
-| Figure Space         | `2007`  |
-| Punctuation Space    | `2008`  |
-| Thin Space           | `2009`  |
-| Hair Space           | `200A`  |
-| Narrow No-Break Space| `202F`  |
-| Medium Mathematical Space | `205F`  |
-| Ideographic Space    | `3000`  |
+| Character Tabulation | `U+0009`  |
+| Space                | `U+0020`  |
+| No-Break Space       | `U+00A0`  |
+| Ogham Space Mark     | `U+1680`  |
+| En Quad              | `U+2000`  |
+| Em Quad              | `U+2001`  |
+| En Space             | `U+2002`  |
+| Em Space             | `U+2003`  |
+| Three-Per-Em Space   | `U+2004`  |
+| Four-Per-Em Space    | `U+2005`  |
+| Six-Per-Em Space     | `U+2006`  |
+| Figure Space         | `U+2007`  |
+| Punctuation Space    | `U+2008`  |
+| Thin Space           | `U+2009`  |
+| Hair Space           | `U+200A`  |
+| Narrow No-Break Space| `U+202F`  |
+| Medium Mathematical Space | `U+205F`  |
+| Ideographic Space    | `U+3000`  |
 
 ### Newline
 
@@ -139,13 +139,13 @@ lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 
 | Acronym | Name            | Code Pt |
 |---------|-----------------|---------|
-| CR      | Carriage Return | `000D`  |
-| LF      | Line Feed       | `000A`  |
-| CRLF    | Carriage Return and Line Feed | `000D` + `000A` |
-| NEL     | Next Line       | `0085`  |
-| FF      | Form Feed       | `000C`  |
-| LS      | Line Separator  | `2028`  |
-| PS      | Paragraph Separator | `2029` |
+| CR      | Carriage Return | `U+000D`  |
+| LF      | Line Feed       | `U+000A`  |
+| CRLF    | Carriage Return and Line Feed | `U+000D` + `U+000A` |
+| NEL     | Next Line       | `U+0085`  |
+| FF      | Form Feed       | `U+000C`  |
+| LS      | Line Separator  | `U+2028`  |
+| PS      | Paragraph Separator | `U+2029` |
 
 Note that for the purpose of new lines, CRLF is considered _a single newline_.
 
@@ -192,11 +192,11 @@ escline := '\\' ws* (single-line-comment | newline)
 
 linespace := newline | ws | single-line-comment
 
-newline := `000D` | `000A` | `000D` `000A` | `0085` | `000C` | `2028` | `2029`
+newline := See Table (All line-break white_space)
 
 ws := bom | unicode-space | multi-line-comment
 
-bom := `FFEF`
+bom := '\u{FFEF}'
 
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
