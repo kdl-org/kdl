@@ -1,6 +1,6 @@
 # KDL Spec
 
-This is the kinda-formal specification for KDL, including the intended data
+This is the semi-formal specification for KDL, including the intended data
 model and the grammar.
 
 ## Introduction
