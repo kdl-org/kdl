@@ -37,16 +37,16 @@ Being a node-oriented language means that the real core component of any KDL
 document is the "node". Every node must have a name, which is either a legal
 [Identifier](#identifier), or a quoted [String](#string).
 
-Following the name are zero or more [Values](#value) or
+Following the name are zero or more [Arguments](#argument) or
 [Properties](#property), separated by either [whitespace](#whitespace) or [a
-slash-escaped line continuation](#line-continuation). Values and Properties
+slash-escaped line continuation](#line-continuation). Arguments and Properties
 may be interspersed in any order, much like is common with positional
 arguments vs options in command line tools.
 
-Values are ordered relative to each other and that order must be
-preserved in order to maintain the semantics.
+Arguments are ordered relative to each other and that order must be preserved
+in order to maintain the semantics.
 
-By contrast, Property order _should not matter_ to implementations.
+By contrast, Property order _SHOULD NOT_ matter to implementations.
 [Children](#children-block) should be used if an order-sensitive key/value
 data structure must be represented in KDL.
 
@@ -106,6 +106,45 @@ my-node 1 2 \  // this is a comment
         3 4    // This is the actual end of the Node.
 ```
 
+### Value
+
+A value is either: a [String](#string), a [Raw String](#raw-string), a
+[Number](#number), a [Boolean](#boolean), or `null`.
+
+### Property
+
+A Property is a key/value pair attached to a [Node](#node). A Property is
+composed of an [Identifier](#identifier) or a [String](#string), followed
+immediately by a `=`, and then a [Value](#value).
+
+Properties should be interpreted left-to-right, with rightmost properties with
+identical names overriding earlier properties. That is:
+
+```
+node a=1 a=2
+```
+
+In this example, the node's `a` value must be `2`, not `1`.
+
+No other guarantees about order should be expected by implementers.
+Deserialized representations may iterate over properties in any order and
+still be spec-compliant.
+
+### Argument
+
+An Argument is a bare [Value](#value) attached to a [Node](#node), with no
+associated key. It shares the same space as [Properties](#properties).
+
+A Node may have any number of Arguments, which should be evaluated left to
+right. KDL implementations _MUST_ preserve the order of Arguments relative to
+each other (not counting Properties).
+
+### Example
+
+```kdl
+my-node 1 2 3 "a" "b" "c"
+```
+
 ### Whitespace
 
 The following characters should be treated as non-[Newline](#newline) [white
@@ -155,9 +194,8 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 // FIXME: I don't... think this is quite right?
 nodes := linespace* (node (newline nodes)? linespace*)?
 
-// FIXME: This is missing the newline at the end? And is the single-line-comment thing correct?
-node := '/-'? identifier (node-space node-argument)* (node-space node-document)? single-line-comment?
-node-argument := '/-'? prop | value
+node := '/-'? identifier (node-space node-props-and-args)* (node-space node-document)? single-line-comment?
+node-props-and-args := '/-'? prop | value
 node-children := '/-'? '{' nodes '}'
 node-space := ws* escline ws* | ws+
 
