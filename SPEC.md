@@ -106,11 +106,6 @@ my-node 1 2 \  // this is a comment
         3 4    // This is the actual end of the Node.
 ```
 
-### Value
-
-A value is either: a [String](#string), a [Raw String](#raw-string), a
-[Number](#number), a [Boolean](#boolean), or `null`.
-
 ### Property
 
 A Property is a key/value pair attached to a [Node](#node). A Property is
@@ -143,6 +138,101 @@ each other (not counting Properties).
 
 ```kdl
 my-node 1 2 3 "a" "b" "c"
+```
+
+### Value
+
+A value is either: a [String](#string), a [Raw String](#raw-string), a
+[Number](#number), a [Boolean](#boolean), or [Null](#null)
+
+Values _MUST_ be either [Arguments](#argument) or values of
+[Properties](#property).
+
+### String
+
+Strings in KDL represent textual [Values](#value). They are delimited by `"`
+on either side of any number of literal string characters except unescaped
+`"` and `\`. This includes literal [Newline](#newline) characters, which means a
+String Value can encompass multiple lines without behaving like a Newline for
+[Node](#node) parsing purposes.
+
+Strings _MUST_ be represented as UTF-8 values.
+
+In addition to literal code points, a number of "escapes" are supported.
+"Escapes" are the character `\` followed by another character, and are
+interpreted as described in the following table:
+
+| Name | Escape | Code Pt |
+| TODO | `\n`   | TODO |
+| TODO | `\r`   | TODO |
+| TODO | `\t`   | TODO |
+| TODO | `\\`   | TODO |
+| TODO | `\"`   | TODO |
+| TODO | `\b`   | TODO |
+| TODO | `\f`   | TODO |
+| TODO | `\u{(0-6 hex chars)}` | Code point described by hex characters, up to `10FFF` |
+
+### Raw String
+
+Raw Strings in KDL are much like [Strings](#string), except they do not
+support `\`-escapes. They otherwise share the same properties as far as
+literal [Newline](#newline) characters go, and the requirement of UTF-8
+representation.
+
+Raw String literals are represented as `r"`, followed by zero or more `#`
+characters, followed by any number of UTF-8 literals. The string is then
+closed by a `"` followed by a _matching_ number of `#` characters. This means
+that the string sequence `"` or `"#` and such must not match the closing `"`
+with the same or more `#` characters as the opening `r"`.
+
+#### Example
+
+```kdl
+my-string r#"hello\n\r\asd"world"#
+```
+
+### Number
+
+Numbers in KDL represent numerical [Values](#value). There is no logical
+distinction in KDL between real numbers, integers, and floating point numbers.
+It's up to individual implementations to determine how to represent KDL
+numbers.
+
+There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
+
+* Binary numbers start with `0b` and only allow `0` and `1` as digits, which may be separated by `_`. They represent numbers in radix 2.
+* Octal numbers start with `0o` and only allow digits between `0` and `7`, which may be separated by `_`. They represent numbers in radix 8.
+* Hexadecimal numbers start with `0x` and allow digits between `0` and `9`, as well as letters `A` through `F`, in either lower or upper case, which may be separated by `_`. They represent numbers in radix 16.
+* Decimal numbers are a bit more special:
+    * They may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
+    * They have no radix prefix.
+    * They use digits `0` through `9`.
+    * They may optionally include a decimal separator `.`, followed by more digits.
+    * They may optionally be followed by `E` or `e`, an optional `-` or `+`, and more digits, to represent an exponent value.
+
+### Boolean
+
+A boolean [Value](#value) is either the symbol `true` or `false`. These
+_SHOULD_ be represented by implementation as boolean logical values, or some
+approximation thereof.
+
+#### Example
+
+```kdl
+my-node true value=false
+```
+
+### Null
+
+The symbol `null` represents a null [Value](#value). It's up to the
+implementation to decide how to represent this, but it generally signals the
+"absence" of a value. It is reasonable for an implementation to ignore null
+values altogether when deserializing.
+
+#### Example
+
+```kdl
+my-node null key=null
 ```
 
 ### Whitespace
