@@ -80,7 +80,7 @@ Identifiers are terminated by [Whitespace](#whitespace) or
 The following characters cannot be the first character in a bare
 [Identifier](#identifier):
 
-* Any of "/\\{};[]=,"
+* Any of "<>"
 * Any decimal digit (0-9)
 * Any [non-identifier characters](#non-identifier-characters)
 
@@ -299,8 +299,8 @@ node-props-and-args := '/-'? prop | value
 node-children := '/-'? '{' nodes '}'
 node-space := ws* escline ws* | ws+
 
-// FIXME: This needs adjustment to the new, unicode-friendly version
-identifier := [a-zA-Z] [a-zA-Z0-9!$%&'*+\-./:<>?@\^_|~]* | string
+identifier := (identifier-char - digit - [<>]) identifier-char*  | string
+identifier-char := unicode - digit - linespace - [\{};[]=,]
 prop := identifier '=' value
 value := string | raw_string | number | boolean | 'null'
 
