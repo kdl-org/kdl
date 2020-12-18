@@ -50,6 +50,10 @@ By contrast, Property order _SHOULD NOT_ matter to implementations.
 [Children](#children-block) should be used if an order-sensitive key/value
 data structure must be represented in KDL.
 
+Nodes _MAY_ be prefixed with `/-` to "comment out" the entire node, including
+its properties, arguments, and children, and make it act as plain whitespace,
+even if it spreads across multiple lines.
+
 Finally, a node is terminated by either a [Newline](#newline), a [Children
 Block](#children-block), a semicolon (`;`) or the end of the file/stream (an
 `EOF`).
@@ -102,7 +106,7 @@ Following a line continuation, processing of a Node can continue as usual.
 
 #### Example
 ```kdl
-my-node 1 2 \  // this is a comment
+my-node 1 2 \  // comments are ok after \
         3 4    // This is the actual end of the Node.
 ```
 
@@ -125,6 +129,9 @@ No other guarantees about order should be expected by implementers.
 Deserialized representations may iterate over properties in any order and
 still be spec-compliant.
 
+Properties _MAY_ be prefixed with `/-` to "comment out" the entire token and
+make it act as plain whitespace, even if it spreads across multiple lines.
+
 ### Argument
 
 An Argument is a bare [Value](#value) attached to a [Node](#node), with no
@@ -133,6 +140,9 @@ associated key. It shares the same space as [Properties](#properties).
 A Node may have any number of Arguments, which should be evaluated left to
 right. KDL implementations _MUST_ preserve the order of Arguments relative to
 each other (not counting Properties).
+
+Arguments _MAY_ be prefixed with `/-` to "comment out" the entire token and
+make it act as plain whitespace, even if it spreads across multiple lines.
 
 ### Example
 
