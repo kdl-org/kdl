@@ -94,7 +94,7 @@ The following characters cannot be used anywhere in a bare
 Line continuations allow [Nodes](#node) to be spread across multiple lines.
 
 A line continuation is one or more [whitespace](#whitespace) characters,
-followed by a `/` character. This character can then be followed by more
+followed by a `\` character. This character can then be followed by more
 [whitespace](#whitespace) and must be terminated by a [Newline](#newline)
 (including the Newline that is part of single-line comments).
 
