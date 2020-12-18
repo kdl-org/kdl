@@ -90,7 +90,7 @@ The following characters cannot be used anywhere in a bare
 [Identifier](#identifier):
 
 * Any codepoint with hexadecimal value `0x20` or below.
-* Any codepoint with hexadecimal value higher than `0x10FFF`.
+* Any codepoint with hexadecimal value higher than `0x10FFFF`.
 * Any of "\\{};[]=,"
 
 ### Line Continuation
