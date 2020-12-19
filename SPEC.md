@@ -292,9 +292,9 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ## Full Grammar
 
 ```
-nodes := linespace* (node nodes?)? linespace*
+nodes := linespace* node* linespace*
 
-node := ('/-' ws*)? identifier (node-space node-props-and-args)* (node-terminator | (node-space node-children))
+node := ('/-' ws*)? identifier (node-space node-props-and-args)* node-space* (node-terminator | node-children)
 node-props-and-args := ('/-' ws*)? (prop | value)
 node-children := ('/-' ws*)? '{' nodes '}'
 node-space := ws* escline ws* | ws+
