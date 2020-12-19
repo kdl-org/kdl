@@ -11,6 +11,13 @@ KDL is a node-oriented document language. Its niche and purpose overlaps with
 XML, and as do many of its semantics. You can use KDL both as a configuration
 language, and a data exchange or storage format, if you so choose.
 
+The bulk of this document is dedicated to a long-form description of all
+[Components](#components) of a KDL documeent. There is also a much more terse
+[Grammar](#full-grammar) at the end of the document that covers most of the
+rules, with some semantic exceptions involving the data model.
+
+KDL is designed to be easy to read _and_ easy to implement.
+
 ## Components
 
 ### Document
