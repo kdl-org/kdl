@@ -80,7 +80,6 @@ Identifiers are terminated by [Whitespace](#whitespace) or
 The following characters cannot be the first character in a bare
 [Identifier](#identifier):
 
-* Any of "<>"
 * Any decimal digit (0-9)
 * Any [non-identifier characters](#non-identifier-characters)
 
@@ -91,7 +90,7 @@ The following characters cannot be used anywhere in a bare
 
 * Any codepoint with hexadecimal value `0x20` or below.
 * Any codepoint with hexadecimal value higher than `0x10FFFF`.
-* Any of "\\{};[]=,"
+* Any of "\\<>{};[]=,"
 
 ### Line Continuation
 
@@ -300,7 +299,7 @@ node-children := '/-'? '{' nodes '}'
 node-space := ws* escline ws* | ws+
 
 identifier := (identifier-char - digit - [<>]) identifier-char*  | string
-identifier-char := unicode - digit - linespace - [\{};[]=,]
+identifier-char := unicode - digit - linespace - [\{}<>;[]=,]
 prop := identifier '=' value
 value := string | raw_string | number | boolean | 'null'
 
