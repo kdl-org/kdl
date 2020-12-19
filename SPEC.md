@@ -290,13 +290,13 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ## Full Grammar
 
 ```
-// FIXME: I don't... think this is quite right?
-nodes := linespace* (node (newline nodes)? linespace*)?
+nodes := linespace* (node nodes?)? linespace*
 
-node := '/-'? identifier (node-space node-props-and-args)* (node-space node-document)? single-line-comment?
-node-props-and-args := '/-'? prop | value
-node-children := '/-'? '{' nodes '}'
+node := '/-'? ws* identifier (node-space node-props-and-args)* (node-terminator | (node-space node-children))
+node-props-and-args := '/-'? ws* (prop | value)
+node-children := '/-'? ws* '{' nodes '}'
 node-space := ws* escline ws* | ws+
+node-terminator := single-line-comment | newline | ';'
 
 identifier := (identifier-char - digit - [<>]) identifier-char*  | string
 identifier-char := unicode - digit - linespace - [\{}<>;[]=,]
