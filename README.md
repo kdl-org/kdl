@@ -1,4 +1,4 @@
-# kdl - Kat's Document Language
+# KDL - The KDL Document Language
 
 kdl is a document language with xml-like semantics that looks like you're
 invoking a bunch of CLI commands!
