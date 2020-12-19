@@ -3,6 +3,8 @@
 This is the semi-formal specification for KDL, including the intended data
 model and the grammar.
 
+This document describes KDL version `1.0.0-pre.0`.
+
 ## Introduction
 
 KDL is a node-oriented document language. Its niche and purpose overlaps with
