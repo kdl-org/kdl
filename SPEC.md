@@ -298,7 +298,7 @@ node := ('/-' ws*)? identifier (node-space node-props-and-args)* (node-terminato
 node-props-and-args := ('/-' ws*)? (prop | value)
 node-children := ('/-' ws*)? '{' nodes '}'
 node-space := ws* escline ws* | ws+
-node-terminator := single-line-comment | newline | ';'
+node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := (identifier-char - digit - [<>]) identifier-char*  | string
 identifier-char := unicode - digit - linespace - [\{}<>;[]=,]
