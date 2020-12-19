@@ -1,12 +1,15 @@
 # kdl - Kat's Document Language
 
-kdl is a document language, mostly based on [SDLang](https://sdlang.org), with
-xml-like semantics that looks like you're invoking a bunch of CLI commands!
+kdl is a document language with xml-like semantics that looks like you're
+invoking a bunch of CLI commands!
 
 It's meant to be used both as a serialization format and a configuration
 language, and is relatively light on syntax compared to XML.
 
-This repository is the place for discussing the [specification](SPEC.md).
+There's a living [specification](SPEC.md), as well as
+[implementations](#implementations). The language is based on
+[SDLang](https://sdlang.org), with a number of modifications and
+clarifications on its syntax and behavior.
 
 ## Design and Discussion
 
@@ -22,56 +25,155 @@ to jump in and give us your 2 cents!
 1. Ease of de/serialization
 1. Ease of implementation
 
-These are the guiding principles behind the design of KDL, in order of
-importance. These principles will hopefully be useful in tie-breaking and
-otherwise directing specific decisions when it comes down to it. They are
-intentionally vague when it comes to specifics, but more concrete definitions
-for each one will be settled on as the project matures.
-
 ## Implementations
 
 * Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs)
 
 ## Overview
 
-The basic syntax is similar to SDLang:
+### Basics
+
+A KDL node is a node name, followed by zero or more "arguments", and
+children.
 
 ```kdl
-// This is a node with a single string value
 title "Hello, World"
+```
 
-// Multiple values are supported, too
+You can also have multiple values in a single node!
+
+```kdl
 bookmarks 12 15 188 1234
+```
 
-// Nodes can have properties
+Nodes can have properties.
+
+```kdl
 author "Alex Monad" email="alex@example.com" active=true
+```
 
-// Nodes can be arbitrarily nested
+And they can have nested child nodes, too!
+
+```kdl
 contents {
   section "First section" {
     paragraph "This is the first paragraph"
     paragraph "This is the second paragraph"
   }
 }
+```
 
-// Nodes can be separated into multiple lines
-title \
-  "Some title"
+Nodes without children are terminated by a newline, a semicolon, or the end of
+a file stream:
 
-// Comment formats:
+```kdl
+node1; node2; node3;
+```
 
-// C++ style
+### Values
+
+KDL supports 4 data types:
+
+* Strings: `"hello world"`
+* Numbers: `123.45`
+* Booleans: `true` and `false`
+* Null: `null`
+
+#### Strings
+It supports two different formats for string input: escaped and raw.
+
+```kdl
+node "this\nhas\tescapes"
+other r"C:\Users\zkat\"
+```
+Both types of string can be multiline as-is, without a different syntax:
+
+```kdl
+string "my
+multiline
+value"
+```
+
+And for raw strings, you can add any number of # after the r and the last " to
+disambiguate literal " characters:
+
+```kdl
+other-raw r#"hello"world"#
+```
+
+#### Numbers
+
+There's 4 ways to represent numbers in KDL. KDL does not prescribe any
+representation for these numbers, and it's entirely up to individual
+implementations whether to represent all numbers with a single type, or to
+have different representations for different forms.
+
+KDL has regular decimal-radix numbers, with optional decimal part, as well as
+an optional exponent.
+
+```kdl
+num 1.234e-42
+```
+
+And using the appropriate prefix, you can also enter hexadecimal, octal, and
+binary literals:
+
+```kdl
+my-hex 0xdeadbeef
+my-octal 0o755
+my-binary 0b10101101
+```
+
+Finally, all numbers can have underscores to help readability:
+
+```kdl
+bignum 1_000_000
+```
+
+### Comments
+
+KDL supports C-style comments, both line-based and multiline. Multiline
+comments can be nested.
+
+```kdl
+// C style
 
 /*
 C style multiline
 */
 
 tag /*foo=true*/ bar=false
+
+/*/*
+hello
+*/*/
 ```
 
-But kdl changes a few details:
+On top of that, KDL supports `/-` "slashdash" comments, which can be used to
+comment out individual nodes, arguments, or children:
 
 ```kdl
+// This entire node and its children are all commented out.
+/-mynode "foo" key=1 {
+  a
+  b
+  c
+}
+
+mynode /-"commented" "not commented" /-key="value" /-{
+  a
+  b
+}
+```
+
+### More Details
+
+```kdl
+// Nodes can be separated into multiple lines
+title \
+  "Some title"
+
+
 // Files must be utf8 encoded!
 smile "😁"
 
@@ -80,64 +182,15 @@ smile "😁"
 "!@#$@$%Q#$%~@!40" "1.2.3" "!!!!!"=true
 
 // The following is a legal bare identifier:
-foo123~!@#$%^&*.:'|<>/?+ "weeee"
+foo123~!@#$%^&*.:'|/?+ "weeee"
+
+// And you can also use unicode!
+ノード　お名前＝"☜(ﾟヮﾟ☜)"
 
 // kdl specifically allows properties and values to be
 // interspersed with each other, much like CLI commands.
 foo bar=true "baz" quux=false 1 2 3
-
-// strings can be multiline as-is, without a different syntax.
-string "my
-multiline
-value"
-
-// raw/unescaped strings use the "r" prefix on string literals and
-// otherwise behave the same, including multiline support.
-raw r"C:\Users\kdl"
-
-// You can add any number of # after the r and the last " to
-// disambiguate literal " characters.
-other-raw r#"hello"world"#
-
-// There is a single decimal number type, much like JSON's.
-num 1.234e-42
-
-// Numbers can have underscores to help readability:
-bignum 1_000_000
-
-// There is additional support for literal hexadecimal, octal, and binary input.
-my-hex 0xdeadbeef
-my-octal 0o755
-my-binary 0b1010_1101
-
-// You can comment out individual nodes with /-. In the case below, everything
-// up until the closing `}` becomes commented.
-/-mynode "foo" key=1 {
-  a
-  b
-  c
-}
-
-// You can apply /- ("slashdash") comments to individual values, properties,
-// or child blocks, too:
-mynode /-"commented" "not commented" /-key="value" /-{
-  a
-  b
-}
-
 ```
-
-The following SDLang features are removed altogether:
-
-* "Anonymous" nodes
-* Binary data literals
-* Date/time formats
-* `on` and `off` booleans
-* Backtick strings
-* Semicolons
-* Namespaces with `:`
-* Shell style (`#`) and Lua-style (`--`) comments
-* Distinction between 32/64/128-bit numbers. There's just numbers.
 
 ## License
 
