@@ -294,9 +294,9 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ```
 nodes := linespace* (node nodes?)? linespace*
 
-node := '/-'? ws* identifier (node-space node-props-and-args)* (node-terminator | (node-space node-children))
-node-props-and-args := '/-'? ws* (prop | value)
-node-children := '/-'? ws* '{' nodes '}'
+node := ('/-' ws*)? identifier (node-space node-props-and-args)* (node-terminator | (node-space node-children))
+node-props-and-args := ('/-' ws*)? (prop | value)
+node-children := ('/-' ws*)? '{' nodes '}'
 node-space := ws* escline ws* | ws+
 node-terminator := single-line-comment | newline | ';'
 
