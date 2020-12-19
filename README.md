@@ -1,6 +1,6 @@
 # KDL - The KDL Document Language
 
-kdl is a document language with xml-like semantics that looks like you're
+KDL is a document language with xml-like semantics that looks like you're
 invoking a bunch of CLI commands!
 
 It's meant to be used both as a serialization format and a configuration
@@ -13,9 +13,9 @@ clarifications on its syntax and behavior.
 
 ## Design and Discussion
 
-kdl is still extremely new, and discussion about the format should happen over
-on the [discussions page](https://github.com/kdoclang/kdl/discussions). Feel free
-to jump in and give us your 2 cents!
+KDL is still extremely new, and discussion about the format should happen over
+on the [discussions page](https://github.com/kdoclang/kdl/discussions). Feel
+free to jump in and give us your 2 cents!
 
 ## Design Principles
 
