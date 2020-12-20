@@ -14,7 +14,7 @@ clarifications on its syntax and behavior.
 ## Design and Discussion
 
 KDL is still extremely new, and discussion about the format should happen over
-on the [discussions page](https://github.com/kdoclang/kdl/discussions). Feel
+on the [discussions page](https://github.com/kdl-org/kdl/discussions). Feel
 free to jump in and give us your 2 cents!
 
 ## Design Principles
