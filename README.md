@@ -29,6 +29,10 @@ free to jump in and give us your 2 cents!
 
 * Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs)
 
+## Editor Support
+
+* [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)
+
 ## Overview
 
 ### Basics
