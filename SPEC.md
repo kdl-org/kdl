@@ -181,6 +181,7 @@ In addition to literal code points, a number of "escapes" are supported.
 interpreted as described in the following table:
 
 | Name | Escape | Code Pt |
+|------|--------|---------|
 | TODO | `\n`   | TODO |
 | TODO | `\r`   | TODO |
 | TODO | `\t`   | TODO |
