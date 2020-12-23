@@ -28,6 +28,7 @@ free to jump in and give us your 2 cents!
 ## Implementations
 
 * Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs)
+* JavaScript: [kdljs](https://github.com/kdl-org/kdljs)
 
 ## Editor Support
 
