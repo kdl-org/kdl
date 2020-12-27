@@ -99,7 +99,7 @@ The following characters cannot be used anywhere in a bare
 
 * Any codepoint with hexadecimal value `0x20` or below.
 * Any codepoint with hexadecimal value higher than `0x10FFFF`.
-* Any of "\\<>{};[]=,"
+* Any of "\\<>{};[]=,\""
 
 ### Line Continuation
 
@@ -308,12 +308,14 @@ node-children := ('/-' ws*)? '{' nodes '}'
 node-space := ws* escline ws* | ws+
 node-terminator := single-line-comment | newline | ';' | eof
 
-identifier := (identifier-char - digit - [<>]) identifier-char*  | string
-identifier-char := unicode - digit - linespace - [\{}<>;[]=,]
+identifier := string | bare-identifier
+bare-identifier := (identifier-char - digit) identifier-char*
+identifier-char := unicode - linespace - [\{}<>;[]=,"]
 prop := identifier '=' value
-value := string | raw_string | number | boolean | 'null'
+value := string | number | boolean | 'null'
 
-string := '"' character* '"'
+string := raw-string | escaped-string
+escaped-string := '"' character* '"'
 character := '\' escape | [^\"]
 escape := ["\\/bfnrt] | 'u{' hex-digit{1, 6} '}'
 hex-digit := [0-9a-fA-F]
