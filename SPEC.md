@@ -180,16 +180,16 @@ In addition to literal code points, a number of "escapes" are supported.
 "Escapes" are the character `\` followed by another character, and are
 interpreted as described in the following table:
 
-| Name | Escape | Code Pt |
-|------|--------|---------|
-| TODO | `\n`   | TODO |
-| TODO | `\r`   | TODO |
-| TODO | `\t`   | TODO |
-| TODO | `\\`   | TODO |
-| TODO | `\"`   | TODO |
-| TODO | `\b`   | TODO |
-| TODO | `\f`   | TODO |
-| TODO | `\u{(0-6 hex chars)}` | Code point described by hex characters, up to `10FFF` |
+| Name                          | Escape | Code Pt  |
+|-------------------------------|--------|----------|
+| Line Feed                     | `\n`   | `U+000A` |
+| Carriage Return               | `\r`   | `U+000D` |
+| Character Tabulation (Tab)    | `\t`   | `U+0009` |
+| Reverse Solidus (Backslash)   | `\\`   | `U+005C` |
+| Quotation Mark (Double Quote) | `\"`   | `U+0022` |
+| Backspace                     | `\b`   | `U+0008` |
+| Form Feed                     | `\f`   | `U+000C` |
+| Unicode Escape                | `\u{(0-6 hex chars)}` | Code point described by hex characters, up to `10FFF` |
 
 ### Raw String
 
