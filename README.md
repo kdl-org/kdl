@@ -201,6 +201,10 @@ foo bar=true "baz" quux=false 1 2 3
 
 ## FAQ
 
+#### How do you pronounce KDL?
+
+Same as "cuddle".
+
 #### Why yet another document language?
 
 Because nothing out there felt quite right. The closest one I found was
