@@ -198,16 +198,17 @@ support `\`-escapes. They otherwise share the same properties as far as
 literal [Newline](#newline) characters go, and the requirement of UTF-8
 representation.
 
-Raw String literals are represented as `r"`, followed by zero or more `#`
-characters, followed by any number of UTF-8 literals. The string is then
+Raw String literals are represented as `r`, followed by zero or more `#`
+characters, followed by `"`, followed by any number of UTF-8 literals. The string is then
 closed by a `"` followed by a _matching_ number of `#` characters. This means
 that the string sequence `"` or `"#` and such must not match the closing `"`
-with the same or more `#` characters as the opening `r"`.
+with the same or more `#` characters as the opening `r`.
 
 #### Example
 
 ```kdl
-my-string r#"hello\n\r\asd"world"#
+just-escapes r"\n will be literal"
+quotes-and-escapes r#"hello\n\r\asd"world"#
 ```
 
 ### Number
