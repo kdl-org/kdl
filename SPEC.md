@@ -186,6 +186,7 @@ interpreted as described in the following table:
 | Carriage Return               | `\r`   | `U+000D` |
 | Character Tabulation (Tab)    | `\t`   | `U+0009` |
 | Reverse Solidus (Backslash)   | `\\`   | `U+005C` |
+| Solidus (Forwardslash)        | `\/`   | `U+002F` |
 | Quotation Mark (Double Quote) | `\"`   | `U+0022` |
 | Backspace                     | `\b`   | `U+0008` |
 | Form Feed                     | `\f`   | `U+000C` |
