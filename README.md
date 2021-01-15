@@ -187,7 +187,7 @@ smile "😁"
 foo123~!@#$%^&*.:'|/?+ "weeee"
 
 // And you can also use unicode!
-ノード　お名前＝"☜(ﾟヮﾟ☜)"
+ノード　お名前="☜(ﾟヮﾟ☜)"
 
 // kdl specifically allows properties and values to be
 // interspersed with each other, much like CLI commands.
