@@ -221,13 +221,13 @@ numbers.
 
 There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
 
+* All numbers may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
 * Binary numbers start with `0b` and only allow `0` and `1` as digits, which may be separated by `_`. They represent numbers in radix 2.
 * Octal numbers start with `0o` and only allow digits between `0` and `7`, which may be separated by `_`. They represent numbers in radix 8.
 * Hexadecimal numbers start with `0x` and allow digits between `0` and `9`, as well as letters `A` through `F`, in either lower or upper case, which may be separated by `_`. They represent numbers in radix 16.
 * Decimal numbers are a bit more special:
-    * They may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
     * They have no radix prefix.
-    * They use digits `0` through `9`.
+    * They use digits `0` through `9`, which may be separated by `_`.
     * They may optionally include a decimal separator `.`, followed by more digits.
     * They may optionally be followed by `E` or `e`, an optional `-` or `+`, and more digits, to represent an exponent value.
 
@@ -333,9 +333,9 @@ exponent := ('e' | 'E') integer
 integer := sign? [0-9] [0-9_]*
 sign := '+' | '-'
 
-hex := '0x' hex-digit (hex-digit | '_')*
-octal := '0o' [0-7] [0-7_]*
-binary := '0b' ('0' | '1') ('0' | '1' | '_')*
+hex := sign? '0x' hex-digit (hex-digit | '_')*
+octal := sign? '0o' [0-7] [0-7_]*
+binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 
 boolean := 'true' | 'false'
 
