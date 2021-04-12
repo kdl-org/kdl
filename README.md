@@ -26,6 +26,7 @@ free to jump in and give us your 2 cents!
 * Dart: [kdl-dart](https://github.com/jellymann/kdl-dart)
 * Java: [kdl4j](https://github.com/hkolbeck/kdl4j)
 * PHP: [kdl-php](https://github.com/kdl-org/kdl-php)
+* Python: [kdl-py](https://github.com/daeken/kdl-py)
 
 ## Editor Support
 
