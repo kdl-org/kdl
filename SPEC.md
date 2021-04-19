@@ -190,7 +190,7 @@ interpreted as described in the following table:
 | Quotation Mark (Double Quote) | `\"`   | `U+0022` |
 | Backspace                     | `\b`   | `U+0008` |
 | Form Feed                     | `\f`   | `U+000C` |
-| Unicode Escape                | `\u{(0-6 hex chars)}` | Code point described by hex characters, up to `10FFFF` |
+| Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, up to `10FFFF` |
 
 ### Raw String
 
