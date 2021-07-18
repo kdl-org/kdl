@@ -267,6 +267,8 @@ forgiving syntax without being so flexible as to allow certain classes of
 unfortunate mistakes. It also has much more flexibility around how to
 represent data.
 
+If you need to interoperate with a service that consumes or emits JSON, or for some other reason have need to write "JSON in KDL", [we have JiK, an official microsyntax for losslessly encoding JSON](JSON-IN-KDL.md).
+
 #### What about TOML?
 
 It nests very poorly. It doesn't fare well with large files.
