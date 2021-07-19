@@ -3,17 +3,17 @@ JSON-in-KDL (JiK)
 
 This specification describes a canonical way to losslessly encode [JSON](https://json.org) in [KDL](https://kdl.dev). While this isn't a very useful thing to want to do on its own, it's occasionally useful when using a KDL toolchain while speaking with a JSON-consuming or -emitting service.
 
-This is version 1.0.0 of JiK.
+This is version 1.0.1 of JiK.
 
 JSON-in-KDL (JiK from now on) is a kdl microsyntax consisting of three types of nodes:
 
-* literal nodes, with `_` as the nodename
+* literal nodes, with `-` as the nodename
 * array nodes, with `array` as the nodename
 * object nodes, with `object` as the nodename
 
 ----
 
-Literal nodes are used to represent a JSON literal, which luckily KDL's literal syntax is a superset of. They contain a single value, the literal they're representing. For example, to represent the JSON literal `true`, you'd write `_ true` in JiK.
+Literal nodes are used to represent a JSON literal, which luckily KDL's literal syntax is a superset of. They contain a single value, the literal they're representing. For example, to represent the JSON literal `true`, you'd write `- true` in JiK.
 
 (In many cases this isn't necessary, and KDL literals can be directly used instead. Literal nodes are necessary only for a top-level literal, or to intersperse literals with arrays or objects inside an array or object node.)
 
@@ -25,9 +25,9 @@ This means that simple arrays of literals can be written compactly and simply; a
 
 ```kdl
 array {
-	_ 1
+	- 1
 	array true false
-	_ 3
+	- 3
 }
 ```
 
@@ -36,7 +36,7 @@ The two methods of writing children can be mixed, pulling the prefix of the arra
 ```kdl
 array 1 {
 	array true false
-	_ 3
+	- 3
 }
 ```
 
@@ -52,8 +52,8 @@ The children of an object node have a slightly modified syntax: they must contai
 
 ```kdl
 object {
-	_ "foo" 1
-	_ "bar" true
+	- "foo" 1
+	- "bar" true
 }
 ```
 
@@ -64,7 +64,7 @@ object {
 	array "foo" 1 2 {
 		object bar=3
 	}
-	_ "baz" 4
+	- "baz" 4
 }
 ```
 
