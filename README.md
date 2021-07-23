@@ -22,8 +22,8 @@ free to jump in and give us your 2 cents!
 
 * Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs)
 * JavaScript: [kdljs](https://github.com/kdl-org/kdljs)
-* Ruby: [kdl-rb](https://github.com/jellymann/kdl-rb)
-* Dart: [kdl-dart](https://github.com/jellymann/kdl-dart)
+* Ruby: [kdl-rb](https://github.com/danini-the-panini/kdl-rb)
+* Dart: [kdl-dart](https://github.com/danini-the-panini/kdl-dart)
 * Java: [kdl4j](https://github.com/hkolbeck/kdl4j)
 * PHP: [kdl-php](https://github.com/kdl-org/kdl-php)
 * Python: [kdl-py](https://github.com/daeken/kdl-py)
