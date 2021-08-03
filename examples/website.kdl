@@ -1,4 +1,4 @@
-doctype "html"
+!doctype "html"
 html lang="en" {
     head {
         meta charset="utf-8"
@@ -16,20 +16,20 @@ html lang="en" {
             }
             section class="kdl-section" id="description" {
                 p {
-                    text "kdl is a document language, mostly based on "
+                    - "kdl is a document language, mostly based on "
                     a href="https://sdlang.org" "SDLang"
-                    text " with xml-like semantics that looks like you're invoking a bunch of CLI commands"
+                    - " with xml-like semantics that looks like you're invoking a bunch of CLI commands"
                 }
                 p "It's meant to be used both as a serialization format and a configuration language, and is relatively light on syntax compared to XML."
             }
             section class="kdl-section" id="design-and-discussion" {
                 h2 "Design and Discussion"
                 p {
-                    text "kdl is still extremely new, and discussion about the format should happen over on the "
+                    - "kdl is still extremely new, and discussion about the format should happen over on the "
                     a href="https://github.com/kdoclang/kdl/discussions" {
-                        text "discussions"
+                        - "discussions"
                     }
-                    text " page in the Github repo. Feel free to jump in and give us your 2 cents!"
+                    - " page in the Github repo. Feel free to jump in and give us your 2 cents!"
                 }
             }
             section class="kdl-section" id="design-principles" {
