@@ -13,7 +13,7 @@ XML has several types of nodes, corresponding to certain KDL constructs:
 
 * Elements, which have an element name, zero or more attribute, and zero or more children. These are encoded directly as KDL nodes, using the nodename, properties, and children nodes.
 * Raw text. In "pure" XML dialects, where raw text only appears as the sole child of an element (never mixed with other elements as siblings), this is generally encoded as a final string argument in a KDL node; in "mixed" XML dialects, it can be encoded as a special KDL node with the name `-`.
-* Comments. These are encoded as KDL nodes with the name `!`.
+* Comments are encoded as KDL block comments. (Or as an actual node type, for some use-cases.)
 * Processing Instructions. These are encoded similarly to elements if their contents are sufficiently structured, with a `?` in front of their node name. If they're not sufficiently structured, their contents are just strings.
 * Doctypes. These are encoded like unstructured PIs, just with the node name `!doctype`.
 
@@ -43,7 +43,9 @@ CDATA sections are not preserved in this encoding, as they are merely a source c
 
 -----
 
-Comments are encoded as a special node name `!`, with a single unnamed string argument containing the comment's value (everything between the `<!--` and the `-->`). For example, `<!-- comment! -->` is encoded as the node `! " comment! "`.
+Comments are encoded as KDL multiline comments.  For example, `<!-- comment! -->` is encoded as `/* comment! */`.
+
+If you are using a KDL toolchain that discards comments, and you *specifically* want to reflect the comment into XML, comments can be encoded as a special node name `!`, with a single unnamed string argument containing the comment's value (everything between the `<!--` and the `-->`). For example, `<!-- comment! -->` is encoded as the node `! " comment! "`.
 
 ----
 
@@ -65,13 +67,13 @@ Converting XiK back to XML is a trivial process:
 
 * Element nodes are emitted as XML start tags, with the appropriate element name and attributes, followed by their contents emitted in order, followed by the appropriate end tag. If there are no contents, they should be emitted as a self-closing tag.
 * Raw text is escaped appropriately when emitted. At the converter's discretion, CDATA segments can be used to encode any segment of raw text, as they deem fit. (This can be heuristic, based on the density of escapes required; or specialized to an output language, like always encoding the contents of HTML `script` and `style` elements with CDATA; or via any other criteria.)
-* Comments are emitted as their unnamed string value surrounded by `<!--` and `-->`, escaped as appropriate.
+* Comments are emitted as their contents (if a KDL comment) or their unnamed string value (if a `!` node) surrounded by `<!--` and `-->`, escaped as appropriate.
 * PIs are emitted as a `<` followed by their node name, then a space, then either their attributes escaped as appropriate (if "structured") or the contents of their string value (if "unstructured"), and finally a `?>`.
 * Doctypes are emitted as `<!DOCTYPE `, followed by the contents of their string value escaped as appropriate, and finally a `>`.
 
 Only valid XiK nodes can be encoded to XML; if a XiK document contains an invalid node, the entire document must fail to encode, rather than "guessing" at the intent. A XiK node is valid if the XML element it represents is well-formed, and it has the correct KDL structure:
 
-* Element nodes must contain: any number of properties with string values, and either a single unnamed string value as its final value, *or* any number of child nodes.
+* Element nodes must contain any number of properties with string values, and either a single unnamed string value as its final value, *or* any number of child nodes.
 * Comment nodes must contain a single unnamed string value and nothing else.
 * "Structured" PI nodes must contain any number of properties with string values, and nothing else. "Unstructured" PI nodes must contain nothing.
 * Doctype nodes must contain nothing.
