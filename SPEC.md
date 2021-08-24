@@ -311,7 +311,7 @@ node-space := ws* escline ws* | ws+
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
-bare-identifier := (identifier-char - digit) identifier-char*
+bare-identifier := (identifier-char - digit - sign) identifier-char*
 identifier-char := unicode - linespace - [\{}<>;[]=,"]
 prop := identifier '=' value
 value := string | number | boolean | 'null'
