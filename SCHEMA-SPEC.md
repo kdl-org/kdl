@@ -30,6 +30,8 @@ None.
 #### Children
 
 * [`node`](#node-node) - zero or more toplevel nodes for the KDL document this schema describes.
+* `node-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of child nodes.
+* `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `false`.
 
 ### `node` node
 
@@ -51,6 +53,8 @@ another node.
 
 * `min` (optional): Minimum number of this kind of node (or any node, if the name is missing) allowed in the parent's children block.
 * `max` (optional): Maximum number of this kind of node (or any node, if the name is missing) allowed in the parent's children block.
+* `prop-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of properties.
+* `other-props-allowed` (optional): Whether to allow props other than the ones explicitly listed here. Defaults to `false`.
 * [`prop`](#prop-node) - zero or more properties for this node.
 * [`value`](#value-node) - zero or more values for this node.
 * [`children`](#children-node) - zero or more children for this node.
@@ -71,9 +75,8 @@ Represents a property of a node, which is a key/value pair in KDL.
 
 #### Children
 
-* `type` (optional): A string denoting the type of the property value.
-* `enum` (optional): A specific list of allowed values for this property. May be heterogenous as long as it agrees with the `type`, if specified.
 * `required` (optional): A boolean value indicating whether this property is required.
+* Any [validation node](#validation-nodes).
 
 ### `value` node
 
@@ -91,10 +94,9 @@ None.
 
 #### Children
 
-* `type` (optional): A string denoting the type of the value.
-* `enum` (optional): A specific list of allowed values for this value. May be heterogenous as long as it agrees with the `type`, if specified.
 * `min` (optional): Minimum number of values allowed.
 * `max` (optional): Maximum number of values allowed.
+* Any [validation node](#validation-nodes).
 
 ### `children` node
 
@@ -113,3 +115,31 @@ None.
 #### Children
 
 * [`node`](#node-node) - zero or more child nodes.
+* `node-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of child nodes.
+* `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `false`.
+
+### Validation Nodes
+
+The following nodes are shared validations between props and values, and can
+be used as children to either definition. They are also used to verify node
+and property names when the `node-names` or `prop-names` options are activated.
+
+#### Generic validations
+
+* `type`: A string denoting the type of the property value.
+* `enum`: A specific list of allowed values for this property. May be heterogenous as long as it agrees with the `type`, if specified.
+
+#### String validations
+
+* `pattern`: PCRE (Regex) pattern or patterns to test prop values against.
+* `min-length`: Minimum length, if a string.
+* `max-length`: Maximum length, if a string.
+* `format`: Intended data format, if the value is a string.
+
+#### Number validations
+
+* `%`: Only used for numeric values. Constrains them to be multiples of the given number(s).
+* `>`: Greater than.
+* `>=`: Greater than or equal to.
+* `<`: Less than.
+* `<=`: Less than or equal to.

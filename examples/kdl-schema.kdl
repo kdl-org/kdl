@@ -9,6 +9,17 @@ document description="KDL Schema KDL schema in KDL" schema-url="https://github.c
             type "string"
         }
         children id="node-children" {
+            node "node-names" description="Validations to apply specifically to arbitrary node names" {
+                children ref="#validations"
+            }
+            node "other-nodes-allowed" description="Whether to allow child nodes other than the ones explicitly listed. Defaults to 'false'." {
+                max 1
+                value {
+                    min 1
+                    max 1
+                    type "boolean"
+                }
+            }
             node "node" description="A child node belonging either to `document` or to another `node`. Nodes may be anonymous." {
                 value description="The name of the node. If a node name is not supplied, the node rules apply to _all_ nodes belonging to the parent." {
                     type "string"
@@ -24,15 +35,10 @@ document description="KDL Schema KDL schema in KDL" schema-url="https://github.c
                     type "string"
                 }
                 children {
-                    node "other-properties-allowed" description="Whether to allow properties other than the ones explicitly listed. Defaults to 'false'." {
-                        max 1
-                        value {
-                            min 1
-                            max 1
-                            type "boolean"
-                        }
+                    node "prop-names" description="Validations to apply specifically to arbitrary property names" {
+                        children ref="#validations"
                     }
-                    node "other-children-allowed" description="Whether to allow child nodes other than the ones explicitly listed. Defaults to 'false'." {
+                    node "other-props-allowed" description="Whether to allow properties other than the ones explicitly listed. Defaults to 'false'." {
                         max 1
                         value {
                             min 1
@@ -78,9 +84,6 @@ document description="KDL Schema KDL schema in KDL" schema-url="https://github.c
                                     type "boolean"
                                 }
                             }
-                            node "property-names" description="Validations to apply specifically to arbitrary node names" {
-                                children ref="#validations"
-                            }
                         }
                         children id="validations" description="General value validations." {
                             node "type" description="The type for this prop's value." {
@@ -94,14 +97,6 @@ document description="KDL Schema KDL schema in KDL" schema-url="https://github.c
                                 max 1
                                 value description="Enumeration choices" {
                                     min 1
-                                }
-                            }
-                            node "required" description="Whether this property is required if its parent is present." {
-                                max 1
-                                value {
-                                    min 1
-                                    max 1
-                                    type "boolean"
                                 }
                             }
                             node "pattern" description="PCRE (Regex) pattern or patterns to test prop values against." {
@@ -133,22 +128,14 @@ document description="KDL Schema KDL schema in KDL" schema-url="https://github.c
                                     enum "date-time" "date" "time" "email" "idn-email" "hostname" "ipv4" "ipv6" "uri" "uri-reference" "iri", "iri-reference" "uri-template" "kdl-pointer" "relative-kdl-pointer" "regex" "uuid"
                                 }
                             }
-                            node "multiple-of" description="Only used for numeric values. Constrains them to be multiples of the given number(s)" {
+                            node "%" description="Only used for numeric values. Constrains them to be multiples of the given number(s)" {
                                 max 1
                                 value {
                                     min 1
                                     type "number"
                                 }
                             }
-                            node "gt" description="Only used for numeric values. Constrains them to be greater than the given number(s)" {
-                                max 1
-                                value {
-                                    min 1
-                                    max 1
-                                    type "number"
-                                }
-                            }
-                            node "gte" description="Only used for numeric values. Constrains them to be greater than or equal to the given number(s)" {
+                            node ">" description="Only used for numeric values. Constrains them to be greater than the given number(s)" {
                                 max 1
                                 value {
                                     min 1
@@ -156,7 +143,7 @@ document description="KDL Schema KDL schema in KDL" schema-url="https://github.c
                                     type "number"
                                 }
                             }
-                            node "lt" description="Only used for numeric values. Constrains them to be less than the given number(s)" {
+                            node ">=" description="Only used for numeric values. Constrains them to be greater than or equal to the given number(s)" {
                                 max 1
                                 value {
                                     min 1
@@ -164,7 +151,15 @@ document description="KDL Schema KDL schema in KDL" schema-url="https://github.c
                                     type "number"
                                 }
                             }
-                            node "lte" description="Only used for numeric values. Constrains them to be less than or equal to the given number(s)" {
+                            node "<" description="Only used for numeric values. Constrains them to be less than the given number(s)" {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "number"
+                                }
+                            }
+                            node "<=" description="Only used for numeric values. Constrains them to be less than or equal to the given number(s)" {
                                 max 1
                                 value {
                                     min 1
