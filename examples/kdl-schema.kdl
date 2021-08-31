@@ -125,7 +125,7 @@ document description="KDL Schema KDL schema in KDL" schema-url="https://github.c
                                     min 1
                                     type "string"
                                     // https://json-schema.org/understanding-json-schema/reference/string.html#format
-                                    enum "date-time" "date" "time" "email" "idn-email" "hostname" "ipv4" "ipv6" "uri" "uri-reference" "iri", "iri-reference" "uri-template" "kdl-pointer" "relative-kdl-pointer" "regex" "uuid"
+                                    enum "date-time" "date" "time" "email" "idn-email" "hostname" "idn-hostname" "ipv4" "ipv6" "uri" "uri-reference" "iri", "iri-reference" "uri-template" "regex" "uuid"
                                 }
                             }
                             node "%" description="Only used for numeric values. Constrains them to be multiples of the given number(s)" {
