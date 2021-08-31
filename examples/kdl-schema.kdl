@@ -17,19 +17,13 @@ document description="KDL Schema KDL schema in KDL" schema-url="https://github.c
                 prop "description" description="A description of this node's purpose." {
                     type "string"
                 }
-                prop "id" description="globally-unique ID of this node." {
+                prop "id" description="A globally-unique ID for this node." {
                     type "string"
                 }
-                prop "ref" description="globally unique reference to this node." {
+                prop "ref" description="A globally unique reference to another node." {
                     type "string"
                 }
                 children {
-                    node "enum" description="An enumeration of possible values" {
-                        max 1
-                        value description="Enumeration choices" {
-                            min 1
-                        }
-                    }
                     node "min" description="minimum number of instances of this node in its parent's children." {
                         max 1
                         value {
