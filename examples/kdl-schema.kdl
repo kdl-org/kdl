@@ -1,0 +1,218 @@
+document description="KDL Schema KDL schema in KDL" schema-url="https://github.com/zkat/kdl" {
+    node "document" {
+        min 1
+        max 1
+        prop "schema-url" description="URL where you can find this schema. Informational only." {
+            type "url"
+        }
+        prop "description" description="General purpose and description for this document schema." {
+            type "string"
+        }
+        children id="node-children" {
+            node "node-names" description="Validations to apply specifically to arbitrary node names" {
+                children ref="#validations"
+            }
+            node "other-nodes-allowed" description="Whether to allow child nodes other than the ones explicitly listed. Defaults to 'false'." {
+                max 1
+                value {
+                    min 1
+                    max 1
+                    type "boolean"
+                }
+            }
+            node "node" description="A child node belonging either to `document` or to another `node`. Nodes may be anonymous." {
+                value description="The name of the node. If a node name is not supplied, the node rules apply to _all_ nodes belonging to the parent." {
+                    type "string"
+                    max 1
+                }
+                prop "description" description="A description of this node's purpose." {
+                    type "string"
+                }
+                prop "id" description="A globally-unique ID for this node." {
+                    type "string"
+                }
+                prop "ref" description="A globally unique reference to another node." {
+                    type "string"
+                }
+                children {
+                    node "prop-names" description="Validations to apply specifically to arbitrary property names" {
+                        children ref="#validations"
+                    }
+                    node "other-props-allowed" description="Whether to allow properties other than the ones explicitly listed. Defaults to 'false'." {
+                        max 1
+                        value {
+                            min 1
+                            max 1
+                            type "boolean"
+                        }
+                    }
+                    node "min" description="minimum number of instances of this node in its parent's children." {
+                        max 1
+                        value {
+                            min 1
+                            max 1
+                            type "number"
+                        }
+                    }
+                    node "max" description="maximum number of instances of this node in its parent's children." {
+                        max 1
+                        value {
+                            min 1
+                            max 1
+                            type "number"
+                        }
+                    }
+                    node "prop" description="A node property key/value pair." {
+                        value description="The property key." {
+                            type "string"
+                        }
+                        prop "id" description="A globally-unique ID of this property." {
+                            type "string"
+                        }
+                        prop "ref" description="A globally unique reference to another property node." {
+                            type "string"
+                        }
+                        prop "description" description="A description of this property's purpose." {
+                            type "string"
+                        }
+                        children description="Property-specific validations." {
+                            node "required" description="Whether this property is required if its parent is present." {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "boolean"
+                                }
+                            }
+                        }
+                        children id="validations" description="General value validations." {
+                            node "type" description="The type for this prop's value." {
+                                max 1
+                                value {
+                                    min 1
+                                    type "string"
+                                }
+                            }
+                            node "enum" description="An enumeration of possible values" {
+                                max 1
+                                value description="Enumeration choices" {
+                                    min 1
+                                }
+                            }
+                            node "pattern" description="PCRE (Regex) pattern or patterns to test prop values against." {
+                                value {
+                                    min 1
+                                    type "string"
+                                }
+                            }
+                            node "min-length" description="Minimum length of prop value, if it's a string." {
+                                max 1
+                                value {
+                                    min 1
+                                    type "number"
+                                }
+                            }
+                            node "max-length" description="Maximum length of prop value, if it's a string." {
+                                max 1
+                                value {
+                                    min 1
+                                    type "number"
+                                }
+                            }
+                            node "format" description="Intended data format, if the value is a string." {
+                                max 1
+                                value {
+                                    min 1
+                                    type "string"
+                                    // https://json-schema.org/understanding-json-schema/reference/string.html#format
+                                    enum "date-time" "date" "time" "email" "idn-email" "hostname" "idn-hostname" "ipv4" "ipv6" "uri" "uri-reference" "iri", "iri-reference" "uri-template" "regex" "uuid"
+                                }
+                            }
+                            node "%" description="Only used for numeric values. Constrains them to be multiples of the given number(s)" {
+                                max 1
+                                value {
+                                    min 1
+                                    type "number"
+                                }
+                            }
+                            node ">" description="Only used for numeric values. Constrains them to be greater than the given number(s)" {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "number"
+                                }
+                            }
+                            node ">=" description="Only used for numeric values. Constrains them to be greater than or equal to the given number(s)" {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "number"
+                                }
+                            }
+                            node "<" description="Only used for numeric values. Constrains them to be less than the given number(s)" {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "number"
+                                }
+                            }
+                            node "<=" description="Only used for numeric values. Constrains them to be less than or equal to the given number(s)" {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "number"
+                                }
+                            }
+                        }
+                    }
+                    node "value" description="one or more direct node values" {
+                        prop "id" description="A globally-unique ID of this value." {
+                            type "string"
+                        }
+                        prop "ref" description="A globally unique reference to another value node." {
+                            type "string"
+                        }
+                        prop "description" description="A description of this property's purpose." {
+                            type "string"
+                        }
+                        children ref="#validations"
+                        children description="Node value-specific validations" {
+                            node "min" description="minimum number of values for this node." {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "number"
+                                }
+                            }
+                            node "max" description="maximum number of values for this node." {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "number"
+                                }
+                            }
+                        }
+                    }
+                    node "children" {
+                        prop "id" description="A globally-unique ID of this children node." {
+                            type "string"
+                        }
+                        prop "ref" description="A globally unique reference to another children node." {
+                            type "string"
+                        }
+                        prop "description" description="A description of this these children's purpose." {
+                            type "string"
+                        }
+                        children ref="#node-children"
+                    }
+                }
+            }
+        }
+    }
+}
