@@ -4,60 +4,146 @@
 
 ```kdl
 document description="KDL Schema KDL schema in KDL" schema-url="https://github.com/zkat/kdl" {
-    node "document" min=1 max=1 {
-        prop "schema-url" type="url" \
-            description="URL where you can find this schema. Informational only."
-        prop "description" type="string" \
-            description="General purpose and description for this document schema."
+    node "document" {
+        min 1
+        max 1
+        prop "schema-url" description="URL where you can find this schema. Informational only." {
+            type "url"
+        }
+        prop "description" description="General purpose and description for this document schema." {
+            type "string"
+        }
         children id="node-children" {
-            node "node" id="node" {
-                value min=1 max=1 type="string" \
-                    description="The name of the node."
-                prop "description" type="string" \
-                    description="A description of this node's purpose."
-                prop "id" type="string" \
-                    description="globally-unique ID of this node."
-                prop "ref" type="string" \
-                    description="globally unique reference to this node."
-                prop "min" type="number" \
-                    description="minimum number of instances of this node in its parent's children."
-                prop "max" type="number" \
-                    description="maximum number of instances of this node in its parent's children."
+            node "node" description="A child node belonging either to `document` or to another `node`. Nodes may be anonymous." {
+                value description="The name of the node. If a node name is not supplied, the node rules apply to _all_ nodes belonging to the parent." {
+                    type "string"
+                    max 1
+                }
+                prop "description" description="A description of this node's purpose." {
+                    type "string"
+                }
+                prop "id" description="globally-unique ID of this node." {
+                    type "string"
+                }
+                prop "ref" description="globally unique reference to this node." {
+                    type "string"
+                }
                 children {
+                    node "enum" description="An enumeration of possible values" {
+                        max 1
+                        value description="Enumeration choices" {
+                            min 1
+                        }
+                    }
+                    node "min" description="minimum number of instances of this node in its parent's children." {
+                        max 1
+                        value {
+                            min 1
+                            max 1
+                            type "number"
+                        }
+                    }
+                    node "max" description="maximum number of instances of this node in its parent's children." {
+                        max 1
+                        value {
+                            min 1
+                            max 1
+                            type "number"
+                        }
+                    }
                     node "prop" description="A node property key/value pair." {
-                        value type="string" min=1 max=1 \
-                            description="The property key."
-                        prop "type" type="string" \
-                            description="The type for this prop's value."
-                        prop "id" type="string" \
-                            description="A globally-unique ID of this property."
-                        prop "ref" type="string" \
-                            description="A globally unique reference to another property node."
-                        prop "description" type="string" \
-                            description="A description of this property's purpose."
+                        value description="The property key." {
+                            type "string"
+                            min 1
+                            max 1
+                        }
+                        prop "id" description="A globally-unique ID of this property." {
+                            type "string"
+                        }
+                        prop "ref" description="A globally unique reference to another property node." {
+                            type "string"
+                        }
+                        prop "description" description="A description of this property's purpose." {
+                            type "string"
+                        }
+                        children description="Property node children. Only used for validation nodes, for now" {
+                            node "type" description="The type for this prop's value." {
+                                max 1
+                                value {
+                                    min 1
+                                    type "string"
+                                }
+                            }
+                            node "enum" description="An enumeration of possible values" {
+                                max 1
+                                value description="Enumeration choices" {
+                                    min 1
+                                }
+                            }
+                            node "required" description="Whether this property is required if its parent is present." {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "boolean"
+                                }
+                            }
+                        }
                     }
                     node "value" description="one or more direct node values" {
-                        prop "id" type="string" \
-                            description="A globally-unique ID of this value."
-                        prop "ref" type="string" \
-                            description="A globally unique reference to another value node."
-                        prop "type" type="string" \
-                            description="The type for this value."
-                        prop "description" type="string" \
-                            description="A description of this property's purpose."
-                        prop "min" type="number" \
-                            description="Minimum number of this value to be provided to the node."
-                        prop "max" type="number" \
-                            description="Maximum number of this value to be provided to the node."
+                        prop "id" description="A globally-unique ID of this value." {
+                            type "string"
+                        }
+                        prop "ref" description="A globally unique reference to another value node." {
+                            type "string"
+                        }
+                        prop "description" description="A description of this property's purpose." {
+                            type "string"
+                        }
+                        children description="Value node children. Only used for validation nodes, for now" {
+                            node "type" description="The type for this/these value(s)." {
+                                max 1
+                                value {
+                                    min 1
+                                    type "string"
+                                }
+                            }
+                            node "enum" description="An enumeration of possible values" {
+                                max 1
+                                value description="Enumeration choices" {
+                                    min 1
+                                }
+                            }
+                            node "min" description="minimum number of values for this node." {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "number"
+                                }
+                            }
+                            node "max" description="maximum number of values for this node." {
+                                max 1
+                                value {
+                                    min 1
+                                    max 1
+                                    type "number"
+                                }
+                            }
+                        }
                     }
-                    node "children" max=1 {
-                        prop "id" type="string" \
-                            description="A globally-unique ID of this children node."
-                        prop "ref" type="string" \
-                            description="A globally unique reference to another children node."
-                        prop "description" type="string" \
-                            description="A description of this property's purpose."
-                        children ref="node-children"
+                    node "children" {
+                        max 1
+                        prop "id" description="A globally-unique ID of this children node." {
+                            type "string"
+                        }
+                        prop "ref" description="A globally unique reference to another children node." {
+                            type "string"
+                        }
+                        prop "description" description="A description of this these children's purpose." {
+                            type "string"
+                        }
+                        children ref="#node-children"
                     }
                 }
             }
