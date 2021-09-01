@@ -130,7 +130,7 @@ immediately by a `=`, and then a [Value](#value).
 Properties should be interpreted left-to-right, with rightmost properties with
 identical names overriding earlier properties. That is:
 
-```
+```kdl
 node a=1 a=2
 ```
 
@@ -155,10 +155,30 @@ each other (not counting Properties).
 Arguments _MAY_ be prefixed with `/-` to "comment out" the entire token and
 make it act as plain whitespace, even if it spreads across multiple lines.
 
-### Example
+#### Example
 
 ```kdl
 my-node 1 2 3 "a" "b" "c"
+```
+
+### Children Block
+
+A children block is a block of [Nodes](#node), surrounded by `{` and `}`. They
+are an optional terminator for nodes, and create a hierarchy of KDL nodes.
+
+Regular node termination rules apply, which means multiple nodes can be
+included in a single-line children block, as long as they're all terminated by
+`;`.
+
+#### Example
+
+```kdl
+parent {
+    child1
+    child2
+}
+
+parent { child1; child2; }
 ```
 
 ### Value
