@@ -1,4 +1,20 @@
 document {
+    info {
+        title "KDL Schema" lang="en"
+        description "KDL Schema KDL schema in KDL" lang="en"
+        author "Kat Marchán" {
+            link "https://github.com/zkat" rel="self"
+        }
+        contributor "Lars Willighagen" {
+            link "https://github.com/larsgw" rel="self"
+        }
+        link https://github.com/zkat/kdl rel="documentation"
+        license "Creative Commons Attribution-ShareAlike 4.0 International License" spdx="CC-BY-SA-4.0" {
+            link "https://creativecommons.org/licenses/by-sa/4.0/" lang="en"
+        }
+        published "2021-08-31"
+        modified "2021-09-01"
+    }
     node "document" {
         min 1
         max 1
