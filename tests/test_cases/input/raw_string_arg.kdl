@@ -1,0 +1,3 @@
+node_1 r"arg\n"
+node_2 r#""arg\n"and stuff"#
+node_3 r##"#"arg\n"#and stuff"##

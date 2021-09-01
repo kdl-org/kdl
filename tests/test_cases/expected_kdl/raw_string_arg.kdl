@@ -1,0 +1,3 @@
+node_1 "arg\\n"
+node_2 "\"arg\\n\"and stuff"
+node_3 "#\"arg\\n\"#and stuff"

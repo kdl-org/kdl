@@ -32,6 +32,14 @@ free to jump in and give us your 2 cents!
 * PHP: [kdl-php](https://github.com/kdl-org/kdl-php)
 * Python: [kdl-py](https://github.com/daeken/kdl-py)
 
+## Compatibility Test Suite
+
+There is a [compatibility test suite](tests/README.md) available for KDL
+implementors to check that their implementations are actually spec-compatible.
+
+The implementations above are not guaranteed to pass this test suite in its
+entirety, but in the future, may be required to in order to be included here.
+
 ## Editor Support
 
 * [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)
