@@ -15,7 +15,9 @@ following rules:
 * All comments removed
 * Extra empty lines removed except for a newline after the last node
 * All nodes should be reformatted without escaped newlines
-* Node fields should be `identifier <args in same order> <properties in alpha order by key> <children if non-empty>`
+* Node fields should be `identifier <values> <properties> <children only if non-empty>`
+* All values and all children must be in the same order as they were defined.
+* Properties must be in _alphabetical order_ and separated by a single space.
 * All strings must be represented as regular strings, with appropriate escapes
   for invalid bare characters. That means that raw strings must be converted
   to plain strings, and escaped.
