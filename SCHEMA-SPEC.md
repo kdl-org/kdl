@@ -151,6 +151,7 @@ and property names when the `node-names` or `prop-names` options are activated.
     * `uri-template`: RFC6570 URI Template.
     * `uuid`: RFC4122 UUID.
     * `regex`: Regular expression. Specific patterns may be implementation-dependent.
+    * `base64`: A Base64-encoded string, denoting arbitrary binary data.
 
 #### Number validations
 
