@@ -9,6 +9,10 @@ There's a living [specification](SPEC.md), as well as various
 [implementations](#implementations). You can also check out the [FAQ](#faq) to
 answer all your burning questions!
 
+In addition to a spec for KDL itself, there are also standard specs for [a KDL
+Query Language](QUERY-SPEC.md) based on CSS selectors, and [a KDL Schema
+Language](SCHEMA-SPEC.md) loosely based on JSON Schema.
+
 The language is based on [SDLang](https://sdlang.org), with a number of
 modifications and clarifications on its syntax and behavior.
 
