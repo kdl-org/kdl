@@ -1,0 +1,3 @@
+node "arg" /- {
+     inner_node
+}

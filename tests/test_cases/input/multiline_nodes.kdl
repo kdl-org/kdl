@@ -1,0 +1,3 @@
+node \
+    "arg1" \// comment
+    "arg2"
