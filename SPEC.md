@@ -81,7 +81,9 @@ foo 1 key="val" 3 {
 A bare Identifier is composed of any unicode codepoint other than [non-initial
 characters](#non-inidital-characters), followed by any number of unicode
 codepoints other than [non-identifier characters](#non-identifier-characters),
-so long as this doesn't produce something confusable for a [Number](#number).
+so long as this doesn't produce something confusable for a [Number](#number),
+[Boolean](#boolean), or [Null](#null).
+
 Identifiers are terminated by [Whitespace](#whitespace) or
 [Newlines](#newline).
 
@@ -312,10 +314,11 @@ node-space := ws* escline ws* | ws+
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
-bare-identifier := (identifier-char - digit - sign) identifier-char* | sign ((identifier-char - digit) identifier-char*)?
+bare-identifier := ((identifier-char - digit - sign) identifier-char* | sign ((identifier-char - digit) identifier-char*)?) - keyword
 identifier-char := unicode - linespace - [\/(){}<>;[]=,"]
+keyword := boolean | 'null'
 prop := identifier '=' value
-value := string | number | boolean | 'null'
+value := string | number | keyword
 
 string := raw-string | escaped-string
 escaped-string := '"' character* '"'
