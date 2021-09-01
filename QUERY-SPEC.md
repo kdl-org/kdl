@@ -6,6 +6,7 @@ This is loosely based on CSS selectors, but without the web-specific stuff.
 
 * `a > b`: Selects any `b` element that is a direct child of an `a` element.
 * `a b`: Selects any `b` element that is a _descendant_ of an `a` element.
+* `a b || a c`: Selects all `b` and `c` elements that are descendants of an `a` element. Any selector may be on either side of the `||`. Multiple `||` are supported.
 * `a + b`: Selects any `b` element that is placed immediately after a sibling `a` element.
 * `a ~ b`: Selects any `b` element that follows an `a` element as a sibling, either immediately or later.
 * `[accessor()]`: Selects any element, filtered by [an accessor](#accessors). (`accessor()` is a placeholder, not an actual accessor)
