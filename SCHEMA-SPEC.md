@@ -24,8 +24,7 @@ None.
 
 #### Properties
 
-* `description` (optional): An informational description of the purpose of this schema.
-* `schema-url` (optional): A URL where someone may go to find more information about this schema. It is not meant for mechanical processing.
+None.
 
 #### Children
 

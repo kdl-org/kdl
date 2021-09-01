@@ -1,13 +1,7 @@
-document description="KDL Schema KDL schema in KDL" schema-url="https://github.com/zkat/kdl" {
+document {
     node "document" {
         min 1
         max 1
-        prop "schema-url" description="URL where you can find this schema. Informational only." {
-            type "url"
-        }
-        prop "description" description="General purpose and description for this document schema." {
-            type "string"
-        }
         children id="node-children" {
             node "node-names" description="Validations to apply specifically to arbitrary node names" {
                 children ref="#validations"
