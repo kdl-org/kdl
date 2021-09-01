@@ -1,8 +1,16 @@
 # KDL Query Language Spec
 
-This is loosely based on CSS selectors, but without the web-specific stuff.
+The KDL Query Language is a small language specially tailored for querying KDL
+documents to extract nodes and even specific data. It is loosely based on CSS
+selectors for familiarity and ease of use. Think of it as CSS Selectors or
+XPath, but for KDL!
 
-## Selection operators
+## Selectors
+
+Selectors use selection operators to filter nodes that will be returned by an
+API using KQL. The main differences between this and CSS selectors are the
+lack of `*` (use `[]` instead), and the specific syntax for
+[matchers](#matchers) (the stuff between `[` and `]`), which is similar, but not identical to CSS.
 
 * `a > b`: Selects any `b` element that is a direct child of an `a` element.
 * `a b`: Selects any `b` element that is a _descendant_ of an `a` element.
@@ -15,10 +23,17 @@ This is loosely based on CSS selectors, but without the web-specific stuff.
 
 ## Matchers
 
+Matchers are used to filter nodes by their various attributes (such as values,
+properties, node names, etc). With the exception of `top()`, they are all used
+inside a `[ ]` selector. Some matchers are unary, but most of them involve
+binary operators.
+
 * `top()`: Returns all toplevel children of the current document.
 * `top() > []`: Equivalent to `top()` on its own.
 * `[val()]`: Selects any element with a value.
 * `[val(1)]`: Selects any element with a second value.
+* `[prop(foo)]`: Selects any element with a property named `foo`.
+* `[prop]`: Selects any element with a property named `prop`.
 
 Attribute matchers support certain binary operators:
 
@@ -89,20 +104,28 @@ package {
 
 Then the following queries are valid:
 
-* `package name` -> fetches the `name` node itself
-* `top() > package name` -> fetches the `name` node, guaranteeing that `package` is in the document root.
-* `dependencies` -> deep-fetches both `dependencies` nodes
-* `dependencies[platform]` -> fetches any dependencies nodes with a `platform` prop (just the one, in this case)
-* `dependencies[prop(platform)]` -> Identical to the above. Plain identifiers are equivalent to `prop(<identifier>)`.
-* `dependencies > any()` -> fetches all direct-child nodes of any `dependencies`
-  nodes in the document. In this case, it will fetch both `miette` and
-  `winapi` nodes.
+* `package name`
+    * -> fetches the `name` node itself
+* `top() > package name`
+    * -> fetches the `name` node, guaranteeing that `package` is in the document root.
+* `dependencies`
+    * -> deep-fetches both `dependencies` nodes
+* `dependencies[platform]`
+    * -> fetches any dependencies nodes with a `platform` prop (just the one, in this case)
+* `dependencies[prop(platform)]`
+    * -> Identical to the above. Plain identifiers are equivalent to `prop(<identifier>)`.
+* `dependencies > []` ->
+    * fetches all direct-child nodes of any `dependencies` nodes in the
+      document. In this case, it will fetch both `miette` and `winapi` nodes.
 
-There is an additional `=>` selector (called the "map selector") that MAY be
-implemented, which will allow extracting/selecting arbitrary data _from_
-nodes, instead of returning the nodes themselves:
+If using an API that supports the [map operator](#map-operator), the following
+are valid queries:
 
-* `package name => val(0)` -> `["foo"]`. (The `0` is optional if you just want the first `val()`)
-* `dependencies[platform] => platform` -> `["windows"]`
-* `dependencies > [] => (name(), val(), path)` -> `[("winapi", "1.0.0", "./crates/my-winapi-fork"), ("miette", "2.0.0", None)]`
-* `dependencies > [] => (name(), values(), props())` -> `[("winapi", ["1.0.0"], {"platform": "windows"}), ("miette", ["2.0.0"], {"dev": true})]`
+* `package name => val()`
+    * -> `["foo"]`.
+* `dependencies[platform] => platform`
+    * -> `["windows"]`
+* `dependencies > [] => (name(), val(), path)`
+    * -> `[("winapi", "1.0.0", "./crates/my-winapi-fork"), ("miette", "2.0.0", None)]`
+* `dependencies > [] => (name(), values(), props())`
+    * -> `[("winapi", ["1.0.0"], {"platform": "windows"}), ("miette", ["2.0.0"], {"dev": true})]`
