@@ -100,7 +100,7 @@ The following characters cannot be used anywhere in a bare
 
 * Any codepoint with hexadecimal value `0x20` or below.
 * Any codepoint with hexadecimal value higher than `0x10FFFF`.
-* Any of "\\<>{};[]=,\""
+* Any of "\\<>{};[]()=,\""
 
 ### Line Continuation
 
@@ -313,7 +313,7 @@ node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
 bare-identifier := (identifier-char - digit - sign) identifier-char* | sign ((identifier-char - digit) identifier-char*)?
-identifier-char := unicode - linespace - [\{}<>;[]=,"]
+identifier-char := unicode - linespace - [\(){}<>;[]=,"]
 prop := identifier '=' value
 value := string | number | boolean | 'null'
 
