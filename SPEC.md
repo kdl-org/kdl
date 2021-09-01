@@ -229,7 +229,7 @@ There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
 * Decimal numbers are a bit more special:
     * They have no radix prefix.
     * They use digits `0` through `9`, which may be separated by `_`.
-    * They may optionally include a decimal separator `.`, followed by more digits.
+    * They may optionally include a decimal separator `.`, followed by more digits, which may again be separated by `_`.
     * They may optionally be followed by `E` or `e`, an optional `-` or `+`, and more digits, to represent an exponent value.
 
 ### Boolean
@@ -329,7 +329,7 @@ raw-string-quotes := '"' .* '"'
 
 number := decimal | hex | octal | binary
 
-decimal := integer ('.' [0-9]+)? exponent?
+decimal := integer ('.' [0-9] [0-9_]*)? exponent?
 exponent := ('e' | 'E') integer
 integer := sign? [0-9] [0-9_]*
 sign := '+' | '-'
