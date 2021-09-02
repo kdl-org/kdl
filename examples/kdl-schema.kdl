@@ -33,7 +33,6 @@ document {
             node "info" description="A child node that describes the schema itself." {
                 children {
                     node "title" description="The title of the schema or the format it describes" {
-                        min 1
                         value description="The title text" {
                             type "string"
                             min 1
@@ -52,7 +51,6 @@ document {
                         prop ref="#info-lang"
                     }
                     node "author" description="Author of the schema" {
-                        min 1
                         value id="info-person-name" description="Person name" {
                             type "string"
                             min 1

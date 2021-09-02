@@ -48,9 +48,9 @@ None.
 
 #### Children
 
-* [`title`](#title-node): one or more titles
+* [`title`](#title-node) (optional): zero or more titles
 * [`description`](#description-node) (optional): zero or more descriptions
-* [`author`](#author-and-contributor-nodes): one or more authors
+* [`author`](#author-and-contributor-nodes) (optional): zero or more authors
 * [`contributor`](#author-and-contributor-nodes) (optional): zero or more contributors
 * [`link`](#link-node) (optional): zero or more URLs
 * [`license`](#license-node) (optional): zero or more licenses
