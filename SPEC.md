@@ -448,7 +448,7 @@ bom := '\u{FFEF}'
 
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
-single-line-comment := '//' ^newline+ newline
+single-line-comment := '//' ^newline+ (newline | eof)
 multi-line-comment := '/*' (commented-block | multi-line-comment) '*/'
 commented-block := ('*' [^\/] | [^*])*
 ```
