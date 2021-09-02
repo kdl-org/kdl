@@ -104,11 +104,11 @@ Links to the schema itself, and to sources about the schema.
 
 #### Values
 
-* URL - A URL that the link points to
+* URI/IRI - A URI/IRI that the link points to
 
 #### Properties
 
-* `rel`: what the URL is for (`"self"` or `"documentation"`)
+* `rel`: what the link is for (`"self"` or `"documentation"`)
 * `lang` (optional): An IETF BCP 47 language tag
 
 ### `license` node
