@@ -56,7 +56,7 @@ None.
 * [`license`](#license-node) (optional): zero or more licenses
 * [`published`](#published-and-modified-nodes) (optional): a publication date
 * [`modified`](#published-and-modified-nodes) (optional): a modification date
-* [`version`](#version-node) (optional): a (semver) version number
+* [`version`](#version-node) (optional): a [SemVer](https://semver.org/) version number
 
 ### `title` node
 
