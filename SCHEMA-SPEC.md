@@ -24,14 +24,128 @@ None.
 
 #### Properties
 
-* `description` (optional): An informational description of the purpose of this schema.
-* `schema-url` (optional): A URL where someone may go to find more information about this schema. It is not meant for mechanical processing.
+None.
 
 #### Children
 
+* [`info`](#info-node) - one info node for that describes the schema itself.
 * [`node`](#node-node) - zero or more toplevel nodes for the KDL document this schema describes.
+* [`definitions`](#definitions-node) (optional): Definitions of nodes, values, props, and children block to reference in the toplevel nodes.
 * `node-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of child nodes.
 * `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `false`.
+
+### `info` node
+
+The `info` node describes the schema itself.
+
+#### Values
+
+None.
+
+#### Properties
+
+None.
+
+#### Children
+
+* [`title`](#title-node) (optional): zero or more titles
+* [`description`](#description-node) (optional): zero or more descriptions
+* [`author`](#author-and-contributor-nodes) (optional): zero or more authors
+* [`contributor`](#author-and-contributor-nodes) (optional): zero or more contributors
+* [`link`](#link-node) (optional): zero or more URLs
+* [`license`](#license-node) (optional): zero or more licenses
+* [`published`](#published-and-modified-nodes) (optional): a publication date
+* [`modified`](#published-and-modified-nodes) (optional): a modification date
+* [`version`](#version-node) (optional): a [SemVer](https://semver.org/) version number
+
+### `title` node
+
+The title of the schema or the format it describes.
+
+#### Values
+
+* Title
+
+#### Properties
+
+* `lang` (optional): An IETF BCP 47 language tag
+
+### `description` node
+
+A description of the schema or the format it describes.
+
+#### Values
+
+* Description
+
+#### Properties
+
+* `lang` (optional): An IETF BCP 47 language tag
+
+### `author` and `contributor` nodes
+
+Author(s) of the schema.
+
+#### Values
+
+* Author name
+
+#### Properties
+
+* `orcid` (optional): The [ORCID](https://orcid.org/) of the author.
+
+#### Children
+
+* [`link`](#link-node) (optional): zero or more URLs
+
+### `link` node
+
+Links to the schema itself, and to sources about the schema.
+
+#### Values
+
+* URI/IRI - A URI/IRI that the link points to
+
+#### Properties
+
+* `rel`: what the link is for (`"self"` or `"documentation"`)
+* `lang` (optional): An IETF BCP 47 language tag
+
+### `license` node
+
+The license(s) that the schema is licensed under.
+
+#### Values
+
+* License name - Name of the used license
+
+#### Properties
+
+* `spdx` (optional): an [SPDX license identifier](https://spdx.dev/ids/)
+
+#### Children
+
+* [`link`](#link-node): one or more URLs
+
+### `published` and `modified` nodes
+
+When the schema was published or last modified respectively.
+
+#### Values
+
+* Publication or modification date - As a ISO8601 date
+
+#### Properties
+
+* `time` (optional): an ISO8601 Time to accompany the date
+
+### `version` nodes
+
+The version number of this version of the schema.
+
+#### Values
+
+* Version - Semver version specification
 
 ### `node` node
 
@@ -160,3 +274,22 @@ and property names when the `node-names` or `prop-names` options are activated.
 * `>=`: Greater than or equal to.
 * `<`: Less than.
 * `<=`: Less than or equal to.
+
+### `definitions` node
+
+Definitions to reference in parts of the top-level `node`s.
+
+#### Values
+
+None.
+
+#### Properties
+
+None.
+
+#### Children
+
+* [`node`](#node-node) - zero or more node definitions.
+* [`prop`](#prop-node) - zero or more property definitions.
+* [`value`](#value-node) - zero or more value definitions.
+* [`children`](#children-node) - zero or more definitions of children blocks.
