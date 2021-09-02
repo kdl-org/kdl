@@ -71,6 +71,7 @@ document {
                     node "link" id="info-link" description="Links to itself, and to sources describing it" {
                         value description="A URL that the link points to" {
                             type "string"
+                            format "uri" "iri"
                             min 1
                             max 1
                         }
