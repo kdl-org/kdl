@@ -243,11 +243,10 @@ It's up to individual implementations to determine how to represent KDL
 numbers.
 
 Implementations MUST support number values representable as IEEE754 floating
-point numbers. That is, all implementations must support at least the numbers
-between `-(2^53 - 1)` and `2^53 - 1`. Larger or smaller values MAY error, or
-be represented as `Infinity`, or `NaN`, or any other value of the
-implementation's choosing. If you want to reliably represent numbers outside
-of this range, use the `string` type to represent them.
+point numbers. Larger or smaller values MAY error, or be represented as
+`Infinity`, or `NaN`, or any other value of the implementation's choosing. If
+you want to reliably represent numbers outside of this range, use the `string`
+type to represent them.
 
 There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
 
