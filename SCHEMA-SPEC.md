@@ -258,11 +258,11 @@ and property names when the `node-names` or `prop-names` options are activated.
     * `idn-hostname`: RFC5890 internationalized internet hostname.
     * `ipv4`: RFC2673 dotted-quad IPv4 address.
     * `ipv6`: RFC2373 IPv6 address.
-    * `uri`: RFC3986 URI.
-    * `uri-reference`: RFC3986 URI Reference.
-    * `iri`: RFC3987 Internationalized Resource Identifier.
-    * `iri-reference`: RFC3987 Internationalized Resource Identifier Reference.
-    * `uri-template`: RFC6570 URI Template.
+    * `url`: RFC3986 URI.
+    * `url-reference`: RFC3986 URI Reference.
+    * `irl`: RFC3987 Internationalized Resource Identifier.
+    * `irl-reference`: RFC3987 Internationalized Resource Identifier Reference.
+    * `url-template`: RFC6570 URI Template.
     * `uuid`: RFC4122 UUID.
     * `regex`: Regular expression. Specific patterns may be implementation-dependent.
     * `base64`: A Base64-encoded string, denoting arbitrary binary data.
