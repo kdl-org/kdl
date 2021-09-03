@@ -78,8 +78,8 @@ foo 1 key="val" 3 {
 
 ### Identifier
 
-A bare Identifier is composed of any unicode codepoint other than [non-initial
-characters](#non-inidital-characters), followed by any number of unicode
+A bare Identifier is composed of any Unicode codepoint other than [non-initial
+characters](#non-initial-characters), followed by any number of Unicode
 codepoints other than [non-identifier characters](#non-identifier-characters),
 so long as this doesn't produce something confusable for a [Number](#number),
 [Boolean](#boolean), or [Null](#null).
