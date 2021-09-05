@@ -78,8 +78,8 @@ foo 1 key="val" 3 {
 
 ### Identifier
 
-A bare Identifier is composed of any unicode codepoint other than [non-initial
-characters](#non-inidital-characters), followed by any number of unicode
+A bare Identifier is composed of any Unicode codepoint other than [non-initial
+characters](#non-initial-characters), followed by any number of Unicode
 codepoints other than [non-identifier characters](#non-identifier-characters),
 so long as this doesn't produce something confusable for a [Number](#number),
 [Boolean](#boolean), or [Null](#null).
@@ -188,6 +188,78 @@ A value is either: a [String](#string), a [Raw String](#raw-string), a
 
 Values _MUST_ be either [Arguments](#argument) or values of
 [Properties](#property).
+
+Values _MAY_ be prefixed by a single [Type Annotation](#type-annotation).
+
+### Type Annotation
+
+A type annotation is a prefix to any [Value](#value) that includes a
+_suggestion_ of what type the value is _intended_ to be treated as.
+
+Type annotations are written as a set of `(` and `)` with a single
+[Identifier](#identifier) in it. Any valid identifier is considered a valid
+type annotation. There must be no whitespace between a type annotation and its
+associated Value.
+
+KDL does not specify any restrictions on what implementations might do with
+these annotations. They are free to ignore them, or use them to make decisions
+about how to interpret a value.
+
+Additionally, the following type annotations MAY be recognized by KDL parsers
+and, if used, SHOULD interpret these types as follows:
+
+#### Reserved Type Annotations for Numbers Without Decimals:
+
+Signed integers of various sizes (the number is the bit size):
+
+* `i8`
+* `i16`
+* `i32`
+* `i64`
+
+Unsigned integers of various sizes (the number is the bit size):
+
+* `u8`
+* `u16`
+* `u32`
+* `u64`
+
+Platform-dependent integer types, both signed and unsigned:
+
+* `isize`
+* `usize`
+
+IEEE 754 floating point numbers, both single (32) and double (64) precision:
+
+* `f32`
+* `f64`
+
+#### Reserved Type Annotations for Strings:
+
+* `date-time`: ISO8601 date/time format.
+* `time`: "Time" section of ISO8601.
+* `date`: "Date" section of ISO8601.
+* `email`: RFC5302 email address.
+* `idn-email`: RFC6531 internationalized email address.
+* `hostname`: RFC1132 internet hostname.
+* `idn-hostname`: RFC5890 internationalized internet hostname.
+* `ipv4`: RFC2673 dotted-quad IPv4 address.
+* `ipv6`: RFC2373 IPv6 address.
+* `url`: RFC3986 URI.
+* `url-reference`: RFC3986 URI Reference.
+* `irl`: RFC3987 Internationalized Resource Identifier.
+* `irl-reference`: RFC3987 Internationalized Resource Identifier Reference.
+* `url-template`: RFC6570 URI Template.
+* `uuid`: RFC4122 UUID.
+* `regex`: Regular expression. Specific patterns may be implementation-dependent.
+* `base64`: A Base64-encoded string, denoting arbitrary binary data.
+
+#### Examples
+
+```kdl
+node (u8)123
+node prop=(regex)".*"
+```
 
 ### String
 
@@ -327,9 +399,9 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ```
 nodes := linespace* (node nodes?)? linespace*
 
-node := ('/-' ws*)? identifier (node-space node-space* node-props-and-args)* (node-space* node-children ws*)? node-space* node-terminator
-node-props-and-args := ('/-' ws*)? (prop | value)
-node-children := ('/-' ws*)? '{' nodes '}'
+node := ('/-' node-space*)? identifier (node-space node-space* node-props-and-args)* (node-space* node-children ws*)? node-space* node-terminator
+node-props-and-args := ('/-' node-space*)? (prop | value)
+node-children := ('/-' node-space*)? '{' nodes '}'
 node-space := ws* escline ws* | ws+
 node-terminator := single-line-comment | newline | ';' | eof
 
@@ -338,7 +410,8 @@ bare-identifier := ((identifier-char - digit - sign) identifier-char* | sign ((i
 identifier-char := unicode - linespace - [\/(){}<>;[]=,"]
 keyword := boolean | 'null'
 prop := identifier '=' value
-value := string | number | keyword
+value := (type ws*)? (string | number | keyword)
+type := '(' identifier ')'
 
 string := raw-string | escaped-string
 escaped-string := '"' character* '"'
@@ -375,7 +448,7 @@ bom := '\u{FFEF}'
 
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
-single-line-comment := '//' ^newline+ newline
+single-line-comment := '//' ^newline+ (newline | eof)
 multi-line-comment := '/*' commented-block
 commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
 ```
