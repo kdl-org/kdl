@@ -59,7 +59,7 @@ If the contents of a PI do *not* look like attributes, then instead the entire c
 
 ----
 
-Doctypes (nodes that look like `<!DOCTYPE ...>`) are encoded similarly to unstructured Processing Instructions. They have a node name of `!doctype`, and the entire contents of the node, from the end of the whitespace following the "DOCTYPE" to the closing `>`, are encoded as a single unnamed string value.
+Doctypes (nodes that look like `<!DOCTYPE ...>`) are encoded similarly to unstructured Processing Instructions. They have a node name of `!doctype`, and the entire contents of the node, from the end of the whitespace following the "DOCTYPE" to the closing `>`, are encoded as a single unnamed string value. For example, the HTML doctype `<!DOCTYPE html>` is encoded as `!doctype "html"`, while the XHTML 1 Strict doctype would be encoded as `!doctype r#"html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd""#`
 
 ----
 
@@ -73,9 +73,9 @@ Converting XiK back to XML is a trivial process:
 
 Only valid XiK nodes can be encoded to XML; if a XiK document contains an invalid node, the entire document must fail to encode, rather than "guessing" at the intent. A XiK node is valid if the XML element it represents is well-formed, and it has the correct KDL structure:
 
-* Element nodes must contain any number of properties with string values, and either a single unnamed string value as its final value, *or* any number of child nodes.
-* Comment nodes must contain a single unnamed string value and nothing else.
-* "Structured" PI nodes must contain any number of properties with string values, and nothing else. "Unstructured" PI nodes must contain nothing.
-* Doctype nodes must contain nothing.
+* Element nodes must contain any number of properties with string values, and either a single unnamed string argument as its final value, *or* any number of child nodes.
+* Comment nodes must contain a single unnamed string argument and nothing else.
+* "Structured" PI nodes must contain any number of properties with string values, and nothing else. "Unstructured" PI nodes must contain a single unnamed string argument and nothing else.
+* Doctype nodes must contain a single unnamed string argument and nothing else.
 
 The XiK document must also represent a well-formed XML document in its overall structure - for example, it can only contain a single top-level element node, all namespaces must be declared before they are used, etc.
