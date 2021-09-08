@@ -3,7 +3,7 @@ JSON-in-KDL (JiK)
 
 This specification describes a canonical way to losslessly encode [JSON](https://json.org) in [KDL](https://kdl.dev). While this isn't a very useful thing to want to do on its own, it's occasionally useful when using a KDL toolchain while speaking with a JSON-consuming or -emitting service.
 
-This is version 1.0.1 of JiK.
+This is version 2.0.0 of JiK.
 
 JSON-in-KDL (JiK from now on) is a kdl microsyntax consisting of three types of nodes:
 
@@ -44,16 +44,14 @@ array 1 {
 
 Object nodes are used to represent a JSON object. They can contain zero or more named properties, followed by zero or more child nodes; these are taken as the key/value pairs of the object, in order of appearance.
 
-The named properties of an object node are key/value pairs, used when the value is a literal.
+If the value of a key/value pair is a literal, it can be encoded as a named property on the object. For example, the JSON object `{"foo": 1, "bar": true}` could be written in JiK as `object foo=1 bar=true`.
 
-For example, the JSON object `{"foo": 1, "bar": true}` could be written in JiK as `object foo=1 bar=true`.
-
-The children of an object node have a slightly modified syntax: they must contain a string as their first value, giving their "key"; the child itself, besides the "key" argument, is the "value". The preceding example could instead have been written as:
+Alternately, key/value pairs can be encoded as child nodes, using a type annotation on the node name to encode the key, and the node itself as the value. The preceding example could instead have been written as:
 
 ```kdl
 object {
-	- "foo" 1
-	- "bar" true
+	(foo)- 1
+	(bar)- true
 }
 ```
 
@@ -61,18 +59,18 @@ Of course, using children for literals is overly-verbose. It's only necessary wh
 
 ```kdl
 object {
-	array "foo" 1 2 {
+	(foo)array 1 2 {
 		object bar=3
 	}
-	- "baz" 4
+	(baz)- 4
 }
 ```
 
-As with arrays, child lists and arguments can be mixed. The precise order of a JSON object's keys isn't *meant* to be meaningful, so as long as that's true, *all* the keys with literal values can be pulled into the argument list. The preceding example could thus also be written as:
+As with arrays, child nodes and properties can be mixed. The precise order of a JSON object's keys isn't *meant* to be meaningful, so as long as that's true, *all* the keys with literal values can be pulled into the argument list. The preceding example could thus also be written as:
 
 ```kdl
 object baz=4 {
-	array "foo" 1 2 {
+	(foo)array 1 2 {
 		object bar=3
 	}
 }
@@ -84,8 +82,8 @@ Converting JiK back to JSON is a trivial process: literal nodes are encoded as t
 
 Only valid JiK nodes can be encoded to JSON; if a JiK document contains an invalid node, the entire document must fail to encode, rather than "guessing" at the intent. As well, a JiK document must contain only a single top-level node to be valid, unless the output is intended to be a JSON stream, in which case arbitrary numbers of nodes are allowed, each a separate JSON value.
 
-* A literal node is valid if it contains a single unnamed argument (or, if a child of an object node, a single unnamed string argument followed by a single unnamed argument).
+* A literal node is valid if it contains a single unnamed argument.
 
-* An array node is valid if it contains no named properties. If it's the child of an object node, it must contain, as its first argument, a string literal.
+* An array node is valid if it contains only unnamed arguments and/or child nodes without type annotations on their node names.
 
-* An object node is valid if it contains no unnamed arguments, with the exception that if it's the child of an object node, it must contain, as its first argument, a string literal. It must not contain any repeated "key" strings among its children, whether expressed as named properties or child nodes.
+* An object node is valid if it contains only named properties and/or child nodes with type annotations on their node names. Additionally, all "keys" must be unique within the node, whether they're encoded as property names or type annotations on node names.
