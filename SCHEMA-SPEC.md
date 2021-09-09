@@ -252,6 +252,12 @@ and property names when the `node-names` or `prop-names` options are activated.
     * `date-time`: ISO8601 date/time format.
     * `time`: "Time" section of ISO8601.
     * `date`: "Date" section of ISO8601.
+    * `duration`: ISO8601 duration format. 
+    * `decimal`: IEEE 754-2008 decimal string format.
+    * `currency`: ISO 4217 currency code.
+    * `country-2`: ISO 3166-1 alpha-2 country code.
+    * `country-3`: ISO 3166-1 alpha-3 country code.
+    * `country-subdivision`: ISO 3166-2 country subdivision code.
     * `email`: RFC5302 email address.
     * `idn-email`: RFC6531 internationalized email address.
     * `hostname`: RFC1132 internet hostname.
