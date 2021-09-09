@@ -24,12 +24,14 @@ lack of `*` (use `[]` instead), and the specific syntax for
 ## Matchers
 
 Matchers are used to filter nodes by their various attributes (such as values,
-properties, node names, etc). With the exception of `top()`, they are all used
-inside a `[ ]` selector. Some matchers are unary, but most of them involve
+properties, node names, etc). With the exception of `top()` and `()`, they are all
+used inside a `[ ]` selector. Some matchers are unary, but most of them involve
 binary operators.
 
 * `top()`: Returns all toplevel children of the current document.
 * `top() > []`: Equivalent to `top()` on its own.
+* `(foo)`: Selects any element with a tag named `foo`.
+* `()`: Selects any element with any tag.
 * `[val()]`: Selects any element with a value.
 * `[val(1)]`: Selects any element with a second value.
 * `[prop(foo)]`: Selects any element with a property named `foo`.
@@ -41,9 +43,10 @@ Attribute matchers support certain binary operators:
 * `[prop(name) = 1]`: Selects any element with a property `name` whose value is 1.
 * `[name = 1]`: Equivalent to the above.
 * `[name() = "hi"]`: Selects any element whose _node name_ is "hi". Equivalent to just `hi`, but more useful when using string operators.
+* `[tag() = "hi"]`: Selects any element whose tag is "hi". Equivalent to just `(hi)`, but more useful when using string operators.
 * `[val() != 1]`: Selects any element whose first value exists, and is not 1.
 
-The following operators work with any `val()`, `prop()`, or `name()` values.
+The following operators work with any `val()` or `prop()` values.
 If the value is not of the same type, the operator will always fail ("1" is
 never coerced to 1, and there is no "universal" ordering across all types.):
 
@@ -52,11 +55,17 @@ never coerced to 1, and there is no "universal" ordering across all types.):
 * `[val() < 1]`: Selects any element whose first value is less than 1.
 * `[val() <= 1]`: Selects any element whose first value is less than or equal to 1.
 
-The following operators work only with string `val()`, `prop()`, or `name()` values. If the value is not a string, the matcher will always fail:
+The following operators work only with string `val()`, `prop()`, `tag()`, or `name()` values.
+If the value is not a string, the matcher will always fail:
 
 * `[val() ^= "foo"]`: Selects any element whose first value starts with "foo".
 * `[val() $= "foo"]`: Selects any element whose first value ends with "foo".
 * `[val() *= "foo"]`: Selects any element whose first value contains "foo".
+
+The following operators work only with `val()` or `prop()` values. If the value
+is not one of those, the matcher will always fail:
+
+* `[val() = (foo)]`: Selects any element whose tag is "foo".
 
 ## Map Operator
 
