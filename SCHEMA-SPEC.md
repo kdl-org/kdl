@@ -164,7 +164,7 @@ another node.
 
 * `description` (optional): An informational description of the purpose of this node.
 * `id` (optional): A globally unique identifier for this node.
-* `ref` (optional): A globally unique reference to another node's ID. If present, all properties, values, and children defined in the target node will be copied to this node, replacing any conflicts.
+* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all properties, values, and children defined in the target node will be copied to this node, replacing any conflicts.
 
 #### Children
 
@@ -172,7 +172,7 @@ another node.
 * `max` (optional): Maximum number of this kind of node (or any node, if the name is missing) allowed in the parent's children block.
 * `prop-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of properties.
 * `other-props-allowed` (optional): Whether to allow props other than the ones explicitly listed here. Defaults to `false`.
-* `tag`: [Validations](#validation-nodes) to apply to the tag of the node. 
+* `tag`: [Validations](#validation-nodes) to apply to the tag of the node.
 * [`prop`](#prop-node) - zero or more properties for this node.
 * [`value`](#value-node) - zero or more values for this node.
 * [`children`](#children-node) - zero or more children for this node.
@@ -189,7 +189,7 @@ The `tag` describes the tags allowed in a children block or toplevel document.
 
 * `description` (optional): An informational description of the purpose of this node.
 * `id` (optional): A globally unique identifier for this node.
-* `ref` (optional): A globally unique reference to another node's ID. If present, all properties, values, and children defined in the target node will be copied to this node, replacing any conflicts.
+* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all properties, values, and children defined in the target node will be copied to this node, replacing any conflicts.
 
 #### Children
 
@@ -209,7 +209,7 @@ Represents a property of a node, which is a key/value pair in KDL.
 
 * `description` (optional): An informational description of the purpose of this property.
 * `id` (optional): A globally unique identifier for this property.
-* `ref` (optional): A globally unique reference to another property's ID. If present, all properties defined in the target property will be copied to this property, replacing any conflicts.
+* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all properties defined in the target property will be copied to this property, replacing any conflicts.
 
 #### Children
 
@@ -228,7 +228,7 @@ None.
 
 * `description` (optional): An informational description of the purpose of this value.
 * `id` (optional): A globally unique identifier for this value.
-* `ref` (optional): A globally unique reference to another value's ID. If present, all values defined in the target value will be copied to this value, replacing any conflicts.
+* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all values defined in the target value will be copied to this value, replacing any conflicts.
 
 #### Children
 
@@ -248,7 +248,7 @@ None.
 
 * `description` (optional): An informational description of the purpose of this children block.
 * `id` (optional): A globally unique identifier for this children block.
-* `ref` (optional): A globally unique reference to another children block's ID. If present, all children defined in the target children block will be copied to this children block, replacing any conflicts.
+* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all children defined in the target children block will be copied to this children block, replacing any conflicts.
 
 #### Children
 
@@ -291,6 +291,7 @@ and property names when the `node-names` or `prop-names` options are activated.
     * `uuid`: RFC4122 UUID.
     * `regex`: Regular expression. Specific patterns may be implementation-dependent.
     * `base64`: A Base64-encoded string, denoting arbitrary binary data.
+    * `kdl-query`: A [KDL Query](./QUERY-SPEC.md) string.
 
 #### Number validations
 
