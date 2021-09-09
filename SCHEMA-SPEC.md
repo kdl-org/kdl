@@ -33,6 +33,9 @@ None.
 * [`definitions`](#definitions-node) (optional): Definitions of nodes, values, props, and children block to reference in the toplevel nodes.
 * `node-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of child nodes.
 * `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `false`.
+* [`tag`](#tag-node) - zero or more toplevel tags for nodes in the KDL document that this schema describes.
+* `tag-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of tags of child nodes.
+* `other-tags-allowed` (optional): Whether to allow node tags other than the ones explicitly listed here. Defaults to `false`.
 
 ### `info` node
 
@@ -169,9 +172,30 @@ another node.
 * `max` (optional): Maximum number of this kind of node (or any node, if the name is missing) allowed in the parent's children block.
 * `prop-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of properties.
 * `other-props-allowed` (optional): Whether to allow props other than the ones explicitly listed here. Defaults to `false`.
+* `tag`: [Validations](#validation-nodes) to apply to the tag of the node. 
 * [`prop`](#prop-node) - zero or more properties for this node.
 * [`value`](#value-node) - zero or more values for this node.
 * [`children`](#children-node) - zero or more children for this node.
+
+### `tag` node
+
+The `tag` describes the tags allowed in a children block or toplevel document.
+
+#### Values
+
+* Tag name (optional) - A tag for the node. If present, the node's rules/validations will apply only to children with this tag. Otherwise, the rules will apply to _all_ child nodes with tags.
+
+#### Properties
+
+* `description` (optional): An informational description of the purpose of this node.
+* `id` (optional): A globally unique identifier for this node.
+* `ref` (optional): A globally unique reference to another node's ID. If present, all properties, values, and children defined in the target node will be copied to this node, replacing any conflicts.
+
+#### Children
+
+* [`node`](#node-node) - zero or more toplevel nodes that this tag is allowed to be on.
+* `node-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of nodes with this tag.
+* `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `false`.
 
 ### `prop` node
 
@@ -240,6 +264,7 @@ and property names when the `node-names` or `prop-names` options are activated.
 
 #### Generic validations
 
+* `tag`: [Validations](#validation-nodes) to apply to the tag of the value.
 * `type`: A string denoting the type of the property value.
 * `enum`: A specific list of allowed values for this property. May be heterogenous as long as it agrees with the `type`, if specified.
 
@@ -290,6 +315,7 @@ None.
 #### Children
 
 * [`node`](#node-node) - zero or more node definitions.
+* [`tag`](#tag-node) - zero or more toplevel tags for nodes in the KDL document that this schema describes.
 * [`prop`](#prop-node) - zero or more property definitions.
 * [`value`](#value-node) - zero or more value definitions.
 * [`children`](#children-node) - zero or more definitions of children blocks.

@@ -19,10 +19,21 @@ document {
         min 1
         max 1
         children id="node-children" {
-            node "node-names" description="Validations to apply specifically to arbitrary node names" {
+            node "node-names" id="node-names-node" description="Validations to apply specifically to arbitrary node names" {
                 children ref="#validations"
             }
-            node "other-nodes-allowed" description="Whether to allow child nodes other than the ones explicitly listed. Defaults to 'false'." {
+            node "other-nodes-allowed" id="other-nodes-allowed-node" description="Whether to allow child nodes other than the ones explicitly listed. Defaults to 'false'." {
+                max 1
+                value {
+                    min 1
+                    max 1
+                    type "boolean"
+                }
+            }
+            node "tag-names" description="Validations to apply specifically to arbitrary type tag names" {
+                children ref="#validations"
+            }
+            node "other-tags-allowed" description="Whether to allow child node tags other than the ones explicitly listed. Defaults to 'false'." {
                 max 1
                 value {
                     min 1
@@ -125,6 +136,26 @@ document {
                     }
                 }
             }
+            node "tag" id="tag-node" description="A tag belonging to a child node of `document` or another node." {
+                value description="The name of the tag. If a tag name is not supplied, the node rules apply to _all_ nodes belonging to the parent." {
+                    type "string"
+                    max 1
+                }
+                prop "description" description="A description of this node's purpose." {
+                    type "string"
+                }
+                prop "id" description="A globally-unique ID for this node." {
+                    type "string"
+                }
+                prop "ref" description="A globally unique reference to another node." {
+                    type "string"
+                }
+                children {
+                    node ref="#node-names-node"
+                    node ref="#other-nodes-allowed-node"
+                    node ref="#node-node"
+                }
+            }
             node "node" id="node-node" description="A child node belonging either to `document` or to another `node`. Nodes may be anonymous." {
                 value description="The name of the node. If a node name is not supplied, the node rules apply to _all_ nodes belonging to the parent." {
                     type "string"
@@ -167,6 +198,7 @@ document {
                             type "number"
                         }
                     }
+                    node ref="#value-tag-node"
                     node "prop" id="prop-node" description="A node property key/value pair." {
                         value description="The property key." {
                             type "string"
@@ -191,6 +223,10 @@ document {
                             }
                         }
                         children id="validations" description="General value validations." {
+                            node "tag" id="value-tag-node" description="The tags associated with this value" {
+                                max 1
+                                children ref="#validations"
+                            }
                             node "type" description="The type for this prop's value." {
                                 max 1
                                 value {
@@ -324,6 +360,7 @@ document {
                     node ref="#value-node"
                     node ref="#prop-node"
                     node ref="#children-node"
+                    node ref="#tag-node"
                 }
             }
         }
