@@ -236,16 +236,26 @@ Platform-dependent integer types, both signed and unsigned:
 * `isize`
 * `usize`
 
+#### Reserved Type Annotations for Numbers With Decimals:
+
 IEEE 754 floating point numbers, both single (32) and double (64) precision:
 
 * `f32`
 * `f64`
+
+IEEE754-2008 decimal floating point numbers
+
+* `decimal64`
+* `decimal128`
 
 #### Reserved Type Annotations for Strings:
 
 * `date-time`: ISO8601 date/time format.
 * `time`: "Time" section of ISO8601.
 * `date`: "Date" section of ISO8601.
+* `duration`: ISO8601 duration format. 
+* `decimal`: IEEE754-2008 decimal string format.
+* `money`: TBD
 * `email`: RFC5302 email address.
 * `idn-email`: RFC6531 internationalized email address.
 * `hostname`: RFC1132 internet hostname.
