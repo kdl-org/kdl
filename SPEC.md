@@ -46,6 +46,11 @@ Being a node-oriented language means that the real core component of any KDL
 document is the "node". Every node must have a name, which is either a legal
 [Identifier](#identifier), or a quoted [String](#string).
 
+The name may be preceded by a [Type Annotation](#type-annotation) to further
+clarify its type, particularly in relation to its parent node. (For example,
+clarifying that a particular `date` child node is for the _publication_ date,
+rather than the last-modified date, with `(published)date`.)
+
 Following the name are zero or more [Arguments](#argument) or
 [Properties](#property), separated by either [whitespace](#whitespace) or [a
 slash-escaped line continuation](#line-continuation). Arguments and Properties
@@ -72,7 +77,7 @@ Block](#children-block), a semicolon (`;`) or the end of the file/stream (an
 ```kdl
 foo 1 key="val" 3 {
     bar
-    baz
+    (role)baz 1 2
 }
 ```
 
@@ -193,13 +198,15 @@ Values _MAY_ be prefixed by a single [Type Annotation](#type-annotation).
 
 ### Type Annotation
 
-A type annotation is a prefix to any [Value](#value) that includes a
-_suggestion_ of what type the value is _intended_ to be treated as.
+A type annotation is a prefix to any [Node Name](#node) or [Value](#value) that
+includes a _suggestion_ of what type the value is _intended_ to be treated as,
+or as a _context-specific elaboration_ of the more generic type the node name
+indicates.
 
 Type annotations are written as a set of `(` and `)` with a single
 [Identifier](#identifier) in it. Any valid identifier is considered a valid
 type annotation. There must be no whitespace between a type annotation and its
-associated Value.
+associated Node Name or Value.
 
 KDL does not specify any restrictions on what implementations might do with
 these annotations. They are free to ignore them, or use them to make decisions
@@ -259,6 +266,8 @@ IEEE 754 floating point numbers, both single (32) and double (64) precision:
 ```kdl
 node (u8)123
 node prop=(regex)".*"
+(published)date "1970-01-01"
+(contributor)person name="Foo McBar"
 ```
 
 ### String
@@ -399,7 +408,7 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ```
 nodes := linespace* (node nodes?)? linespace*
 
-node := ('/-' node-space*)? identifier (node-space node-space* node-props-and-args)* (node-space* node-children ws*)? node-space* node-terminator
+node := ('/-' node-space*)? type? identifier (node-space node-space* node-props-and-args)* (node-space* node-children ws*)? node-space* node-terminator
 node-props-and-args := ('/-' node-space*)? (prop | value)
 node-children := ('/-' node-space*)? '{' nodes '}'
 node-space := ws* escline ws* | ws+
