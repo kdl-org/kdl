@@ -243,7 +243,7 @@ IEEE 754 floating point numbers, both single (32) and double (64) precision:
 * `f32`
 * `f64`
 
-IEEE754-2008 decimal floating point numbers
+IEEE 754-2008 decimal floating point numbers
 
 * `decimal64`
 * `decimal128`
@@ -254,8 +254,11 @@ IEEE754-2008 decimal floating point numbers
 * `time`: "Time" section of ISO8601.
 * `date`: "Date" section of ISO8601.
 * `duration`: ISO8601 duration format. 
-* `decimal`: IEEE754-2008 decimal string format.
-* `money`: TBD
+* `decimal`: IEEE 754-2008 decimal string format.
+* `currency`: ISO 4217 currency code.
+* `country-2`: ISO 3166-1 alpha-2 country code.
+* `country-3`: ISO 3166-1 alpha-3 country code.
+* `country-subdivision`: ISO 3166-2 country subdivision code.
 * `email`: RFC5302 email address.
 * `idn-email`: RFC6531 internationalized email address.
 * `hostname`: RFC1132 internet hostname.
