@@ -20,7 +20,7 @@ document {
         max 1
         children id="node-children" {
             node "node-names" id="node-names-node" description="Validations to apply specifically to arbitrary node names" {
-                children ref="#validations"
+                children ref=r#"[id="validations"]"#
             }
             node "other-nodes-allowed" id="other-nodes-allowed-node" description="Whether to allow child nodes other than the ones explicitly listed. Defaults to 'false'." {
                 max 1
@@ -31,7 +31,7 @@ document {
                 }
             }
             node "tag-names" description="Validations to apply specifically to arbitrary type tag names" {
-                children ref="#validations"
+                children ref=r#"[id="validations"]"#
             }
             node "other-tags-allowed" description="Whether to allow child node tags other than the ones explicitly listed. Defaults to 'false'." {
                 max 1
@@ -59,7 +59,7 @@ document {
                             min 1
                             max 1
                         }
-                        prop ref="#info-lang"
+                        prop ref=r#"[id="info-lang"]"#
                     }
                     node "author" description="Author of the schema" {
                         value id="info-person-name" description="Person name" {
@@ -72,12 +72,12 @@ document {
                             pattern r"\d{4}-\d{4}-\d{4}-\d{4}"
                         }
                         children {
-                            node ref="#info-link"
+                            node ref=r#"[id="info-link"]"#
                         }
                     }
                     node "contributor" description="Contributor to the schema" {
-                        value ref="#info-person-name"
-                        prop ref="#info-orcid"
+                        value ref=r#"[id="info-person-name"]"#
+                        prop ref=r#"[id="info-orcid"]"#
                     }
                     node "link" id="info-link" description="Links to itself, and to sources describing it" {
                         value description="A URL that the link points to" {
@@ -90,7 +90,7 @@ document {
                             type "string"
                             enum "self" "documentation"
                         }
-                        prop ref="#info-lang"
+                        prop ref=r#"[id="info-lang"]"#
                     }
                     node "license" description="The license(s) that the schema is licensed under" {
                         value description="Name of the used license" {
@@ -102,7 +102,7 @@ document {
                             type "string"
                         }
                         children {
-                            node ref="#info-link"
+                            node ref=r#"[id="info-link"]"#
                         }
                     }
                     node "published" description="When the schema was published" {
@@ -124,7 +124,7 @@ document {
                             min 1
                             max 1
                         }
-                        prop ref="#info-time"
+                        prop ref=r#"[id="info-time"]"#
                     }
                     node "version" description="The version number of this version of the schema" {
                         value description="Semver version number" {
@@ -149,11 +149,12 @@ document {
                 }
                 prop "ref" description="A globally unique reference to another node." {
                     type "string"
+                    format "kdl-query"
                 }
                 children {
-                    node ref="#node-names-node"
-                    node ref="#other-nodes-allowed-node"
-                    node ref="#node-node"
+                    node ref=r#"[id="node-names-node"]"#
+                    node ref=r#"[id="other-nodes-allowed-node"]"#
+                    node ref=r#"[id="node-node"]"#
                 }
             }
             node "node" id="node-node" description="A child node belonging either to `document` or to another `node`. Nodes may be anonymous." {
@@ -169,10 +170,11 @@ document {
                 }
                 prop "ref" description="A globally unique reference to another node." {
                     type "string"
+                    format "kdl-query"
                 }
                 children {
                     node "prop-names" description="Validations to apply specifically to arbitrary property names" {
-                        children ref="#validations"
+                        children ref=r#"[id="validations"]"#
                     }
                     node "other-props-allowed" description="Whether to allow properties other than the ones explicitly listed. Defaults to 'false'." {
                         max 1
@@ -198,7 +200,7 @@ document {
                             type "number"
                         }
                     }
-                    node ref="#value-tag-node"
+                    node ref=r#"[id="value-tag-node"]"#
                     node "prop" id="prop-node" description="A node property key/value pair." {
                         value description="The property key." {
                             type "string"
@@ -208,6 +210,7 @@ document {
                         }
                         prop "ref" description="A globally unique reference to another property node." {
                             type "string"
+                            format "kdl-query"
                         }
                         prop "description" description="A description of this property's purpose." {
                             type "string"
@@ -225,7 +228,7 @@ document {
                         children id="validations" description="General value validations." {
                             node "tag" id="value-tag-node" description="The tags associated with this value" {
                                 max 1
-                                children ref="#validations"
+                                children ref="[id="validations"]"
                             }
                             node "type" description="The type for this prop's value." {
                                 max 1
@@ -266,7 +269,7 @@ document {
                                     min 1
                                     type "string"
                                     // https://json-schema.org/understanding-json-schema/reference/string.html#format
-                                    enum "date-time" "date" "time" "email" "idn-email" "hostname" "idn-hostname" "ipv4" "ipv6" "uri" "uri-reference" "iri", "iri-reference" "uri-template" "regex" "uuid"
+                                    enum "date-time" "date" "time" "email" "idn-email" "hostname" "idn-hostname" "ipv4" "ipv6" "uri" "uri-reference" "iri", "iri-reference" "uri-template" "regex" "uuid" "kdl-query"
                                 }
                             }
                             node "%" description="Only used for numeric values. Constrains them to be multiples of the given number(s)" {
@@ -316,11 +319,12 @@ document {
                         }
                         prop "ref" description="A globally unique reference to another value node." {
                             type "string"
+                            format "kdl-query"
                         }
                         prop "description" description="A description of this property's purpose." {
                             type "string"
                         }
-                        children ref="#validations"
+                        children ref=r#"[id="validations"]"#
                         children description="Node value-specific validations" {
                             node "min" description="minimum number of values for this node." {
                                 max 1
@@ -346,21 +350,22 @@ document {
                         }
                         prop "ref" description="A globally unique reference to another children node." {
                             type "string"
+                            format "kdl-query"
                         }
                         prop "description" description="A description of this these children's purpose." {
                             type "string"
                         }
-                        children ref="#node-children"
+                        children ref=r#"[id="node-children"]"#
                     }
                 }
             }
             node "definitions" description="Definitions to reference in parts of the top-level nodes" {
                 children {
-                    node ref="#node-node"
-                    node ref="#value-node"
-                    node ref="#prop-node"
-                    node ref="#children-node"
-                    node ref="#tag-node"
+                    node ref=r#"[id="node-node"]"#
+                    node ref=r#"[id="value-node"]"#
+                    node ref=r#"[id="prop-node"]"#
+                    node ref=r#"[id="children-node"]"#
+                    node ref=r#"[id="tag-node"]"#
                 }
             }
         }
