@@ -419,7 +419,7 @@ bare-identifier := ((identifier-char - digit - sign) identifier-char* | sign ((i
 identifier-char := unicode - linespace - [\/(){}<>;[]=,"]
 keyword := boolean | 'null'
 prop := identifier '=' value
-value := (type ws*)? (string | number | keyword)
+value := type? (string | number | keyword)
 type := '(' identifier ')'
 
 string := raw-string | escaped-string
