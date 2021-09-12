@@ -16,6 +16,8 @@ Language](SCHEMA-SPEC.md) loosely based on JSON Schema.
 The language is based on [SDLang](https://sdlang.org), with a number of
 modifications and clarifications on its syntax and behavior.
 
+The current version of the KDL spec is `1.0.0`.
+
 ## Design and Discussion
 
 KDL is still extremely new, and discussion about the format should happen over
@@ -178,6 +180,20 @@ comment out individual nodes, arguments, or children:
 mynode /-"commented" "not commented" /-key="value" /-{
   a
   b
+}
+```
+
+### Type Annotations
+
+KDL supports type annotations on both values and nodes. These can be
+arbitrary, but can be used by individual implementations or use-cases to
+constrain KDL's basic types. A number of type names are also reserved to have
+specific meanings.
+
+```kdl
+numbers (u8)10 (i32)20 myfloat=(f32)1.5 {
+  strings (uuid)"123e4567-e89b-12d3-a456-426614174000" (date)"2021-02-03" filter=(regex)r"$\d+"
+  (author)person name="Alex"
 }
 ```
 

@@ -3,7 +3,7 @@
 This is the semi-formal specification for KDL, including the intended data
 model and the grammar.
 
-This document describes KDL version `1.0.0-pre.0`.
+This document describes KDL version `1.0.0`.
 
 ## Introduction
 
@@ -253,7 +253,7 @@ IEEE 754-2008 decimal floating point numbers
 * `date-time`: ISO8601 date/time format.
 * `time`: "Time" section of ISO8601.
 * `date`: "Date" section of ISO8601.
-* `duration`: ISO8601 duration format. 
+* `duration`: ISO8601 duration format.
 * `decimal`: IEEE 754-2008 decimal string format.
 * `currency`: ISO 4217 currency code.
 * `country-2`: ISO 3166-1 alpha-2 country code.
