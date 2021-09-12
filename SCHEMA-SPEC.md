@@ -273,10 +273,16 @@ and property names when the `node-names` or `prop-names` options are activated.
 * `pattern`: Regex pattern or patterns to test prop values against. Specific regex syntax may be implementation-dependent.
 * `min-length`: Minimum length, if a string.
 * `max-length`: Maximum length, if a string.
-* `format`: Intended data format, if the value is a string. Possible values are:
+* `format`: Intended data format, if the value is a string. Reserved values are:
     * `date-time`: ISO8601 date/time format.
     * `time`: "Time" section of ISO8601.
     * `date`: "Date" section of ISO8601.
+    * `duration`: ISO8601 duration format. 
+    * `decimal`: IEEE 754-2008 decimal string format.
+    * `currency`: ISO 4217 currency code.
+    * `country-2`: ISO 3166-1 alpha-2 country code.
+    * `country-3`: ISO 3166-1 alpha-3 country code.
+    * `country-subdivision`: ISO 3166-2 country subdivision code.
     * `email`: RFC5302 email address.
     * `idn-email`: RFC6531 internationalized email address.
     * `hostname`: RFC1132 internet hostname.
@@ -300,6 +306,21 @@ and property names when the `node-names` or `prop-names` options are activated.
 * `>=`: Greater than or equal to.
 * `<`: Less than.
 * `<=`: Less than or equal to.
+* `format`: Intended data format for numeric values. Reserved values are:
+    * `i8`: 8-bit signed integer
+    * `i16`: 16-bit signed integer
+    * `i32`: 32-bit signed integer
+    * `i64`: 64-bit signed integer
+    * `u8`: 8-bit unsigned integer
+    * `u16`: 16-bit unsigned integer
+    * `u32`: 32-bit unsigned integer
+    * `u64`: 64-bit unsigned integer
+    * `isize`: Platform-dependent signed integer
+    * `usize`: Platform-dependent unsigned integer
+    * `f32`: IEEE 754 single (32-bit) precision floating point number
+    * `f64`: IEEE 754 double (64-bit) precision floating point number
+    * `decimal64`: IEEE 754-2008 64-bit decimal floating point number
+    * `decimal128`: IEEE 754-2008 128-bit decimal floating point number
 
 ### `definitions` node
 
