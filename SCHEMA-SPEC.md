@@ -6,6 +6,8 @@ constrain the allowed semantics of a KDL document. This can be used for many
 purposes: documentation for users, automated verification, or even automated
 generation of bindings!
 
+This document describes KDL Schema version `1.0.0`. It was released on September 11, 2021.
+
 ## The Formal Schema
 
 For the full KDL Schema schema itself, see
@@ -277,7 +279,7 @@ and property names when the `node-names` or `prop-names` options are activated.
     * `date-time`: ISO8601 date/time format.
     * `time`: "Time" section of ISO8601.
     * `date`: "Date" section of ISO8601.
-    * `duration`: ISO8601 duration format. 
+    * `duration`: ISO8601 duration format.
     * `decimal`: IEEE 754-2008 decimal string format.
     * `currency`: ISO 4217 currency code.
     * `country-2`: ISO 3166-1 alpha-2 country code.

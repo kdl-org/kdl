@@ -5,6 +5,8 @@ documents to extract nodes and even specific data. It is loosely based on CSS
 selectors for familiarity and ease of use. Think of it as CSS Selectors or
 XPath, but for KDL!
 
+This document describes KQL `1.0.0`. It was released on September 11, 2021.
+
 ## Selectors
 
 Selectors use selection operators to filter nodes that will be returned by an

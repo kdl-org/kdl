@@ -3,7 +3,7 @@
 This is the semi-formal specification for KDL, including the intended data
 model and the grammar.
 
-This document describes KDL version `1.0.0`.
+This document describes KDL version `1.0.0`. It was released on September 11, 2021.
 
 ## Introduction
 
