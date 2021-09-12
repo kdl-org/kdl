@@ -82,7 +82,7 @@ document {
                     node "link" id="info-link" description="Links to itself, and to sources describing it" {
                         value description="A URL that the link points to" {
                             type "string"
-                            format "uri" "iri"
+                            format "url" "irl"
                             min 1
                             max 1
                         }
@@ -269,7 +269,7 @@ document {
                                     min 1
                                     type "string"
                                     // https://json-schema.org/understanding-json-schema/reference/string.html#format
-                                    enum "date-time" "date" "time" "duration" "decimal" "currency" "country-2" "country-3" "country-subdivision" "email" "idn-email" "hostname" "idn-hostname" "ipv4" "ipv6" "uri" "uri-reference" "iri", "iri-reference" "uri-template" "regex" "uuid" "kdl-query" "i8" "i16" "i32" "i64" "u8" "u16" "u32" "u64" "isize" "usize" "f32" "f64" "decimal64" "decimal128"
+                                    enum "date-time" "date" "time" "duration" "decimal" "currency" "country-2" "country-3" "country-subdivision" "email" "idn-email" "hostname" "idn-hostname" "ipv4" "ipv6" "url" "url-reference" "irl", "irl-reference" "url-template" "regex" "uuid" "kdl-query" "i8" "i16" "i32" "i64" "u8" "u16" "u32" "u64" "isize" "usize" "f32" "f64" "decimal64" "decimal128"
                                 }
                             }
                             node "%" description="Only used for numeric values. Constrains them to be multiples of the given number(s)" {
