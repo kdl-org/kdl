@@ -8,7 +8,7 @@ document {
         contributor "Lars Willighagen" {
             link "https://github.com/larsgw" rel="self"
         }
-        link https://github.com/zkat/kdl rel="documentation"
+        link "https://github.com/zkat/kdl" rel="documentation"
         license "Creative Commons Attribution-ShareAlike 4.0 International License" spdx="CC-BY-SA-4.0" {
             link "https://creativecommons.org/licenses/by-sa/4.0/" lang="en"
         }
