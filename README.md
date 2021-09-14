@@ -33,6 +33,7 @@ free to jump in and give us your 2 cents!
 * Java: [kdl4j](https://github.com/hkolbeck/kdl4j)
 * PHP: [kdl-php](https://github.com/kdl-org/kdl-php)
 * Python: [kdl-py](https://github.com/daeken/kdl-py)
+* Elixir: [kuddle](https://github.com/IceDragon200/kuddle)
 
 ## Compatibility Test Suite
 
