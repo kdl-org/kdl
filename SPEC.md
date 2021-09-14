@@ -466,7 +466,7 @@ newline := See Table (All line-break white_space)
 
 ws := bom | unicode-space | multi-line-comment
 
-bom := '\u{FFEF}'
+bom := '\u{FEFF}'
 
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
