@@ -7,7 +7,7 @@ This is version 1.0.0 of XiK.
 
 XML-in-KDL (XiK from now on) is a KDL microsyntax for losslessly encoding XML into a KDL document. XML and KDL, luckily, have *very similar* data models (KDL is *almost* a superset of XML), so it's quite straightforward to encode most XML documents into KDL.
 
-See [the website example](blob/main/examples/website.kdl) for an example of this grammar in use to encode an HTML document.
+See [the website example](examples/website.kdl) for an example of this grammar in use to encode an HTML document.
 
 XML has several types of nodes, corresponding to certain KDL constructs:
 
