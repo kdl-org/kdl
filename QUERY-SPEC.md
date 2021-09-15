@@ -21,13 +21,13 @@ lack of `*` (use `[]` instead), and the specific syntax for
 * `a ~ b`: Selects any `b` element that follows an `a` element as a sibling, either immediately or later.
 * `[accessor()]`: Selects any element, filtered by [an accessor](#accessors). (`accessor()` is a placeholder, not an actual accessor)
 * `a[accessor()]`: Selects any `a` element, filtered by an accessor.
-* `[]`: Selects any element (a )
+* `[]`: Selects any element.
 
 ## Matchers
 
 Matchers are used to filter nodes by their various attributes (such as values,
 properties, node names, etc). With the exception of `top()` and `()`, they are all
-used inside a `[ ]` selector. Some matchers are unary, but most of them involve
+used inside a `[]` selector. Some matchers are unary, but most of them involve
 binary operators.
 
 * `top()`: Returns all toplevel children of the current document.
@@ -125,9 +125,9 @@ Then the following queries are valid:
     * -> fetches any dependencies nodes with a `platform` prop (just the one, in this case)
 * `dependencies[prop(platform)]`
     * -> Identical to the above. Plain identifiers are equivalent to `prop(<identifier>)`.
-* `dependencies > []` ->
-    * fetches all direct-child nodes of any `dependencies` nodes in the
-      document. In this case, it will fetch both `miette` and `winapi` nodes.
+* `dependencies > []`
+    * -> fetches all direct-child nodes of any `dependencies` nodes in the
+         document. In this case, it will fetch both `miette` and `winapi` nodes.
 
 If using an API that supports the [map operator](#map-operator), the following
 are valid queries:
