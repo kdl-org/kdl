@@ -214,7 +214,7 @@ smile "😁"
 "!@#$@$%Q#$%~@!40" "1.2.3" "!!!!!"=true
 
 // The following is a legal bare identifier:
-foo123~!@#$%^&*.:'|/?+ "weeee"
+foo123~!@#$%^&*.:'|?+ "weeee"
 
 // And you can also use unicode!
 ノード　お名前="☜(ﾟヮﾟ☜)"
