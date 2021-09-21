@@ -427,8 +427,9 @@ node-space := ws* escline ws* | ws+
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
-bare-identifier := ((identifier-char - digit - sign) identifier-char* | sign ((identifier-char - digit) identifier-char*)?) - keyword
-identifier-char := unicode - linespace - [\/(){}<>;[]=,"]
+bare-identifier := (identifier-initial identifier-char* | sign ((identifier-initial | sign) identifier-char*)?) - keyword
+identifier-char := identifier-initial | digit | sign
+identifier-initial := [A-Za-z] | [\x80-\u{10FFFF}] | [!#$%&'*.:?@^_`|~]
 keyword := boolean | 'null'
 prop := identifier '=' value
 value := type? (string | number | keyword)
