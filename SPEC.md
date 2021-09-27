@@ -57,8 +57,8 @@ slash-escaped line continuation](#line-continuation). Arguments and Properties
 may be interspersed in any order, much like is common with positional
 arguments vs options in command line tools.
 
-Arguments are ordered relative to each other and that order must be preserved
-in order to maintain the semantics.
+Arguments are ordered relative to each other (but not relative to Properties)
+and that order must be preserved in order to maintain the semantics.
 
 By contrast, Property order _SHOULD NOT_ matter to implementations.
 [Children](#children-block) should be used if an order-sensitive key/value
