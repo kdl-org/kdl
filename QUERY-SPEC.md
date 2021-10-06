@@ -5,20 +5,20 @@ documents to extract nodes and even specific data. It is loosely based on CSS
 selectors for familiarity and ease of use. Think of it as CSS Selectors or
 XPath, but for KDL!
 
-This document describes KQL `1.0.0`. It was released on September 11, 2021.
+This document describes KQL `next`. It is unreleased.
 
 ## Selectors
 
 Selectors use selection operators to filter nodes that will be returned by an
 API using KQL. The main differences between this and CSS selectors are the
-lack of `*` (use `[]` instead), and the specific syntax for
+lack of `*` (use `[]` instead), the specific syntax for descendants and siblings, and the specific syntax for
 [matchers](#matchers) (the stuff between `[` and `]`), which is similar, but not identical to CSS.
 
 * `a > b`: Selects any `b` element that is a direct child of an `a` element.
-* `a b`: Selects any `b` element that is a _descendant_ of an `a` element.
-* `a b || a c`: Selects all `b` and `c` elements that are descendants of an `a` element. Any selector may be on either side of the `||`. Multiple `||` are supported.
+* `a >> b`: Selects any `b` element that is a _descendant_ of an `a` element.
+* `a >> b || a >> c`: Selects all `b` and `c` elements that are descendants of an `a` element. Any selector may be on either side of the `||`. Multiple `||` are supported.
 * `a + b`: Selects any `b` element that is placed immediately after a sibling `a` element.
-* `a ~ b`: Selects any `b` element that follows an `a` element as a sibling, either immediately or later.
+* `a ++ b`: Selects any `b` element that follows an `a` element as a sibling, either immediately or later.
 * `[accessor()]`: Selects any element, filtered by [an accessor](#accessors). (`accessor()` is a placeholder, not an actual accessor)
 * `a[accessor()]`: Selects any `a` element, filtered by an accessor.
 * `[]`: Selects any element.
@@ -108,16 +108,16 @@ package {
         winapi "1.0.0" path="./crates/my-winapi-fork"
     }
     dependencies {
-        miette "2.0.0" dev=true
+        miette "2.0.0" dev=true integrity=(sri)"sha512-deadbeef"
     }
 }
 ```
 
 Then the following queries are valid:
 
-* `package name`
+* `package >> name`
     * -> fetches the `name` node itself
-* `top() > package name`
+* `top() > package >> name`
     * -> fetches the `name` node, guaranteeing that `package` is in the document root.
 * `dependencies`
     * -> deep-fetches both `dependencies` nodes
