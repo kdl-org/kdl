@@ -69,33 +69,6 @@ is not one of those, the matcher will always fail:
 
 * `[val() = (foo)]`: Selects any element whose tag is "foo".
 
-## Map Operator
-
-KQL implementations MAY support a "map operator", `=>`, that allows selection
-of specific parts of the selected notes, essentially "mapping" over a
-selector's result set.
-
-Only a single map operator may be used, and it must be the last element in a
-selector string.
-
-The map operator's right hand side is either an [`accessor`](#accessors) on
-its own, or a tuple of accessors, denoted by a comma-separated list wrapped in
-`()` (for example, `(a, b, c)`).
-
-## Accessors
-
-Accessors access/extract specific parts of a node. They are used with the [map
-operator](#map-operator), and have syntactic overlap with some
-[matchers](#matchers).
-
-* `name()`: Returns the name of the node itself.
-* `val(2)`: Returns the third value in a node.
-* `val()`: Equivalent to `val(0)`.
-* `prop(foo)`: Returns the value of the property `foo` in the node.
-* `foo`: Equivalent to `prop(foo)`.
-* `props()`: Returns all properties of the node as an object.
-* `values()`: Returns all values of the node as an array.
-
 ## Examples
 
 Given this document:
@@ -128,15 +101,3 @@ Then the following queries are valid:
 * `dependencies > []`
     * -> fetches all direct-child nodes of any `dependencies` nodes in the
          document. In this case, it will fetch both `miette` and `winapi` nodes.
-
-If using an API that supports the [map operator](#map-operator), the following
-are valid queries:
-
-* `package name => val()`
-    * -> `["foo"]`.
-* `dependencies[platform] => platform`
-    * -> `["windows"]`
-* `dependencies > [] => (name(), val(), path)`
-    * -> `[("winapi", "1.0.0", "./crates/my-winapi-fork"), ("miette", "2.0.0", None)]`
-* `dependencies > [] => (name(), values(), props())`
-    * -> `[("winapi", ["1.0.0"], {"platform": "windows"}), ("miette", ["2.0.0"], {"dev": true})]`
