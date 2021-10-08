@@ -48,7 +48,7 @@ A node consists of three mandatory and two optional elements:
 A value is one of:
 
 * a Unicode string
-* a **number**, consisting of an integer part and a decimal part
+* a **number**, being an arbitrary-precision, base-10 decimal number value
 * a **boolean**, being one of the special values *true* and *false*
 * the special value *null*
 
