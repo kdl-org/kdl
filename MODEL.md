@@ -33,44 +33,72 @@ circular structures.
 
 ### Node
 
-A node consists of three mandatory and two optional elements:
+A node consists of five elements:
 
 * a **name** being a Unicode string
-* an optional **tag** being a Unicode string
+* a **tag** being a Unicode string
 * a sequence of **arguments**, each being a [value](#value)
 * a set of **properties**, each consisting of
     * a name being Unicode string unique within the set
     * a [value](#value)
-* an optional list of **children** being a [document](#document)
+* a list of **children** being a [document](#document)
 
 ### Value
 
-A value is one of:
+A value consists of two elements:
+
+* a **tag** being a Unicode string
+
+and one one of:
 
 * a Unicode string
 * a **number**, being an arbitrary-precision, base-10 decimal number value
 * a **boolean**, being one of the special values *true* and *false*
 * the special value *null*
 
-## Application Notes
+## Implementation Notes
 
-Implementations may want to limit the set of processable KDL documents by
-limiting properties of the data model such as the following:
+### Extensions to the data model
 
-* A node with empty string tag (e.g. `("")node`) differs from a node without
-  tag (`node`).
+While valid implementations must support at least the elements described above,
+they *may* recognize and preserve additional information not captured in the
+data model, such as:
 
-* A node with empty children (e.g. `node {}`) differs from a node without
-  children (`node`).
+* Line numbers and character position of parsed KDL syntax elements.
 
-* KDL does not differ between integer numbers and numbers with fractional part
-  nor does it define a fixed limit to the length or precision of numbers.
+* Comments and precise details of whitespace and node terminators.
 
-* property names differ also if their distinct strings become equivalent after
-  Unicode normalization.
+* Whether a tag is the empty string (`("")node)` or missing. KDL syntax allows
+  nodes and values with and without tag. Both are identical in KDL data model.
 
-Applications must make clear whether they support full KDL data model or a
-specific subset and whether they modify KDL documents to fit to their limited
-model. Applications may further extend their document model with additional
-information such as line numbers beyond the scope of this specification.
+* Whether a node had an empty child list (`node {}`) or no child list at all.
+  KDL syntax allows both. KDL data model considers these identical.
+ 
+* The precise format of numbers, such as what radix they're specified in
+  (`0x1a`), whether they are an integer or not (`1` vs `1.0`), the presence of
+  underscores (`1_234`), etc. KDL syntax supports multiple ways to specify
+  numbers. KDL data model does not differentiate number types.
 
+### Data binding
+
+The mapping of KDL elements to data elements of a particular programming or
+database languages is beyond the scope of this data model. Implementations
+should use tags as type annotations to map KDL data model instances to other
+type systems.
+
+### Limitations to the data model
+
+Implementations may choose to limit the set of processable KDL documents for
+technical reasons. Such limitations must be stated clearly to indicate a useful
+but incomplete support of KDL data model. Reasonable limitations include:
+
+* Precision of numbers
+
+* Types of elements that can have tags (e.g. disallow tags for boolean values
+  and `null`)
+
+* Unicode Normalization (e.g. collapse properties into one when their names are
+  equivalent after normalization)
+
+Implementations must document how limitations to KDL model are applied when KDL
+document are read (e.g. give warnings and ignore unsupported elements).
