@@ -33,28 +33,30 @@ circular structures.
 
 ### Node
 
-A node consists of five elements:
+A node consists of four mandatory and one optional elements:
 
 * a **name** being a Unicode string
-* a **tag** being a Unicode string
+* an optional **tag** being a Unicode string (the empty string tag is distinct from no tag)
 * a sequence of **arguments**, each being a [value](#value)
-* a set of **properties**, each consisting of
-    * a name being Unicode string unique within the set
+* a map of **properties**, each consisting of
+    * a key being a Unicode string unique within the map
     * a [value](#value)
-* a list of **children** being a [document](#document)
+* a sequence of **children** being a [document](#document)
 
 ### Value
 
-A value consists of two elements:
-
-* a **tag** being a Unicode string
-
-and one one of:
+A value consists of one of:
 
 * a Unicode string
 * a **number**, being an arbitrary-precision, base-10 decimal number value
 * a **boolean**, being one of the special values *true* and *false*
 * the special value *null*
+
+and
+
+* an optional a **tag** being a Unicode string (the empty string tag is distinct from no tag)
+
+The data model does not limit the use of tags to specific types of values.
 
 ## Implementation Notes
 
@@ -67,9 +69,6 @@ data model, such as:
 * Line numbers and character position of parsed KDL syntax elements.
 
 * Comments and precise details of whitespace and node terminators.
-
-* Whether a tag is the empty string (`("")node)` or missing. KDL syntax allows
-  nodes and values with and without tag. Both are identical in KDL data model.
 
 * Whether a node had an empty child list (`node {}`) or no child list at all.
   KDL syntax allows both. KDL data model considers these identical.
