@@ -446,9 +446,10 @@ raw-string-quotes := '"' .* '"'
 
 number := decimal | hex | octal | binary
 
-decimal := integer ('.' [0-9] [0-9_]*)? exponent?
-exponent := ('e' | 'E') integer
-integer := sign? [0-9] [0-9_]*
+decimal := sign? integer ('.' integer)? exponent?
+exponent := ('e' | 'E') sign? integer
+integer := digit (digit | '_')*
+digit := [0-9]
 sign := '+' | '-'
 
 hex := sign? '0x' hex-digit (hex-digit | '_')*
