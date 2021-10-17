@@ -420,8 +420,8 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ```
 nodes := linespace* (node nodes?)? linespace*
 
-node := ('/-' node-space*)? type? identifier (node-space node-space* node-props-and-args)* (node-space* node-children ws*)? node-space* node-terminator
-node-props-and-args := ('/-' node-space*)? (prop | value)
+node := ('/-' node-space*)? type? identifier (node-space+ node-prop-or-arg)* (node-space* node-children ws*)? node-space* node-terminator
+node-prop-or-arg := ('/-' node-space*)? (prop | value)
 node-children := ('/-' node-space*)? '{' nodes '}'
 node-space := ws* escline ws* | ws+
 node-terminator := single-line-comment | newline | ';' | eof
