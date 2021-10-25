@@ -35,6 +35,7 @@ free to jump in and give us your 2 cents!
 * Python: [kdl-py](https://github.com/tabatkins/kdlpy), [cuddle](https://github.com/djmattyg007/python-cuddle)
 * Elixir: [kuddle](https://github.com/IceDragon200/kuddle)
 * XSLT: [xml2kdl](https://github.com/Devasta/XML2KDL)
+* Haskell: [Hustle](https://github.com/fuzzypixelz/Hustle)
 
 ## Compatibility Test Suite
 
