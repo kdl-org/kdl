@@ -430,7 +430,7 @@ identifier := string | bare-identifier
 bare-identifier := (unambiguous-ident | numberish-ident | stringish-ident) - keyword
 unambiguous-ident := (identifier-char - digit - sign - "r") identifier-char*
 numberish-ident := sign ((identifier-char - digit) identifier-char*)?
-stringish-ident := "r" ((identifier-char - [#"]) identifier-char*)?
+stringish-ident := "r" ((identifier-char - "#") identifier-char*)?
 identifier-char := unicode - linespace - [\/(){}<>;[]=,"]
 keyword := boolean | 'null'
 prop := identifier '=' value
