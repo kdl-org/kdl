@@ -18,6 +18,12 @@ rules, with some semantic exceptions involving the data model.
 
 KDL is designed to be easy to read _and_ easy to implement.
 
+In this document, references to "left" or "right" refer to directions in the
+*data stream* towards the beginning or end, respectively; in other words,
+the directions if the data stream were only ASCII text. They do not refer
+to the writing direction of text, which can flow in either direction,
+depending on the characters used.
+
 ## Components
 
 ### Document
