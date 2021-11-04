@@ -260,8 +260,8 @@ IEEE 754-2008 decimal floating point numbers
 * `country-subdivision`: ISO 3166-2 country subdivision code.
 * `email`: RFC5302 email address.
 * `idn-email`: RFC6531 internationalized email address.
-* `hostname`: RFC1132 internet hostname.
-* `idn-hostname`: RFC5890 internationalized internet hostname.
+* `hostname`: RFC1132 internet hostname (only ASCII segments)
+* `idn-hostname`: RFC5890 internationalized internet hostname (only `xn--`-prefixed ASCII "punycode" segments, or non-ASCII segments)
 * `ipv4`: RFC2673 dotted-quad IPv4 address.
 * `ipv6`: RFC2373 IPv6 address.
 * `url`: RFC3986 URI.
