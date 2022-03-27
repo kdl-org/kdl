@@ -228,7 +228,7 @@ document {
                         children id="validations" description="General value validations." {
                             node "tag" id="value-tag-node" description="The tags associated with this value" {
                                 max 1
-                                children ref="[id="validations"]"
+                                children ref=r#"[id="validations"]"#
                             }
                             node "type" description="The type for this prop's value." {
                                 max 1
@@ -269,7 +269,7 @@ document {
                                     min 1
                                     type "string"
                                     // https://json-schema.org/understanding-json-schema/reference/string.html#format
-                                    enum "date-time" "date" "time" "duration" "decimal" "currency" "country-2" "country-3" "country-subdivision" "email" "idn-email" "hostname" "idn-hostname" "ipv4" "ipv6" "url" "url-reference" "irl", "irl-reference" "url-template" "regex" "uuid" "kdl-query" "i8" "i16" "i32" "i64" "u8" "u16" "u32" "u64" "isize" "usize" "f32" "f64" "decimal64" "decimal128"
+                                    enum "date-time" "date" "time" "duration" "decimal" "currency" "country-2" "country-3" "country-subdivision" "email" "idn-email" "hostname" "idn-hostname" "ipv4" "ipv6" "url" "url-reference" "irl" "irl-reference" "url-template" "regex" "uuid" "kdl-query" "i8" "i16" "i32" "i64" "u8" "u16" "u32" "u64" "isize" "usize" "f32" "f64" "decimal64" "decimal128"
                                 }
                             }
                             node "%" description="Only used for numeric values. Constrains them to be multiples of the given number(s)" {
