@@ -78,6 +78,9 @@ document {
                     node "contributor" description="Contributor to the schema" {
                         value ref=r#"[id="info-person-name"]"#
                         prop ref=r#"[id="info-orcid"]"#
+                        children {
+                            node ref=r#"[id="info-link"]"#
+                        }
                     }
                     node "link" id="info-link" description="Links to itself, and to sources describing it" {
                         value description="A URL that the link points to" {
