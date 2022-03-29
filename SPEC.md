@@ -404,6 +404,13 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Medium Mathematical Space | `U+205F`  |
 | Ideographic Space    | `U+3000`  |
 
+#### Multi-line comments
+
+In addition to single-line comments using `//`, comments can also be started
+with `/*` and ended with `*/`. These comments can span multiple lines. They
+are allowed in all positions where [Whitespace](#whitespace) is allowed and
+can be nested.
+
 ### Newline
 
 The following characters [should be treated as new
