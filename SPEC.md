@@ -93,7 +93,10 @@ A bare Identifier is composed of any Unicode codepoint other than [non-initial
 characters](#non-initial-characters), followed by any number of Unicode
 codepoints other than [non-identifier characters](#non-identifier-characters),
 so long as this doesn't produce something confusable for a [Number](#number),
-[Boolean](#boolean), or [Null](#null).
+[Boolean](#boolean), or [Null](#null). For example, both a [Number](#number)
+and an Identifier can start with `-`, but when an Identifier starts with `-`
+the second character cannot be a digit. This is precicely specified in the 
+[Full Grammar](#full-grammar) below.
 
 Identifiers are terminated by [Whitespace](#whitespace) or
 [Newlines](#newline).
@@ -105,6 +108,11 @@ The following characters cannot be the first character in a bare
 
 * Any decimal digit (0-9)
 * Any [non-identifier characters](#non-identifier-characters)
+
+Be aware that the `-` character can only be used as an initial
+character if the second character is not a digit. This allows
+identifiers to look like `--this`, and removes the ambiguity
+of having an identifier look like a negative number.
 
 ### Non-identifier characters
 
