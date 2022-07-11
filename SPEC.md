@@ -63,6 +63,10 @@ slash-escaped line continuation](#line-continuation). Arguments and Properties
 may be interspersed in any order, much like is common with positional
 arguments vs options in command line tools.
 
+[Children](#children-block) can be placed after the name and the optional
+Arguments and Properties, possibly separated by either whitespace or a
+slash-escaped line continuation.
+
 Arguments are ordered relative to each other (but not relative to Properties)
 and that order must be preserved in order to maintain the semantics.
 
@@ -74,9 +78,8 @@ Nodes _MAY_ be prefixed with `/-` to "comment out" the entire node, including
 its properties, arguments, and children, and make it act as plain whitespace,
 even if it spreads across multiple lines.
 
-Finally, a node is terminated by either a [Newline](#newline), a [Children
-Block](#children-block), a semicolon (`;`) or the end of the file/stream (an
-`EOF`).
+Finally, a node is terminated by either a [Newline](#newline), a semicolon (`;`)
+or the end of the file/stream (an `EOF`).
 
 #### Example
 
@@ -182,7 +185,7 @@ my-node 1 2 3 "a" "b" "c"
 ### Children Block
 
 A children block is a block of [Nodes](#node), surrounded by `{` and `}`. They
-are an optional terminator for nodes, and create a hierarchy of KDL nodes.
+are an optional part of nodes, and create a hierarchy of KDL nodes.
 
 Regular node termination rules apply, which means multiple nodes can be
 included in a single-line children block, as long as they're all terminated by
