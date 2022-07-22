@@ -275,7 +275,7 @@ IEEE 754-2008 decimal floating point numbers
 * `country-2`: ISO 3166-1 alpha-2 country code.
 * `country-3`: ISO 3166-1 alpha-3 country code.
 * `country-subdivision`: ISO 3166-2 country subdivision code.
-* `email`: RFC5302 email address.
+* `email`: RFC5322 email address.
 * `idn-email`: RFC6531 internationalized email address.
 * `hostname`: RFC1132 internet hostname (only ASCII segments)
 * `idn-hostname`: RFC5890 internationalized internet hostname (only `xn--`-prefixed ASCII "punycode" segments, or non-ASCII segments)
