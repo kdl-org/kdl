@@ -27,7 +27,7 @@ free to jump in and give us your 2 cents!
 ## Implementations
 
 * Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs), [knuffel](https://crates.io/crates/knuffel/) (latter includes derive macro), and [kaydle](https://github.com/Lucretiel/kaydle) (serde-based)
-* JavaScript: [kdljs](https://github.com/kdl-org/kdljs)
+* JavaScript: [kdljs](https://github.com/kdl-org/kdljs), [@virtualstate/kdl](https://github.com/virtualstate/kdl) (query only, for JSX based)
 * Ruby: [kdl-rb](https://github.com/danini-the-panini/kdl-rb)
 * Dart: [kdl-dart](https://github.com/danini-the-panini/kdl-dart)
 * Java: [kdl4j](https://github.com/hkolbeck/kdl4j)
