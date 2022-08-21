@@ -442,17 +442,19 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ## Full Grammar
 
 ```
-nodes := linespace* (node nodes?)? linespace*
+nodes := (line-space* node)* line-space*
 
-node := ('/-' node-space*)? type? identifier (node-space+ node-prop-or-arg)* (node-space* node-children ws*)? node-space* node-terminator
-node-prop-or-arg := ('/-' node-space*)? (prop | value)
-node-children := ('/-' node-space*)? '{' nodes '}'
-node-space := ws* escline ws* | ws+
+line-space := newline | ws | single-line-comment | '/-' node-space* node
+node-space := ws* escline ws* | ws+ | '/-' node-space* (node-prop-or-arg | node-children)
+
+node := type? identifier (node-space+ node-prop-or-arg)* (node-space* node-children)? node-space* node-terminator
+node-prop-or-arg := prop | value
+node-children := '{' nodes '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
 bare-identifier := ((identifier-char - digit - sign) identifier-char* | sign ((identifier-char - digit) identifier-char*)?) - keyword
-identifier-char := unicode - linespace - [\/(){}<>;[]=,"]
+identifier-char := unicode - line-space - [\/(){}<>;[]=,"]
 keyword := boolean | 'null'
 prop := identifier '=' value
 value := type? (string | number | keyword)
@@ -483,8 +485,6 @@ binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 boolean := 'true' | 'false'
 
 escline := '\\' ws* (single-line-comment | newline)
-
-linespace := newline | ws | single-line-comment
 
 newline := See Table (All line-break white_space)
 
