@@ -3,7 +3,9 @@
 This is the semi-formal specification for KDL, including the intended data
 model and the grammar.
 
-This document describes KDL version `1.0.0`. It was released on September 11, 2021.
+This document describes KDL version `2.0.0-preview`.
+
+KDL version `1.0.0` was released on September 11, 2021.
 
 ## Introduction
 
@@ -23,6 +25,22 @@ In this document, references to "left" or "right" refer to directions in the
 the directions if the data stream were only ASCII text. They do not refer
 to the writing direction of text, which can flow in either direction,
 depending on the characters used.
+
+## Changes from version `1.0.0`
+
+### Relaxed
+
+- The way that `/-` comments are handled has changed. Now, `/-` comments are
+  consistently treated like whitespace. Notably, this means that `/-` children
+  blocks do not prevent the presence of later arguments, properties, or children
+  blocks on the attached node.
+
+### Constrained
+
+- Previously, whitespace was not required before a children block, i.e. `node{}`
+  was valid. Now, whitespace is required before a children block, the same as
+  before arguments and properties.
+- `/-` comments on nodes must also be separated by plain (non-`/-`) whitespace. 
 
 ## Components
 
@@ -444,10 +462,13 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ```
 nodes := (line-space* node)* line-space*
 
-line-space := newline | ws | single-line-comment | '/-' node-space* node
-node-space := ws* escline ws* | ws+ | '/-' node-space* (node-prop-or-arg | node-children)
+plain-line-space := newline | ws | single-line-comment
+plain-node-space := ws* escline ws* | ws+
 
-node := type? identifier (node-space+ node-prop-or-arg)* (node-space* node-children)? node-space* node-terminator
+line-space := (plain-line-space+ '/-' plain-node-space* node)* plain-line-space+
+node-space := (plain-node-space+ '/-' plain-node-space* (node-prop-or-arg | node-children))* plain-node-space+
+
+node := type? identifier (node-space+ node-prop-or-arg)* (node-space+ node-children)? node-space* node-terminator
 node-prop-or-arg := prop | value
 node-children := '{' nodes '}'
 node-terminator := single-line-comment | newline | ';' | eof
