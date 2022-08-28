@@ -26,14 +26,17 @@ free to jump in and give us your 2 cents!
 
 ## Implementations
 
-* Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs)
-* JavaScript: [kdljs](https://github.com/kdl-org/kdljs)
+* Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs), [knuffel](https://crates.io/crates/knuffel/) (latter includes derive macro), and [kaydle](https://github.com/Lucretiel/kaydle) (serde-based)
+* JavaScript: [kdljs](https://github.com/kdl-org/kdljs), [@virtualstate/kdl](https://github.com/virtualstate/kdl) (query only, JSX based)
 * Ruby: [kdl-rb](https://github.com/danini-the-panini/kdl-rb)
 * Dart: [kdl-dart](https://github.com/danini-the-panini/kdl-dart)
 * Java: [kdl4j](https://github.com/hkolbeck/kdl4j)
 * PHP: [kdl-php](https://github.com/kdl-org/kdl-php)
-* Python: [kdl-py](https://github.com/daeken/kdl-py)
+* Python: [kdl-py](https://github.com/tabatkins/kdlpy), [cuddle](https://github.com/djmattyg007/python-cuddle)
 * Elixir: [kuddle](https://github.com/IceDragon200/kuddle)
+* XSLT: [xml2kdl](https://github.com/Devasta/XML2KDL)
+* Haskell: [Hustle](https://github.com/fuzzypixelz/Hustle)
+* .NET: [Kadlet](https://github.com/oledfish/Kadlet)
 
 ## Compatibility Test Suite
 

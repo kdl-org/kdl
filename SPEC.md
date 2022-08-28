@@ -18,6 +18,12 @@ rules, with some semantic exceptions involving the data model.
 
 KDL is designed to be easy to read _and_ easy to implement.
 
+In this document, references to "left" or "right" refer to directions in the
+*data stream* towards the beginning or end, respectively; in other words,
+the directions if the data stream were only ASCII text. They do not refer
+to the writing direction of text, which can flow in either direction,
+depending on the characters used.
+
 ## Components
 
 ### Document
@@ -57,8 +63,12 @@ slash-escaped line continuation](#line-continuation). Arguments and Properties
 may be interspersed in any order, much like is common with positional
 arguments vs options in command line tools.
 
-Arguments are ordered relative to each other and that order must be preserved
-in order to maintain the semantics.
+[Children](#children-block) can be placed after the name and the optional
+Arguments and Properties, possibly separated by either whitespace or a
+slash-escaped line continuation.
+
+Arguments are ordered relative to each other (but not relative to Properties)
+and that order must be preserved in order to maintain the semantics.
 
 By contrast, Property order _SHOULD NOT_ matter to implementations.
 [Children](#children-block) should be used if an order-sensitive key/value
@@ -68,9 +78,8 @@ Nodes _MAY_ be prefixed with `/-` to "comment out" the entire node, including
 its properties, arguments, and children, and make it act as plain whitespace,
 even if it spreads across multiple lines.
 
-Finally, a node is terminated by either a [Newline](#newline), a [Children
-Block](#children-block), a semicolon (`;`) or the end of the file/stream (an
-`EOF`).
+Finally, a node is terminated by either a [Newline](#newline), a semicolon (`;`)
+or the end of the file/stream (an `EOF`).
 
 #### Example
 
@@ -87,7 +96,10 @@ A bare Identifier is composed of any Unicode codepoint other than [non-initial
 characters](#non-initial-characters), followed by any number of Unicode
 codepoints other than [non-identifier characters](#non-identifier-characters),
 so long as this doesn't produce something confusable for a [Number](#number),
-[Boolean](#boolean), or [Null](#null).
+[Boolean](#boolean), or [Null](#null). For example, both a [Number](#number)
+and an Identifier can start with `-`, but when an Identifier starts with `-`
+the second character cannot be a digit. This is precicely specified in the 
+[Full Grammar](#full-grammar) below.
 
 Identifiers are terminated by [Whitespace](#whitespace) or
 [Newlines](#newline).
@@ -99,6 +111,11 @@ The following characters cannot be the first character in a bare
 
 * Any decimal digit (0-9)
 * Any [non-identifier characters](#non-identifier-characters)
+
+Be aware that the `-` character can only be used as an initial
+character if the second character is not a digit. This allows
+identifiers to look like `--this`, and removes the ambiguity
+of having an identifier look like a negative number.
 
 ### Non-identifier characters
 
@@ -168,7 +185,7 @@ my-node 1 2 3 "a" "b" "c"
 ### Children Block
 
 A children block is a block of [Nodes](#node), surrounded by `{` and `}`. They
-are an optional terminator for nodes, and create a hierarchy of KDL nodes.
+are an optional part of nodes, and create a hierarchy of KDL nodes.
 
 Regular node termination rules apply, which means multiple nodes can be
 included in a single-line children block, as long as they're all terminated by
@@ -258,10 +275,10 @@ IEEE 754-2008 decimal floating point numbers
 * `country-2`: ISO 3166-1 alpha-2 country code.
 * `country-3`: ISO 3166-1 alpha-3 country code.
 * `country-subdivision`: ISO 3166-2 country subdivision code.
-* `email`: RFC5302 email address.
+* `email`: RFC5322 email address.
 * `idn-email`: RFC6531 internationalized email address.
-* `hostname`: RFC1132 internet hostname.
-* `idn-hostname`: RFC5890 internationalized internet hostname.
+* `hostname`: RFC1132 internet hostname (only ASCII segments)
+* `idn-hostname`: RFC5890 internationalized internet hostname (only `xn--`-prefixed ASCII "punycode" segments, or non-ASCII segments)
 * `ipv4`: RFC2673 dotted-quad IPv4 address.
 * `ipv6`: RFC2373 IPv6 address.
 * `url`: RFC3986 URI.
@@ -397,6 +414,13 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Medium Mathematical Space | `U+205F`  |
 | Ideographic Space    | `U+3000`  |
 
+#### Multi-line comments
+
+In addition to single-line comments using `//`, comments can also be started
+with `/*` and ended with `*/`. These comments can span multiple lines. They
+are allowed in all positions where [Whitespace](#whitespace) is allowed and
+can be nested.
+
 ### Newline
 
 The following characters [should be treated as new
@@ -419,8 +443,8 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ```
 nodes := linespace* (node nodes?)? linespace*
 
-node := ('/-' node-space*)? type? identifier (node-space node-space* node-props-and-args)* (node-space* node-children ws*)? node-space* node-terminator
-node-props-and-args := ('/-' node-space*)? (prop | value)
+node := ('/-' node-space*)? type? identifier (node-space+ node-prop-or-arg)* (node-space* node-children ws*)? node-space* node-terminator
+node-prop-or-arg := ('/-' node-space*)? (prop | value)
 node-children := ('/-' node-space*)? '{' nodes '}'
 node-space := ws* escline ws* | ws+
 node-terminator := single-line-comment | newline | ';' | eof
@@ -445,9 +469,10 @@ raw-string-quotes := '"' .* '"'
 
 number := decimal | hex | octal | binary
 
-decimal := integer ('.' [0-9] [0-9_]*)? exponent?
-exponent := ('e' | 'E') integer
-integer := sign? [0-9] [0-9_]*
+decimal := sign? integer ('.' integer)? exponent?
+exponent := ('e' | 'E') sign? integer
+integer := digit (digit | '_')*
+digit := [0-9]
 sign := '+' | '-'
 
 hex := sign? '0x' hex-digit (hex-digit | '_')*
