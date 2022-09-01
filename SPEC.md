@@ -352,7 +352,7 @@ World"
 
 ##### Invalid escapes
 
-Except as desribed in the escapes table, above, `\` *MUST NOT* precede any
+Except as described in the escapes table, above, `\` *MUST NOT* precede any
 other characters in a string.
 
 ### Raw String
