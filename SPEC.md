@@ -309,6 +309,8 @@ String Value can encompass multiple lines without behaving like a Newline for
 
 Strings _MUST_ be represented as UTF-8 values.
 
+#### Escapes
+
 In addition to literal code points, a number of "escapes" are supported.
 "Escapes" are the character `\` followed by another character, and are
 interpreted as described in the following table:
@@ -323,6 +325,35 @@ interpreted as described in the following table:
 | Backspace                     | `\b`   | `U+0008` |
 | Form Feed                     | `\f`   | `U+000C` |
 | Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, up to `10FFFF` |
+| Whitespace Escape             | See below | N/A   |
+
+##### Escaped Whitespace
+
+In addition to escaping individual characters, `\` can also escape whitespace.
+When a `\` is followed by one or more literal whitespace characters, the `\`
+and all of that whitespace are discarded. For example, `"Hello World"` and
+`"Hello \    World"` are semantically identical. See [whitespace](#whitespace)
+and [newlines](#newlines) for how whitespace is defined.
+
+Note that only literal whitespace is escaped; *escaped* whitespace is retained.
+For example, these strings are all semantically identical:
+
+```kdl
+"Hello\       \nWorld"
+
+    "Hello\n\
+    World"
+
+"Hello\nWorld"
+
+"Hello
+World"
+```
+
+##### Invalid escapes
+
+Except as described in the escapes table, above, `\` *MUST NOT* precede any
+other characters in a string.
 
 ### Raw String
 
@@ -460,7 +491,7 @@ type := '(' identifier ')'
 string := raw-string | escaped-string
 escaped-string := '"' character* '"'
 character := '\' escape | [^\"]
-escape := ["\\bfnrt] | 'u{' hex-digit{1, 6} '}'
+escape := ["\\bfnrt] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := 'r' raw-string-hash
