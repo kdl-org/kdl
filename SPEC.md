@@ -50,7 +50,7 @@ baz
 
 Being a node-oriented language means that the real core component of any KDL
 document is the "node". Every node must have a name, which is either a legal
-[Identifier](#identifier), or a quoted [String](#string).
+[Identifier](#identifier) or a quoted [String](#string), this quoted string has to have more than 0 characters (`""` is not a valid string identifier).
 
 The name may be preceded by a [Type Annotation](#type-annotation) to further
 clarify its type, particularly in relation to its parent node. (For example,
@@ -145,7 +145,7 @@ my-node 1 2 \  // comments are ok after \
 ### Property
 
 A Property is a key/value pair attached to a [Node](#node). A Property is
-composed of an [Identifier](#identifier) or a [String](#string), followed
+composed of an [Identifier](#identifier) or a [String](#string) (this quoted string has to have more than 0 characters), followed
 immediately by a `=`, and then a [Value](#value).
 
 Properties should be interpreted left-to-right, with rightmost properties with
@@ -220,7 +220,7 @@ or as a _context-specific elaboration_ of the more generic type the node name
 indicates.
 
 Type annotations are written as a set of `(` and `)` with a single
-[Identifier](#identifier) in it. Any valid identifier is considered a valid
+[Identifier](#identifier) or [String](#string) (this quoted string has to have more than 0 characters) in it. Any valid identifier is considered a valid
 type annotation. There must be no whitespace between a type annotation and its
 associated Node Name or Value.
 
