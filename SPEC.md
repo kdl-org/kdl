@@ -95,7 +95,8 @@ foo 1 key="val" 3 {
 An Identifier is either a [Bare Identifier](#bare-identifier), which is an
 unquoted string like `node` or `item`, or a [String](#string), which is quoted,
 like `"node"` or `"two words"`. There's no semantic difference between the
-kinds of identifier; this simply allows for the use of quotes to have unusual identifiers that are inexpressible as bare identifiers.
+kinds of identifier; this simply allows for the use of quotes to have unusual
+identifiers that are inexpressible as bare identifiers.
 
 ### Bare Identifier
 
