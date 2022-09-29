@@ -52,10 +52,3 @@ please send a PR.
 If you think the disagreement is due to a genuine error or oversight in the
 KDL specification, please open an issue explaining the matter and the change
 will be considered for the next version of the KDL spec.
-
-## Credit
-
-This test suite was extracted from
-[`kdl4j`](https://github.com/hkolbeck/kdl4j), the original Java
-implementation of KDL, with huge thanks to
-[@hkolbeck](https://github.com/hkolbeck) for authoring them!
