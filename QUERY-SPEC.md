@@ -104,7 +104,7 @@ Then the following queries are valid:
 
 ## Full Grammar
 
-Note: for rules that are not defined in this grammar, see [the KDL grammar](https://github.com/kdl-org/kdl/blob/main/SPEC.md#full-grammar).
+For rules that are not defined in this grammar, see [the KDL grammar](https://github.com/kdl-org/kdl/blob/main/SPEC.md#full-grammar).
 
 ```
 query := selector q-ws* "||" q-ws* query | selector
