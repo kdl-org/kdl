@@ -109,7 +109,7 @@ For rules that are not defined in this grammar, see [the KDL grammar](https://gi
 ```
 query := selector q-ws* "||" q-ws* query | selector
 selector := filter q-ws* selector-operator q-ws* selector | filter
-selector-operator := ">" | "+" | "~" | ""
+selector-operator := ">>" | ">" | "++" | "+"
 filter := matcher+
 matcher := "top()"| "()" | identifier | type | accessor-matcher
 accessor-matcher := "[" (comparison | accessor)? "]"
