@@ -101,3 +101,21 @@ Then the following queries are valid:
 * `dependencies > []`
     * -> fetches all direct-child nodes of any `dependencies` nodes in the
          document. In this case, it will fetch both `miette` and `winapi` nodes.
+
+## Full Grammar
+
+For rules that are not defined in this grammar, see [the KDL grammar](https://github.com/kdl-org/kdl/blob/main/SPEC.md#full-grammar).
+
+```
+query := selector q-ws* "||" q-ws* query | selector
+selector := filter q-ws* selector-operator q-ws* selector | filter
+selector-operator := ">>" | ">" | "++" | "+"
+filter := matcher+
+matcher := "top()"| "()" | identifier | type | accessor-matcher
+accessor-matcher := "[" (comparison | accessor)? "]"
+comparison := accessor q-ws* matcher-operator q-ws* (type | string | number | keyword)
+accessor := "val(" number ")" | "prop(" identifier ")" | "name()" | "tag()" | "values()" | "props()" | identifier
+matcher-operator := "=" | "!=" | ">" | "<" | ">=" | "<=" | "^=" | "$=" | "*="
+
+q-ws := bom | unicode-space
+```
