@@ -32,8 +32,8 @@ binary operators.
 
 * `top()`: Returns all toplevel children of the current document.
 * `top() > []`: Equivalent to `top()` on its own.
-* `(foo)`: Selects any element with a tag named `foo`.
-* `()`: Selects any element with any tag.
+* `(foo)`: Selects any element whose type annotation is `foo`.
+* `()`: Selects any element with any type annotation.
 * `[val()]`: Selects any element with a value.
 * `[val(1)]`: Selects any element with a second value.
 * `[prop(foo)]`: Selects any element with a property named `foo`.
@@ -44,8 +44,8 @@ Attribute matchers support certain binary operators:
 * `[val() = 1]`: Selects any element whose first value is 1.
 * `[prop(name) = 1]`: Selects any element with a property `name` whose value is 1.
 * `[name = 1]`: Equivalent to the above.
-* `[name() = "hi"]`: Selects any element whose _node name_ is "hi". Equivalent to just `hi`, but more useful when using string operators.
-* `[tag() = "hi"]`: Selects any element whose tag is "hi". Equivalent to just `(hi)`, but more useful when using string operators.
+* `[name() = "hi"]`: Selects any element whose _node name_ is `"hi"`. Equivalent to just `hi`, but more useful when using string operators.
+* `[tag() = "hi"]`: Selects any element whose type annotation is `"hi"`. Equivalent to just `(hi)`, but more useful when using string operators.
 * `[val() != 1]`: Selects any element whose first value exists, and is not 1.
 
 The following operators work with any `val()` or `prop()` values.
@@ -67,7 +67,7 @@ If the value is not a string, the matcher will always fail:
 The following operators work only with `val()` or `prop()` values. If the value
 is not one of those, the matcher will always fail:
 
-* `[val() = (foo)]`: Selects any element whose tag is "foo".
+* `[val() = (foo)]`: Selects any element whose type annotation is `foo`.
 
 ## Map Operator
 

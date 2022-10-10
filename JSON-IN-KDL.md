@@ -41,14 +41,14 @@ Arguments and children can be mixed, if desired. The preceding example could als
 }
 ```
 
-Two otherwise-ambiguous cases must be manually annotated with an `(array)` tag:
+Two otherwise-ambiguous cases must be manually annotated with an `(array)` type annotation:
 
 * A single-element array (such as `[1]`) written using arguments (as `- 1`) would be ambiguous with a literal node. 
 	To indicate this is an array, it must be written as `(array)- 1`
 	(Or rewritten to use child nodes, like `- { - 1 }`.)
-* An empty array (JSON `[]`) must use the `(array)` tag, like `(array)-`.
+* An empty array (JSON `[]`) must use the `(array)` type annotation, like `(array)-`.
 
-The `(array)` tag can be used on any other valid array node if desired, but has no effect in such cases.
+The `(array)` type annotation can be used on any other valid array node if desired, but has no effect in such cases.
 
 ----
 
@@ -97,14 +97,14 @@ The properties and/or children of the node represent the items of the object,
 with the property names and child nodenames as each item's key.
 All "keys" in an object node must be unique.
 
-As with arrays, there are two ambiguous cases that must be manually annoted with the `(object)` tag:
+As with arrays, there are two ambiguous cases that must be manually annoted with the `(object)` type annotation:
 
 * An object containing a single item whose key is "-" (like `{"-": 1}`) written using children (like `- { - 1 }`)
 	would be ambiguous with an array node.
 	To indicate this is an object, it must be written as `(object)- { - 1 }`.
 	(Or, if the sole item's value is a literal, as in this example,
 	it can be rewritten to use properties, as `- -=1`.)
-* An empty object (JSON `{}`) must use the `(object)` tag, like `(object)-`.
+* An empty object (JSON `{}`) must use the `(object)` type annotation, like `(object)-`.
 
 As with array nodes, `(object)` can be used on any valid object node if desired.
 
@@ -116,9 +116,9 @@ Only valid JiK nodes can be encoded to JSON; if a JiK document contains an inval
 
 * A literal node is valid if it contains a single unnamed argument.
 
-* An array node is valid if it contains only unnamed arguments and/or child nodes named "-". If it contains no arguments and no child nodes, its nodename *must* have the `(array)` tag.
+* An array node is valid if it contains only unnamed arguments and/or child nodes named "-". If it contains no arguments and no child nodes, its nodename *must* have the `(array)` type annotation.
 
-* An object node is valid if it contains only named properties and/or child nodes. Additionally, all "keys" must be unique within the node, whether they're encoded as property names or child node names. If it contains no properties and no child nodes, its nodename *must* have the `(object)` tag.
+* An object node is valid if it contains only named properties and/or child nodes. Additionally, all "keys" must be unique within the node, whether they're encoded as property names or child node names. If it contains no properties and no child nodes, its nodename *must* have the `(object)` type annotation.
 
 ----
 
