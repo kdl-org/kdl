@@ -40,6 +40,7 @@ free to jump in and give us your 2 cents!
 * C: [ckdl](https://github.com/tjol/ckdl)
 * C++: [kdlpp](https://github.com/tjol/ckdl) (part of ckdl, requires C++20)
 * OCaml: [ocaml-kdl](https://github.com/Bannerets/ocaml-kdl)
+* Nim: [kdl-nim](https://github.com/Patitotective/kdl-nim)
 
 ## Compatibility Test Suite
 
