@@ -54,6 +54,7 @@ entirety, but in the future, may be required to in order to be included here.
 
 * [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)
 * [vim](https://github.com/imsnif/kdl.vim)
+* [Intellij IDEA](https://plugins.jetbrains.com/plugin/20136-kdl-document-language)
 
 ## Overview
 
