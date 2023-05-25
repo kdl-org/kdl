@@ -106,7 +106,7 @@ codepoints other than [non-identifier characters](#non-identifier-characters),
 so long as this doesn't produce something confusable for a [Number](#number),
 [Boolean](#boolean), or [Null](#null). For example, both a [Number](#number)
 and an Identifier can start with `-`, but when an Identifier starts with `-`
-the second character cannot be a digit. This is precicely specified in the
+the second character cannot be a digit. This is precisely specified in the
 [Full Grammar](#full-grammar) below.
 
 Identifiers are terminated by [Whitespace](#whitespace) or
