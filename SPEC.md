@@ -484,7 +484,7 @@ raw-string := 'r' raw-string-hash
 raw-string-hash := '#' raw-string-hash '#' | raw-string-quotes
 raw-string-quotes := '"' .* '"'
 
-number := decimal | hex | octal | binary
+number := hex | octal | binary | decimal
 
 decimal := sign? integer ('.' integer)? exponent?
 exponent := ('e' | 'E') sign? integer
