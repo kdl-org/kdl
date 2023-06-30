@@ -18,6 +18,8 @@ modifications and clarifications on its syntax and behavior.
 
 The current version of the KDL spec is `1.0.0`.
 
+[Play with it in your browser!](https://kdl-play.danini.dev/)
+
 ## Design and Discussion
 
 KDL is still extremely new, and discussion about the format should happen over
