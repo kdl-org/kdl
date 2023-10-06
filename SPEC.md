@@ -465,10 +465,13 @@ nodes := (line-space* node)* line-space*
 plain-line-space := newline | ws | single-line-comment
 plain-node-space := ws* escline ws* | ws+
 
-line-space := (plain-line-space+ '/-' plain-node-space* node)* plain-line-space+
-node-space := (plain-node-space+ '/-' plain-node-space* (node-prop-or-arg | node-children))* plain-node-space+
+line-space := plain-line-space+ ('/-' plain-node-space* node)?
+node-space := plain-node-space+ ('/-' plain-node-space* (node-prop-or-arg | node-children))?
 
-node := type? identifier (node-space+ node-prop-or-arg)* (node-space+ node-children)? node-space* node-terminator
+required-node-space := node-space* plain-node-space+
+optional-node-space := node-space*
+
+node := type? identifier (required-node-space node-prop-or-arg)* (required-node-space node-children)? optional-node-space node-terminator
 node-prop-or-arg := prop | value
 node-children := '{' nodes '}'
 node-terminator := single-line-comment | newline | ';' | eof
