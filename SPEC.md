@@ -510,7 +510,7 @@ bom := '\u{FEFF}'
 
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
-single-line-comment := '//' ^newline* (newline | eof)
+single-line-comment := '//' ^newline+ (newline | eof)
 multi-line-comment := '/*' commented-block
 commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
 ```
