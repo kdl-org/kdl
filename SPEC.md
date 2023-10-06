@@ -413,7 +413,6 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Name                 | Code Pt |
 |----------------------|---------|
 | Character Tabulation | `U+0009`  |
-| Line Tabulation      | `U+000B`  |
 | Space                | `U+0020`  |
 | No-Break Space       | `U+00A0`  |
 | Ogham Space Mark     | `U+1680`  |
