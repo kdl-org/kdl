@@ -6,7 +6,8 @@
 
 * Solidus/Forward slash (`/`) is no longer an escaped character.
 * Single line comments (`//`) can now be immediately followed by a newline.
-* All literal whitespace following a `\` in a string is now discarded. 
+* All literal whitespace following a `\` in a string is now discarded.
+* Vertical tabs (`U+000B`) are now considered to be whitespace.
 
 ### KQL
 
