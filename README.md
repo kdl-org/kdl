@@ -44,7 +44,7 @@ free to jump in and give us your 2 cents!
 * OCaml: [ocaml-kdl](https://github.com/Bannerets/ocaml-kdl)
 * Nim: [kdl-nim](https://github.com/Patitotective/kdl-nim)
 * Common Lisp: [kdlcl](https://github.com/chee/kdlcl)
-* Go: [gokdl](https://github.com/lunjon/gokdl)
+* Go: [gokdl](https://github.com/lunjon/gokdl), [kdl-go](https://github.com/sblinch/kdl-go)
 
 ## Compatibility Test Suite
 
