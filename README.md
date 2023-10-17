@@ -11,7 +11,8 @@ package {
   version "1.2.3"
 
   dependencies {
-    // Nodes can have standalone values as well as key/value pairs.
+    // Nodes can have standalone values as well as
+    // key/value pairs.
     lodash "^3.2.1" optional=true alias="underscore"
   }
 
@@ -29,7 +30,8 @@ package {
              4 5 6 \
              7 8 9
 
-  // "Slashdash" comments operate at the node level, with just `/-`.
+  // "Slashdash" comments operate at the node level,
+  // with just `/-`.
   /-this-is-commented {
     this "entire" "node" {
       "is" "gone"
