@@ -8,8 +8,14 @@
 * Single line comments (`//`) can now be immediately followed by a newline.
 * All literal whitespace following a `\` in a string is now discarded.
 * Vertical tabs (`U+000B`) are now considered to be whitespace.
-* Identifiers can't start with `r#`, so they're easy to distinguish from raw strings. (They already similarly can't start with a digit, or a sign+digit, so they're easy to distinguish from numbers.)
-* The grammar syntax itself has been described, and some confusing definitions in the grammar have been fixed accordingly (mostly related to escaped characters).
+* Identifiers can't start with `r#`, so they're easy to distinguish from raw
+  strings. (They already similarly can't start with a digit, or a sign+digit,
+  so they're easy to distinguish from numbers.)
+* The grammar syntax itself has been described, and some confusing definitions
+  in the grammar have been fixed accordingly (mostly related to escaped
+  characters).
+* `,`, `<`, and `>` are not legal identifier characters. They were previously
+  reserved for KQL but this is no longer necessary.
 
 ### KQL
 
