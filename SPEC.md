@@ -98,7 +98,7 @@ codepoints other than [non-identifier characters](#non-identifier-characters),
 so long as this doesn't produce something confusable for a [Number](#number),
 [Boolean](#boolean), or [Null](#null). For example, both a [Number](#number)
 and an Identifier can start with `-`, but when an Identifier starts with `-`
-the second character cannot be a digit. This is precicely specified in the 
+the second character cannot be a digit. This is precicely specified in the
 [Full Grammar](#full-grammar) below.
 
 Identifiers are terminated by [Whitespace](#whitespace) or
@@ -472,6 +472,10 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 
 ## Full Grammar
 
+This is the full official grammar for KDL and should be considered
+authoritative if something seems to disagree with the text above. The [grammar
+language syntax](#grammar-language) is defined below.
+
 ```
 nodes := (line-space* node)* line-space*
 
@@ -494,7 +498,7 @@ bare-identifier := (unambiguous-ident | numberish-ident | stringish-ident) - key
 unambiguous-ident := (identifier-char - digit - sign - "r") identifier-char*
 numberish-ident := sign ((identifier-char - digit) identifier-char*)?
 stringish-ident := "r" ((identifier-char - "#") identifier-char*)?
-identifier-char := unicode - line-space - [\/(){}<>;[]=,"]
+identifier-char := unicode - line-space - [\\/(){}<>;\[\]=,"]
 keyword := boolean | 'null'
 prop := identifier '=' value
 value := type? (string | number | keyword)
@@ -538,3 +542,25 @@ single-line-comment := '//' ^newline* (newline | eof)
 multi-line-comment := '/*' commented-block
 commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
 ```
+
+### Grammar language
+
+The grammar language syntax is a combination of ABNF with some regex spice thrown in.
+Specifically:
+
+* Single quotes (`'`) are used to denote literal text. `\` within a literal
+  string is used for escaping other single-quotes, for initiating unicode
+  characters using hex values (`\u{FEFF}`), and for escaping `\` itself
+  (`\\`).
+* `*` is used for "zero or more", `+` is used for "one or more", and `?` is
+  used for "zero or one".
+* `()` can be used to group matches that must be matched together.
+* `a | b` means `a or b`, whichever matches first. If multipe items are before
+  a `|`, they are a single group. `a b c | d` is equivalent to `(a b c) | d`.
+* `[]` are used for regex-style character matches, where any character between
+  the brackets will be a single match. `\` is used to escape `\`, `[`, and
+  `]`. They also support character ranges (`0-9`), and negation (`^`)
+* `-` is used for "except for" or "minus" whatever follows it. For example, `a
+  - `'x'` means "any `a`, except something that matches the literal `'x'`".
+* The prefix `^` means "something that does not match" whatever follows it.
+  For example, `^foo` means "must not match `foo`".
