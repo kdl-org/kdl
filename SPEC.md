@@ -473,12 +473,20 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 ## Full Grammar
 
 ```
-nodes := linespace* (node nodes?)? linespace*
+nodes := (line-space* node)* line-space*
 
-node := ('/-' node-space*)? type? identifier (node-space+ node-prop-or-arg)* (node-space* node-children ws*)? node-space* node-terminator
-node-prop-or-arg := ('/-' node-space*)? (prop | value)
-node-children := ('/-' node-space*)? '{' nodes '}'
-node-space := ws* escline ws* | ws+
+plain-line-space := newline | ws | single-line-comment
+plain-node-space := ws* escline ws* | ws+
+
+line-space := plain-line-space+ ('/-' plain-node-space* node)?
+node-space := plain-node-space+ ('/-' plain-node-space* (node-prop-or-arg | node-children))?
+
+required-node-space := node-space* plain-node-space+
+optional-node-space := node-space*
+
+node := type? identifier (required-node-space node-prop-or-arg)* (required-node-space node-children)? optional-node-space node-terminator
+node-prop-or-arg := prop | value
+node-children := '{' nodes '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
@@ -486,7 +494,7 @@ bare-identifier := (unambiguous-ident | numberish-ident | stringish-ident) - key
 unambiguous-ident := (identifier-char - digit - sign - "r") identifier-char*
 numberish-ident := sign ((identifier-char - digit) identifier-char*)?
 stringish-ident := "r" ((identifier-char - "#") identifier-char*)?
-identifier-char := unicode - linespace - [\/(){}<>;[]=,"]
+identifier-char := unicode - line-space - [\/(){}<>;[]=,"]
 keyword := boolean | 'null'
 prop := identifier '=' value
 value := type? (string | number | keyword)
@@ -517,8 +525,6 @@ binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 boolean := 'true' | 'false'
 
 escline := '\\' ws* (single-line-comment | newline)
-
-linespace := newline | ws | single-line-comment
 
 newline := See Table (All line-break white_space)
 
