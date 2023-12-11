@@ -5,20 +5,20 @@ documents to extract nodes and even specific data. It is loosely based on CSS
 selectors for familiarity and ease of use. Think of it as CSS Selectors or
 XPath, but for KDL!
 
-This document describes KQL `1.0.0`. It was released on September 11, 2021.
+This document describes KQL `next`. It is unreleased.
 
 ## Selectors
 
 Selectors use selection operators to filter nodes that will be returned by an
 API using KQL. The main differences between this and CSS selectors are the
-lack of `*` (use `[]` instead), and the specific syntax for
+lack of `*` (use `[]` instead), the specific syntax for descendants and siblings, and the specific syntax for
 [matchers](#matchers) (the stuff between `[` and `]`), which is similar, but not identical to CSS.
 
 * `a > b`: Selects any `b` element that is a direct child of an `a` element.
-* `a b`: Selects any `b` element that is a _descendant_ of an `a` element.
-* `a b || a c`: Selects all `b` and `c` elements that are descendants of an `a` element. Any selector may be on either side of the `||`. Multiple `||` are supported.
+* `a >> b`: Selects any `b` element that is a _descendant_ of an `a` element.
+* `a >> b || a >> c`: Selects all `b` and `c` elements that are descendants of an `a` element. Any selector may be on either side of the `||`. Multiple `||` are supported.
 * `a + b`: Selects any `b` element that is placed immediately after a sibling `a` element.
-* `a ~ b`: Selects any `b` element that follows an `a` element as a sibling, either immediately or later.
+* `a ++ b`: Selects any `b` element that follows an `a` element as a sibling, either immediately or later.
 * `[accessor()]`: Selects any element, filtered by [an accessor](#accessors). (`accessor()` is a placeholder, not an actual accessor)
 * `a[accessor()]`: Selects any `a` element, filtered by an accessor.
 * `[]`: Selects any element.
@@ -69,33 +69,6 @@ is not one of those, the matcher will always fail:
 
 * `[val() = (foo)]`: Selects any element whose tag is "foo".
 
-## Map Operator
-
-KQL implementations MAY support a "map operator", `=>`, that allows selection
-of specific parts of the selected notes, essentially "mapping" over a
-selector's result set.
-
-Only a single map operator may be used, and it must be the last element in a
-selector string.
-
-The map operator's right hand side is either an [`accessor`](#accessors) on
-its own, or a tuple of accessors, denoted by a comma-separated list wrapped in
-`()` (for example, `(a, b, c)`).
-
-## Accessors
-
-Accessors access/extract specific parts of a node. They are used with the [map
-operator](#map-operator), and have syntactic overlap with some
-[matchers](#matchers).
-
-* `name()`: Returns the name of the node itself.
-* `val(2)`: Returns the third value in a node.
-* `val()`: Equivalent to `val(0)`.
-* `prop(foo)`: Returns the value of the property `foo` in the node.
-* `foo`: Equivalent to `prop(foo)`.
-* `props()`: Returns all properties of the node as an object.
-* `values()`: Returns all values of the node as an array.
-
 ## Examples
 
 Given this document:
@@ -108,16 +81,16 @@ package {
         winapi "1.0.0" path="./crates/my-winapi-fork"
     }
     dependencies {
-        miette "2.0.0" dev=true
+        miette "2.0.0" dev=true integrity=(sri)"sha512-deadbeef"
     }
 }
 ```
 
 Then the following queries are valid:
 
-* `package name`
+* `package >> name`
     * -> fetches the `name` node itself
-* `top() > package name`
+* `top() > package >> name`
     * -> fetches the `name` node, guaranteeing that `package` is in the document root.
 * `dependencies`
     * -> deep-fetches both `dependencies` nodes
@@ -129,14 +102,20 @@ Then the following queries are valid:
     * -> fetches all direct-child nodes of any `dependencies` nodes in the
          document. In this case, it will fetch both `miette` and `winapi` nodes.
 
-If using an API that supports the [map operator](#map-operator), the following
-are valid queries:
+## Full Grammar
 
-* `package name => val()`
-    * -> `["foo"]`.
-* `dependencies[platform] => platform`
-    * -> `["windows"]`
-* `dependencies > [] => (name(), val(), path)`
-    * -> `[("winapi", "1.0.0", "./crates/my-winapi-fork"), ("miette", "2.0.0", None)]`
-* `dependencies > [] => (name(), values(), props())`
-    * -> `[("winapi", ["1.0.0"], {"platform": "windows"}), ("miette", ["2.0.0"], {"dev": true})]`
+For rules that are not defined in this grammar, see [the KDL grammar](https://github.com/kdl-org/kdl/blob/main/SPEC.md#full-grammar).
+
+```
+query := selector q-ws* "||" q-ws* query | selector
+selector := filter q-ws* selector-operator q-ws* selector | filter
+selector-operator := ">>" | ">" | "++" | "+"
+filter := matcher+
+matcher := "top()"| "()" | identifier | type | accessor-matcher
+accessor-matcher := "[" (comparison | accessor)? "]"
+comparison := accessor q-ws* matcher-operator q-ws* (type | string | number | keyword)
+accessor := "val(" number ")" | "prop(" identifier ")" | "name()" | "tag()" | "values()" | "props()" | identifier
+matcher-operator := "=" | "!=" | ">" | "<" | ">=" | "<=" | "^=" | "$=" | "*="
+
+q-ws := bom | unicode-space
+```

@@ -3,9 +3,7 @@
 This is the semi-formal specification for KDL, including the intended data
 model and the grammar.
 
-This document describes KDL version `2.0.0-preview`.
-
-KDL version `1.0.0` was released on September 11, 2021.
+This document describes KDL version `1.0.0`. It was released on September 11, 2021.
 
 ## Introduction
 
@@ -25,22 +23,6 @@ In this document, references to "left" or "right" refer to directions in the
 the directions if the data stream were only ASCII text. They do not refer
 to the writing direction of text, which can flow in either direction,
 depending on the characters used.
-
-## Changes from version `1.0.0`
-
-### Relaxed
-
-- The way that `/-` comments are handled has changed. Now, `/-` comments are
-  consistently treated like whitespace. Notably, this means that `/-` children
-  blocks do not prevent the presence of later arguments, properties, or children
-  blocks on the attached node.
-
-### Constrained
-
-- Previously, whitespace was not required before a children block, i.e. `node{}`
-  was valid. Now, whitespace is required before a children block, the same as
-  before arguments and properties.
-- `/-` comments on nodes must also be separated by plain (non-`/-`) whitespace. 
 
 ## Components
 
@@ -327,6 +309,8 @@ String Value can encompass multiple lines without behaving like a Newline for
 
 Strings _MUST_ be represented as UTF-8 values.
 
+#### Escapes
+
 In addition to literal code points, a number of "escapes" are supported.
 "Escapes" are the character `\` followed by another character, and are
 interpreted as described in the following table:
@@ -337,11 +321,39 @@ interpreted as described in the following table:
 | Carriage Return               | `\r`   | `U+000D` |
 | Character Tabulation (Tab)    | `\t`   | `U+0009` |
 | Reverse Solidus (Backslash)   | `\\`   | `U+005C` |
-| Solidus (Forwardslash)        | `\/`   | `U+002F` |
 | Quotation Mark (Double Quote) | `\"`   | `U+0022` |
 | Backspace                     | `\b`   | `U+0008` |
 | Form Feed                     | `\f`   | `U+000C` |
 | Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, up to `10FFFF` |
+| Whitespace Escape             | See below | N/A   |
+
+##### Escaped Whitespace
+
+In addition to escaping individual characters, `\` can also escape whitespace.
+When a `\` is followed by one or more literal whitespace characters, the `\`
+and all of that whitespace are discarded. For example, `"Hello World"` and
+`"Hello \    World"` are semantically identical. See [whitespace](#whitespace)
+and [newlines](#newlines) for how whitespace is defined.
+
+Note that only literal whitespace is escaped; *escaped* whitespace is retained.
+For example, these strings are all semantically identical:
+
+```kdl
+"Hello\       \nWorld"
+
+    "Hello\n\
+    World"
+
+"Hello\nWorld"
+
+"Hello
+World"
+```
+
+##### Invalid escapes
+
+Except as described in the escapes table, above, `\` *MUST NOT* precede any
+other characters in a string.
 
 ### Raw String
 
@@ -415,6 +427,7 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Name                 | Code Pt |
 |----------------------|---------|
 | Character Tabulation | `U+0009`  |
+| Line Tabulation      | `U+000B`  |
 | Space                | `U+0020`  |
 | No-Break Space       | `U+00A0`  |
 | Ogham Space Mark     | `U+1680`  |
@@ -477,7 +490,10 @@ node-children := '{' nodes '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
-bare-identifier := ((identifier-char - digit - sign) identifier-char* | sign ((identifier-char - digit) identifier-char*)?) - keyword
+bare-identifier := (unambiguous-ident | numberish-ident | stringish-ident) - keyword
+unambiguous-ident := (identifier-char - digit - sign - "r") identifier-char*
+numberish-ident := sign ((identifier-char - digit) identifier-char*)?
+stringish-ident := "r" ((identifier-char - "#") identifier-char*)?
 identifier-char := unicode - line-space - [\/(){}<>;[]=,"]
 keyword := boolean | 'null'
 prop := identifier '=' value
@@ -487,7 +503,7 @@ type := '(' identifier ')'
 string := raw-string | escaped-string
 escaped-string := '"' character* '"'
 character := '\' escape | [^\"]
-escape := ["\\/bfnrt] | 'u{' hex-digit{1, 6} '}'
+escape := ["\\bfnrt] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := 'r' raw-string-hash
@@ -518,7 +534,7 @@ bom := '\u{FEFF}'
 
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
-single-line-comment := '//' ^newline+ (newline | eof)
+single-line-comment := '//' ^newline* (newline | eof)
 multi-line-comment := '/*' commented-block
 commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
 ```
