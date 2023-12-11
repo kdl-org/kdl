@@ -16,6 +16,13 @@
   characters).
 * `,`, `<`, and `>` are not legal identifier characters. They were previously
   reserved for KQL but this is no longer necessary.
+* Code points under `0x20`, code points above `0x10FFFF`, Delete control
+  character (`0x7F`), and the [unicode "direction control"
+  characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
+  are now completely banned from appearing literally in KDL documents. They
+  can now only be represented in regular strings, and there's no facilities to
+  represent them in raw strings. This should be considered a security
+  improvement.
 
 ### KQL
 
