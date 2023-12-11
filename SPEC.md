@@ -546,7 +546,7 @@ binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 
 boolean := 'true' | 'false'
 
-escline := '\\' ws* (single-line-comment | newline)
+escline := '\\' ws* (single-line-comment | newline | eof)
 
 newline := See Table (All line-break white_space)
 
