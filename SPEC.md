@@ -367,11 +367,11 @@ support `\`-escapes. They otherwise share the same properties as far as
 literal [Newline](#newline) characters go, and the requirement of UTF-8
 representation.
 
-Raw String literals are represented as `r`, followed by zero or more `#`
-characters, followed by `"`, followed by any number of UTF-8 literals. The string is then
-closed by a `"` followed by a _matching_ number of `#` characters. This means
-that the string sequence `"` or `"#` and such must not match the closing `"`
-with the same or more `#` characters as the opening `r`.
+Raw String literals are represented with one or more `#` characters, followed
+by `"`, followed by any number of UTF-8 literals. The string is then closed by
+a `"` followed by a _matching_ number of `#` characters. This means that the
+string sequence `"` or `"#` and such must not match the closing `"` with the
+same or more `#` characters as the opening `#`, in the body of the string.
 
 Like Strings, Raw Strings _MUST NOT_ include any of the [disallowed literal
 code-points](#disallowed-literal-code-points) as code points in their body.
@@ -381,8 +381,8 @@ unrepresentable when using Raw Strings.
 #### Example
 
 ```kdl
-just-escapes r"\n will be literal"
-quotes-and-escapes r#"hello\n\r\asd"world"#
+just-escapes #"\n will be literal"#
+quotes-and-escapes ##"hello\n\r\asd"#world"##
 ```
 
 ### Number
@@ -514,13 +514,12 @@ node-children := '{' nodes '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
-bare-identifier := (unambiguous-ident | numberish-ident | stringish-ident) - keyword
-unambiguous-ident := (identifier-char - digit - sign - "r") identifier-char*
+bare-identifier := (unambiguous-ident | numberish-ident) - keyword
+unambiguous-ident := (identifier-char - digit - sign - "#") identifier-char*
 numberish-ident := sign ((identifier-char - digit) identifier-char*)?
-stringish-ident := "r" ((identifier-char - "#") identifier-char*)?
 identifier-char := unicode - line-space - [\\/(){};\[\]="] - disallowed-literal-code-points
 keyword := boolean | 'null'
-prop := identifier '=' valuel
+prop := identifier '=' value
 value := type? (string | number | keyword)
 type := '(' identifier ')'
 
@@ -530,9 +529,8 @@ string-character := '\' escape | [^\"] - disallowed-literal-code-points
 escape := ["\\bfnrt] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
-raw-string := 'r' raw-string-hash
-raw-string-hash := '#' raw-string-hash '#' | raw-string-quotes
-raw-string-quotes := '"' .* '"'
+raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
+raw-string-quotes := '"' (unicode - disallowed-literal-code-points) '"'
 
 number := decimal | hex | octal | binary
 

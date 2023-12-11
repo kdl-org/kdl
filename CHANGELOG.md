@@ -23,6 +23,10 @@
   can now only be represented in regular strings, and there's no facilities to
   represent them in raw strings. This should be considered a security
   improvement.
+* Raw strings no longer require an `r` prefix: they are now specified by using
+  `#""#`.
+* `#` is an illegal initial identifier character, but is allowed in other
+  places in identifiers.
 
 ### KQL
 
