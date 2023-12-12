@@ -14,7 +14,7 @@
 * The grammar syntax itself has been described, and some confusing definitions
   in the grammar have been fixed accordingly (mostly related to escaped
   characters).
-* `,`, `<`, and `>` are not legal identifier characters. They were previously
+* `,`, `<`, and `>` are now legal identifier characters. They were previously
   reserved for KQL but this is no longer necessary.
 
 ### KQL
