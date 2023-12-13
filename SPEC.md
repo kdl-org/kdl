@@ -378,6 +378,11 @@ code-points](#disallowed-literal-code-points) as code points in their body.
 Unlike with Strings, these cannot simply be escaped, and are thus
 unrepresentable when using Raw Strings.
 
+Like Strings, Raw Strings _MUST NOT_ include any of the [disallowed literal
+code-points](#disallowed-literal-code-points) as code points in their body.
+Unlike with Strings, these cannot simply be escaped, and are thus
+unrepresentable when using Raw Strings.
+
 #### Example
 
 ```kdl
@@ -519,7 +524,7 @@ unambiguous-ident := (identifier-char - digit - sign - "#") identifier-char*
 numberish-ident := sign ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - line-space - [\\/(){};\[\]="] - disallowed-literal-code-points
 keyword := boolean | 'null'
-prop := identifier '=' value
+prop := identifier '=' valuel
 value := type? (string | number | keyword)
 type := '(' identifier ')'
 
