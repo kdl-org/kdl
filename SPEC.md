@@ -92,13 +92,15 @@ foo 1 key="val" 3 {
 
 ### Identifier
 
-A bare Identifier is composed of any Unicode codepoint other than [non-initial
-characters](#non-initial-characters), followed by any number of Unicode code
-points other than [non-identifier characters](#non-identifier-characters), so
-long as this doesn't produce something confusable for a [Number](#number). For
-example, both a [Number](#number) and an Identifier can start with `-`, but
-when an Identifier starts with `-` the second character cannot be a digit.
-This is precicely specified in the [Full Grammar](#full-grammar) below.
+A bare Identifier is composed of any [Unicode Scalar
+Value](https://unicode.org/glossary/#unicode_scalar_value) other than
+[non-initial characters](#non-initial-characters), followed by any number of
+Unicode Scalar Values other than [non-identifier
+characters](#non-identifier-characters), so long as this doesn't produce
+something confusable for a [Number](#number). For example, both a
+[Number](#number) and an Identifier can start with `-`, but when an Identifier
+starts with `-` the second character cannot be a digit. This is precicely
+specified in the [Full Grammar](#full-grammar) below.
 
 When Identifiers are used as the values in [Arguments](#argument) and
 [Properties](#property), they are treated as strings, just like they are with
@@ -342,7 +344,7 @@ interpreted as described in the following table:
 | Quotation Mark (Double Quote) | `\"`   | `U+0022` |
 | Backspace                     | `\b`   | `U+0008` |
 | Form Feed                     | `\f`   | `U+000C` |
-| Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, up to `10FFFF` |
+| Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, as long as it represents a [Unicode Scalar Value](https://unicode.org/glossary/#unicode_scalar_value) |
 | Whitespace Escape             | See below | N/A   |
 
 ##### Escaped Whitespace
@@ -504,7 +506,7 @@ They may be represented in Strings (but not Raw Strings) using `\u{}`.
 
 * Any codepoint with hexadecimal value `0x20` or below (various control characters).
 * `0x7F` (the Delete control character).
-* Any codepoint with hexadecimal value higher than `0x10FFFF`.
+* Any codepoint that is not a [Unicode Scalar Value](https://unicode.org/glossary/#unicode_scalar_value).
 * `0x2066-2069` and `0x202A-202E`, the [unicode "direction control" characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
 
 ## Full Grammar

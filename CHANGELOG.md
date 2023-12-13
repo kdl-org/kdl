@@ -39,6 +39,10 @@
 * A statement in the spec prose that said "It is reasonable for an
   implementation to ignore null values altogether when deserializing". This is
   no longer encouraged or desired.
+* Code points have been constrained to [Unicode Scalar
+  Values](https://unicode.org/glossary/#unicode_scalar_value) only, including
+  values used in string escapes (`\u{}`). All KDL documents and string values
+  should be valid UTF-8 now, as was intended.
 
 ### KQL
 
