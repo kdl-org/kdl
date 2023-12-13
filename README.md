@@ -7,18 +7,18 @@ XML. It looks like this:
 
 ```kdl
 package {
-  name "my-pkg"
+  name my-pkg
   version "1.2.3"
 
   dependencies {
     // Nodes can have standalone values as well as
     // key/value pairs.
-    lodash "^3.2.1" optional=true alias="underscore"
+    lodash "^3.2.1" optional=#true alias=underscore
   }
 
   scripts {
     // "Raw" and multi-line strings are supported.
-    build r#"
+    build #"
       echo "foo"
       node -c "console.log('hello, world!');"
       echo "foo" > some-file.txt
@@ -33,8 +33,8 @@ package {
   // "Slashdash" comments operate at the node level,
   // with just `/-`.
   /-this-is-commented {
-    this "entire" "node" {
-      "is" "gone"
+    this entire node {
+      is gone
     }
   }
 }
@@ -51,7 +51,7 @@ Language](SCHEMA-SPEC.md) loosely based on JSON Schema.
 The language is based on [SDLang](https://sdlang.org), with a number of
 modifications and clarifications on its syntax and behavior.
 
-The current version of the KDL spec is `1.0.0`.
+The current version of the KDL spec is `2.0.0-draft.1`.
 
 [Play with it in your browser!](https://kdl-play.danini.dev/)
 
@@ -116,7 +116,7 @@ bookmarks 12 15 188 1234
 Nodes can have properties.
 
 ```kdl
-author "Alex Monad" email="alex@example.com" active=true
+author "Alex Monad" email=alex@example.com active=#true
 ```
 
 And they can have nested child nodes, too!
@@ -141,31 +141,38 @@ node1; node2; node3;
 
 KDL supports 4 data types:
 
-* Strings: `"hello world"`
+* Strings: `"hello world"` or just `foo`
 * Numbers: `123.45`
-* Booleans: `true` and `false`
-* Null: `null`
+* Booleans: `#true` and `#false`
+* Null: `#null`
 
 #### Strings
-It supports two different formats for string input: escaped and raw.
+
+It supports three different formats for string input: identifiers, quoted, and raw.
 
 ```kdl
-node "this\nhas\tescapes"
-other r"C:\Users\zkat\"
-```
-Both types of string can be multiline as-is, without a different syntax:
-
-```kdl
-string "my
-multiline
-value"
+node1 this-is-a-string
+node2 "this\nhas\tescapes"
+node3 #"C:\Users\zkat\raw\string"#
 ```
 
-And for raw strings, you can add any number of # after the r and the last " to
-disambiguate literal " characters:
+Both types of quoted string can be multiline as-is, without a different
+syntax. Additionally, these multi-line strings will be "dedented" according to
+the indentation of the least-indented line:
 
 ```kdl
-other-raw r#"hello"world"#
+string "
+  my
+    multiline
+  value
+"
+```
+
+Raw strings, you can add any number of `#`s before and after the opening and
+closing `#` to disambiguate literal `#"` sequences:
+
+```kdl
+other-raw ##"hello"#world"##
 ```
 
 #### Numbers
@@ -209,7 +216,7 @@ comments can be nested.
 C style multiline
 */
 
-tag /*foo=true*/ bar=false
+tag /*foo=#true*/ bar=#false
 
 /*/*
 hello
@@ -221,13 +228,13 @@ comment out individual nodes, arguments, or children:
 
 ```kdl
 // This entire node and its children are all commented out.
-/-mynode "foo" key=1 {
+/-mynode foo key=1 {
   a
   b
   c
 }
 
-mynode /-"commented" "not commented" /-key="value" /-{
+mynode /-commented "not commented" /-key=value /-{
   a
   b
 }
@@ -242,8 +249,8 @@ specific meanings.
 
 ```kdl
 numbers (u8)10 (i32)20 myfloat=(f32)1.5 {
-  strings (uuid)"123e4567-e89b-12d3-a456-426614174000" (date)"2021-02-03" filter=(regex)r"$\d+"
-  (author)person name="Alex"
+  strings (uuid)123e4567-e89b-12d3-a456-426614174000 (date)"2021-02-03" filter=(regex)#"$\d+"#
+  (author)person name=Alex
 }
 ```
 
@@ -256,21 +263,21 @@ title \
 
 
 // Files must be utf8 encoded!
-smile "😁"
+smile 😁
 
 // Instead of anonymous nodes, nodes and properties can be wrapped
 // in "" for arbitrary node names.
-"!@#$@$%Q#$%~@!40" "1.2.3" "!!!!!"=true
+"!@#$@$%\\/()[]Q#$%~@!40" "1.2.3" "#null"=#true
 
-// The following is a legal bare identifier:
-foo123~!@#$%^&*.:'|?+ "weeee"
+// Identifiers are very flexible. The following is a legal bare identifier:
+<@foo123~!$%^&*.:'|?+>
 
 // And you can also use unicode!
-ノード　お名前="☜(ﾟヮﾟ☜)"
+ノード　お名前=☜(ﾟヮﾟ☜)
 
 // kdl specifically allows properties and values to be
 // interspersed with each other, much like CLI commands.
-foo bar=true "baz" quux=false 1 2 3
+foo bar=#true baz quux=#false 1 2 3
 ```
 
 ## Design Principles
