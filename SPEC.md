@@ -523,6 +523,7 @@ bare-identifier := (unambiguous-ident | numberish-ident) - keyword
 unambiguous-ident := (identifier-char - digit - sign - "#") identifier-char*
 numberish-ident := sign ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - line-space - [\\/(){};\[\]="] - disallowed-literal-code-points
+
 keyword := boolean | 'null'
 prop := identifier '=' valuel
 value := type? (string | number | keyword)
