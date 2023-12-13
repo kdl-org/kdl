@@ -29,6 +29,18 @@
   places in identifiers.
 * Line continuations can be followed by an EOF now, instead of requiring a
   newline (or comment). `node \<EOF>` is now a legal KDL document.
+* `#` is no longer a legal identifier character.
+* `null`, `true`, and `false` are now `#null`, `#true`, and `#false`. Using
+  the unprefixed versions of these values is a syntax error.
+* The spec prose has more explicitly stated that whitespace and newlines are
+  not valid identifier characters, even though the grammar already expressed
+  this.
+* Bare identifiers can now be used as values in Arguments and Properties, and are interpreted as string values.
+* The spec prose now more explicitly states that strings and raw strings can
+  be used as type annotations.
+* A statement in the spec prose that said "It is reasonable for an
+  implementation to ignore null values altogether when deserializing". This is
+  no longer encouraged or desired.
 
 ### KQL
 
