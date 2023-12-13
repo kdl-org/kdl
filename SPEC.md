@@ -527,7 +527,7 @@ node-space := plain-node-space+ ('/-' plain-node-space* (node-prop-or-arg | node
 required-node-space := node-space* plain-node-space+
 optional-node-space := node-space*
 
-base-node := type? identifier (required-node-space node-prop-or-arg)* (required-node-space node-children)?
+base-node := type? optional-node-space identifier (required-node-space node-prop-or-arg)* (required-node-space node-children)?
 node := base-node optional-node-space node-terminator
 final-node := base-node optional-node-space node-terminator?
 node-prop-or-arg := prop | value
@@ -541,9 +541,9 @@ numberish-ident := sign ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - line-space - [\\/(){};\[\]="#] - disallowed-literal-code-points
 
 keyword := '#' (boolean | 'null')
-prop := identifier '=' value
-value := type? (identifier | string | number | keyword)
-type := '(' identifier ')'
+prop := identifier optional-node-space '=' optional-node-space value
+value := type? optional-node-space (identifier | string | number | keyword)
+type := '(' optional-node-space identifier optional-node-space ')'
 
 string := raw-string | escaped-string
 escaped-string := '"' string-character* '"'

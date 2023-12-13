@@ -46,6 +46,13 @@
 * The last node in a child block no longer needs to be terminated with `;`,
   even if the closing `}` is on the same line, so this is now a legal node:
   `node {foo;bar;baz}`
+* More places allow whitespace (node-spaces, specifically) now. With great
+  power comes great responsibility:
+  * Inside `(foo)` annotations (so, `( foo )` would be legal (`( f oo )` would
+    not be, since it has two identifiers))
+  * Between annotations and the thing they're annotating (`(blah) node (thing)
+    1 y= (who) 2`)
+  * Around `=` for props (`x = 1`)
 
 ### KQL
 
