@@ -93,9 +93,10 @@ foo 1 key="val" 3 {
 ### Identifier
 
 An Identifier is either a [Bare Identifier](#bare-identifier), which is an
-unquoted string like `node` or `item`, a [String](#string), or a [Raw String](#raw-string).
-There's no semantic difference between the kinds of identifier; this simply allows
-for the use of quotes to have unusual identifiers that are inexpressible as bare identifiers.
+unquoted string like `node` or `item`, a [String](#string), or a [Raw
+String](#raw-string). There's no semantic difference between the kinds of
+identifier; this simply allows for the use of quotes to have unusual
+identifiers that are inexpressible as bare identifiers.
 
 ### Bare Identifier
 
@@ -220,7 +221,7 @@ parent { child1; child2; }
 
 ### Value
 
-A value is either: an [Identifier](#identifier), a [String](#string), a 
+A value is either: an [Identifier](#identifier), a [String](#string), a
 [Number](#number), a [Boolean](#boolean), or [Null](#null).
 
 Values _MUST_ be either [Arguments](#argument) or values of
