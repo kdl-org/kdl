@@ -13,7 +13,7 @@ JSON-in-KDL (JiK from now on) is a kdl microsyntax consisting of three types of 
 
 ----
 
-Literal nodes are used to represent a JSON literal, which luckily KDL's literal syntax is a superset of. They contain a single value, the literal they're representing. For example, to represent the JSON literal `true`, you'd write `- true` in JiK.
+Literal nodes are used to represent a JSON literal, which luckily KDL's literal syntax is a superset of. They contain a single value, the literal they're representing. For example, to represent the JSON literal `true`, you'd write `- #true` in JiK.
 
 (In many cases this isn't necessary, and KDL literals can be directly used instead. Literal nodes are necessary only for a top-level literal, or to intersperse literals with arrays or objects inside an array or object node.)
 
@@ -26,7 +26,7 @@ This means that simple arrays of literals can be written compactly and simply; a
 ```kdl
 array {
 	- 1
-	array true false
+	array #true #false
 	- 3
 }
 ```
@@ -35,7 +35,7 @@ The two methods of writing children can be mixed, pulling the prefix of the arra
 
 ```kdl
 array 1 {
-	array true false
+	array #true #false
 	- 3
 }
 ```
@@ -44,14 +44,14 @@ array 1 {
 
 Object nodes are used to represent a JSON object. They can contain zero or more named properties, followed by zero or more child nodes; these are taken as the key/value pairs of the object, in order of appearance.
 
-If the value of a key/value pair is a literal, it can be encoded as a named property on the object. For example, the JSON object `{"foo": 1, "bar": true}` could be written in JiK as `object foo=1 bar=true`.
+If the value of a key/value pair is a literal, it can be encoded as a named property on the object. For example, the JSON object `{"foo": 1, "bar": true}` could be written in JiK as `object foo=1 bar=#true`.
 
 Alternately, key/value pairs can be encoded as child nodes, using a type annotation on the node name to encode the key, and the node itself as the value. The preceding example could instead have been written as:
 
 ```kdl
 object {
 	(foo)- 1
-	(bar)- true
+	(bar)- #true
 }
 ```
 
