@@ -527,9 +527,11 @@ node-space := plain-node-space+ ('/-' plain-node-space* (node-prop-or-arg | node
 required-node-space := node-space* plain-node-space+
 optional-node-space := node-space*
 
-node := type? identifier (required-node-space node-prop-or-arg)* (required-node-space node-children)? optional-node-space node-terminator
+base-node := type? identifier (required-node-space node-prop-or-arg)* (required-node-space node-children)?
+node := base-node optional-node-space node-terminator
+final-node := base-node optional-node-space node-terminator?
 node-prop-or-arg := prop | value
-node-children := '{' nodes '}'
+node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
