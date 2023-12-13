@@ -49,8 +49,8 @@ baz
 ### Node
 
 Being a node-oriented language means that the real core component of any KDL
-document is the "node". Every node must have a name, which is either a legal
-[Identifier](#identifier), or a quoted [String](#string).
+document is the "node". Every node must have a name, which is an
+[Identifier](#identifier).
 
 The name may be preceded by a [Type Annotation](#type-annotation) to further
 clarify its type, particularly in relation to its parent node. (For example,
@@ -92,7 +92,14 @@ foo 1 key="val" 3 {
 
 ### Identifier
 
-A bare Identifier is composed of any [Unicode Scalar
+An Identifier is either a [Bare Identifier](#bare-identifier), which is an
+unquoted string like `node` or `item`, a [String](#string), or a [Raw String](#raw-string).
+There's no semantic difference between the kinds of identifier; this simply allows
+for the use of quotes to have unusual identifiers that are inexpressible as bare identifiers.
+
+### Bare Identifier
+
+A Bare Identifier is composed of any [Unicode Scalar
 Value](https://unicode.org/glossary/#unicode_scalar_value) other than
 [non-initial characters](#non-initial-characters), followed by any number of
 Unicode Scalar Values other than [non-identifier
@@ -106,20 +113,16 @@ When Identifiers are used as the values in [Arguments](#argument) and
 [Properties](#property), they are treated as strings, just like they are with
 node names and property keys.
 
-Identifiers are terminated by [Whitespace](#whitespace) or
+Bare Identifiers are terminated by [Whitespace](#whitespace) or
 [Newlines](#newline).
 
-In all places where Identifiers are used, [Strings](#string) and [Raw
-Strings](#raw-string) can be used in the same place, without an Identifier's
-character restrictions.
-
-The literal identifiers `true`, `false`, and `null` are illegal identifiers,
+The literal identifiers `true`, `false`, and `null` are illegal Bare Identifiers,
 and _MUST_ be treated as a syntax error.
 
 ### Non-initial characters
 
-The following characters cannot be the first character in a bare
-[Identifier](#identifier):
+The following characters cannot be the first character in a
+[Bare Identifier](#identifier):
 
 * Any decimal digit (0-9)
 * Any [non-identifier characters](#non-identifier-characters)
@@ -131,8 +134,7 @@ negative number.
 
 ### Non-identifier characters
 
-The following characters cannot be used anywhere in a bare
-[Identifier](#identifier):
+The following characters cannot be used anywhere in a [Bare Identifier](#identifier):
 
 * Any of `(){}[]/\="#;`
 * Any [Whitespace](#whitespace) or [Newline](#newline).
@@ -160,8 +162,7 @@ my-node 1 2 \  // comments are ok after \
 ### Property
 
 A Property is a key/value pair attached to a [Node](#node). A Property is
-composed of an [Identifier](#identifier) or a [String](#string), followed
-immediately by a `=`, and then a [Value](#value).
+composed of an [Identifier](#identifier), followed immediately by a `=`, and then a [Value](#value).
 
 Properties should be interpreted left-to-right, with rightmost properties with
 identical names overriding earlier properties. That is:
@@ -182,7 +183,7 @@ make it act as plain whitespace, even if it spreads across multiple lines.
 ### Argument
 
 An Argument is a bare [Value](#value) attached to a [Node](#node), with no
-associated key. It shares the same space as [Properties](#properties).
+associated key. It shares the same space as [Properties](#properties), and may be interleaved with them.
 
 A Node may have any number of Arguments, which should be evaluated left to
 right. KDL implementations _MUST_ preserve the order of Arguments relative to
@@ -219,14 +220,14 @@ parent { child1; child2; }
 
 ### Value
 
-A value is either: an [Identifier](#identifier), a [String](#string), a [Raw
-String](#raw-string), a [Number](#number), a [Boolean](#boolean), or
-[Null](#null)
+A value is either: an [Identifier](#identifier), a [String](#string), a 
+[Number](#number), a [Boolean](#boolean), or [Null](#null).
 
 Values _MUST_ be either [Arguments](#argument) or values of
 [Properties](#property).
 
-Values _MAY_ be prefixed by a single [Type Annotation](#type-annotation).
+Values (both as arguments and as properties) _MAY_ be prefixed by a single
+[Type Annotation](#type-annotation).
 
 ### Type Annotation
 
@@ -236,9 +237,8 @@ or as a _context-specific elaboration_ of the more generic type the node name
 indicates.
 
 Type annotations are written as a set of `(` and `)` with a single
-[Identifier](#identifier) in it. Any valid identifier or string is considered
-a valid type annotation. There must be no whitespace between a type annotation
-and its associated Node Name or Value.
+[Identifier](#identifier) in it. It may contain Whitespace after the `(` and before
+the `)`, and may be separated from its target by Whitespace.
 
 KDL does not specify any restrictions on what implementations might do with
 these annotations. They are free to ignore them, or use them to make decisions
@@ -317,9 +317,10 @@ node prop=(regex).*
 
 ### String
 
-Strings in KDL represent textual [Values](#value). They are delimited by `"`
-on either side of any number of literal string characters except unescaped
-`"` and `\`.
+Strings in KDL represent textual [Values](#value), or unusual identifiers. A
+String is either a [Quoted String](#quoted-string) or a
+[Raw String](#raw-string). Quoted Strings may include escaped characters, while
+Raw Strings always contain only the literal characters that are present.
 
 Strings _MUST_ be represented as UTF-8 values.
 
@@ -327,7 +328,7 @@ Strings _MUST NOT_ include the code points for [disallowed literal
 code points](#disallowed-literal-code-points) directly. If needed, they can be
 specified with their corresponding `\u{}` escape.
 
-#### Multi-line Strings
+### Multi-line Strings
 
 Strings may span multiple lines with literal Newlines, in which case the
 resulting String is "dedented" according to the line with the fewest number of
@@ -350,6 +351,19 @@ are stripped to only contain the single Newline character.
 
 Strings with literal Newlines that do not immediately start with a Newline and
 whose final `"` is not preceeded by whitespace and a Newline are illegal.
+
+### Quoted String
+
+A Quoted String is delimited by `"` on either side of any number of literal
+string characters except unescaped `"` and `\`. This includes literal
+[Newline](#newline) characters, which means a String Value can encompass
+multiple lines without behaving like a Newline for [Node](#node) parsing
+purposes.
+
+Like Strings, Quoted Strings _MUST NOT_ include any of the [disallowed literal
+code-points](#disallowed-literal-code-points) as code points in their body.
+
+Quoted Strings also follow the Multi-line rules specified in [String](#string).
 
 #### Escapes
 
@@ -401,10 +415,10 @@ other characters in a string.
 
 ### Raw String
 
-Raw Strings in KDL are much like [Strings](#string), except they do not
-support `\`-escapes. They otherwise share the same properties as far as
-literal [Newline](#newline) characters go, and the requirement of UTF-8
-representation.
+Raw Strings in KDL are much like [Quoted Strings](#quoted-string), except they
+do not support `\`-escapes. They otherwise share the same properties as far as
+literal [Newline](#newline) characters go, multi-line rules, and the requirement
+of UTF-8 representation.
 
 Raw String literals are represented with one or more `#` characters, followed
 by `"`, followed by any number of UTF-8 literals. The string is then closed by
@@ -416,35 +430,6 @@ Like Strings, Raw Strings _MUST NOT_ include any of the [disallowed literal
 code-points](#disallowed-literal-code-points) as code points in their body.
 Unlike with Strings, these cannot simply be escaped, and are thus
 unrepresentable when using Raw Strings.
-
-Like Strings, Raw Strings _MUST NOT_ include any of the [disallowed literal
-code-points](#disallowed-literal-code-points) as code points in their body.
-Unlike with Strings, these cannot simply be escaped, and are thus
-unrepresentable when using Raw Strings.
-
-#### Multi-line Raw Strings
-
-Raw Strings may span multiple lines with literal newlines, in which case the
-resulting string is "dedented" according to the line with the fewest number of
-Whitespace characters preceding its first non-Whitespace character. That is,
-the number of Whitespace characters in the least-indented line in the Raw
-String body is subtracted from the Whitespace of all other lines.
-
-Multi-line strings _MUST_ have a single [Newline](#newline) immediately
-following their opening `#"`, after which they may have any number of newlines.
-Finally, there must be a Newline, followed by any number of Whitespace, before
-the closing `"#`.
-
-The first Newline, the last Newline, along with Whitespace following the last
-Newline, are not included in the value of the Raw String. The first and last
-Newline can be the same character (that is, empty multi-line strings are
-legal).
-
-Furthermore, any lines in the Raw String body that only contain literal
-whitespace are stripped to only contain the single Newline character.
-
-Raw Strings with literal Newlines that do not immediately start with a Newline
-and whose final `"#` is not preceeded by whitespace and a Newline are illegal.
 
 #### Example
 
@@ -469,10 +454,9 @@ This is the base indentation
 
 ### Number
 
-Numbers in KDL represent numerical [Values](#value). There is no logical
-distinction in KDL between real numbers, integers, and floating point numbers.
-It's up to individual implementations to determine how to represent KDL
-numbers.
+Numbers in KDL represent numerical [Values](#value). There is no logical distinction in KDL
+between real numbers, integers, and floating point numbers. It's up to
+individual implementations to determine how to represent KDL numbers.
 
 There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
 
@@ -622,7 +606,7 @@ raw-string-quotes := '"' (single-line-raw-string-body | newline multi-line-raw-s
 single-line-raw-string-body := (unicode - newline - disallowed-literal-code-points)*
 multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
 
-number := decimal | hex | octal | binary
+number := hex | octal | binary | decimal
 
 decimal := sign? integer ('.' integer)? exponent?
 exponent := ('e' | 'E') sign? integer

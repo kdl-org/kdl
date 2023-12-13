@@ -1,9 +1,44 @@
 # The KDL Document Language
 
-KDL is a document language with xml-like semantics that looks like you're
-invoking a bunch of CLI commands! It's meant to be used both as a
+KDL is a small, pleasing document language with xml-like semantics that looks
+like you're invoking a bunch of CLI commands! It's meant to be used both as a
 serialization format and a configuration language, much like JSON, YAML, or
-XML.
+XML. It looks like this:
+
+```kdl
+package {
+  name "my-pkg"
+  version "1.2.3"
+
+  dependencies {
+    // Nodes can have standalone values as well as
+    // key/value pairs.
+    lodash "^3.2.1" optional=true alias="underscore"
+  }
+
+  scripts {
+    // "Raw" and multi-line strings are supported.
+    build r#"
+      echo "foo"
+      node -c "console.log('hello, world!');"
+      echo "foo" > some-file.txt
+    "#
+  }
+
+  // `\` breaks up a single node across multiple lines.
+  the-matrix 1 2 3 \
+             4 5 6 \
+             7 8 9
+
+  // "Slashdash" comments operate at the node level,
+  // with just `/-`.
+  /-this-is-commented {
+    this "entire" "node" {
+      "is" "gone"
+    }
+  }
+}
+```
 
 There's a living [specification](SPEC.md), as well as various
 [implementations](#implementations). You can also check out the [FAQ](#faq) to
@@ -17,6 +52,8 @@ The language is based on [SDLang](https://sdlang.org), with a number of
 modifications and clarifications on its syntax and behavior.
 
 The current version of the KDL spec is `1.0.0`.
+
+[Play with it in your browser!](https://kdl-play.danini.dev/)
 
 ## Design and Discussion
 
@@ -32,11 +69,17 @@ free to jump in and give us your 2 cents!
 * Dart: [kdl-dart](https://github.com/danini-the-panini/kdl-dart)
 * Java: [kdl4j](https://github.com/hkolbeck/kdl4j)
 * PHP: [kdl-php](https://github.com/kdl-org/kdl-php)
-* Python: [kdl-py](https://github.com/tabatkins/kdlpy), [cuddle](https://github.com/djmattyg007/python-cuddle)
+* Python: [kdl-py](https://github.com/tabatkins/kdlpy), [cuddle](https://github.com/djmattyg007/python-cuddle), [ckdl](https://github.com/tjol/ckdl)
 * Elixir: [kuddle](https://github.com/IceDragon200/kuddle)
 * XSLT: [xml2kdl](https://github.com/Devasta/XML2KDL)
 * Haskell: [Hustle](https://github.com/fuzzypixelz/Hustle)
 * .NET: [Kadlet](https://github.com/oledfish/Kadlet)
+* C: [ckdl](https://github.com/tjol/ckdl)
+* C++: [kdlpp](https://github.com/tjol/ckdl) (part of ckdl, requires C++20)
+* OCaml: [ocaml-kdl](https://github.com/Bannerets/ocaml-kdl)
+* Nim: [kdl-nim](https://github.com/Patitotective/kdl-nim)
+* Common Lisp: [kdlcl](https://github.com/chee/kdlcl)
+* Go: [gokdl](https://github.com/lunjon/gokdl), [kdl-go](https://github.com/sblinch/kdl-go)
 
 ## Compatibility Test Suite
 
@@ -49,6 +92,9 @@ entirety, but in the future, may be required to in order to be included here.
 ## Editor Support
 
 * [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)
+* [Sublime Text](https://packagecontrol.io/packages/KDL)
+* [vim](https://github.com/imsnif/kdl.vim)
+* [Intellij IDEA](https://plugins.jetbrains.com/plugin/20136-kdl-document-language)
 
 ## Overview
 
