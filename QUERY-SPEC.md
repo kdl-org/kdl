@@ -44,8 +44,8 @@ Attribute matchers support certain binary operators:
 * `[val() = 1]`: Selects any element whose first value is 1.
 * `[prop(name) = 1]`: Selects any element with a property `name` whose value is 1.
 * `[name = 1]`: Equivalent to the above.
-* `[name() = "hi"]`: Selects any element whose _node name_ is "hi". Equivalent to just `hi`, but more useful when using string operators.
-* `[tag() = "hi"]`: Selects any element whose tag is "hi". Equivalent to just `(hi)`, but more useful when using string operators.
+* `[name() = hi]`: Selects any element whose _node name_ is "hi". Equivalent to just `hi`, but more useful when using string operators.
+* `[tag() = hi]`: Selects any element whose tag is "hi". Equivalent to just `(hi)`, but more useful when using string operators.
 * `[val() != 1]`: Selects any element whose first value exists, and is not 1.
 
 The following operators work with any `val()` or `prop()` values.
@@ -60,9 +60,9 @@ never coerced to 1, and there is no "universal" ordering across all types.):
 The following operators work only with string `val()`, `prop()`, `tag()`, or `name()` values.
 If the value is not a string, the matcher will always fail:
 
-* `[val() ^= "foo"]`: Selects any element whose first value starts with "foo".
-* `[val() $= "foo"]`: Selects any element whose first value ends with "foo".
-* `[val() *= "foo"]`: Selects any element whose first value contains "foo".
+* `[val() ^= foo]`: Selects any element whose first value starts with "foo".
+* `[val() $= foo]`: Selects any element whose first value ends with "foo".
+* `[val() *= foo]`: Selects any element whose first value contains "foo".
 
 The following operators work only with `val()` or `prop()` values. If the value
 is not one of those, the matcher will always fail:
@@ -75,13 +75,13 @@ Given this document:
 
 ```kdl
 package {
-    name "foo"
+    name foo
     version "1.0.0"
-    dependencies platform="windows" {
+    dependencies platform=windows {
         winapi "1.0.0" path="./crates/my-winapi-fork"
     }
     dependencies {
-        miette "2.0.0" dev=true integrity=(sri)"sha512-deadbeef"
+        miette "2.0.0" dev=#true integrity=(sri)sha512-deadbeef
     }
 }
 ```
@@ -113,7 +113,7 @@ selector-operator := ">>" | ">" | "++" | "+"
 filter := matcher+
 matcher := "top()"| "()" | identifier | type | accessor-matcher
 accessor-matcher := "[" (comparison | accessor)? "]"
-comparison := accessor q-ws* matcher-operator q-ws* (type | string | number | keyword)
+comparison := accessor q-ws* matcher-operator q-ws* (type | identifier | string | number | keyword)
 accessor := "val(" number ")" | "prop(" identifier ")" | "name()" | "tag()" | "values()" | "props()" | identifier
 matcher-operator := "=" | "!=" | ">" | "<" | ">=" | "<=" | "^=" | "$=" | "*="
 
