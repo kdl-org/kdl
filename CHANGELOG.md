@@ -27,6 +27,8 @@
   `#""#`.
 * `#` is an illegal initial identifier character, but is allowed in other
   places in identifiers.
+* Line continuations can be followed by an EOF now, instead of requiring a
+  newline (or comment). `node \<EOF>` is now a legal KDL document.
 
 ### KQL
 
