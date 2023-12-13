@@ -53,6 +53,8 @@
   * Between annotations and the thing they're annotating (`(blah) node (thing)
     1 y= (who) 2`)
   * Around `=` for props (`x = 1`)
+* The BOM is now only allowed as the first character in a document. It was
+  previously treated as generic whitespace.
 
 ### KQL
 

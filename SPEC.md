@@ -516,6 +516,8 @@ authoritative if something seems to disagree with the text above. The [grammar
 language syntax](#grammar-language) is defined below.
 
 ```
+document := bom? nodes
+
 nodes := (line-space* node)* line-space*
 
 plain-line-space := newline | ws | single-line-comment
@@ -572,7 +574,7 @@ escline := '\\' ws* (single-line-comment | newline | eof)
 
 newline := See Table (All line-break white_space)
 
-ws := bom | unicode-space | multi-line-comment
+ws := unicode-space | multi-line-comment
 
 bom := '\u{FEFF}'
 
