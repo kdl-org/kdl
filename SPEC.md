@@ -94,7 +94,7 @@ foo 1 key="val" 3 {
 
 A bare Identifier is composed of any Unicode codepoint other than [non-initial
 characters](#non-initial-characters), followed by any number of Unicode
-codepoints other than [non-identifier characters](#non-identifier-characters),
+code points other than [non-identifier characters](#non-identifier-characters),
 so long as this doesn't produce something confusable for a [Number](#number),
 [Boolean](#boolean), or [Null](#null). For example, both a [Number](#number)
 and an Identifier can start with `-`, but when an Identifier starts with `-`
@@ -122,9 +122,9 @@ of having an identifier look like a negative number.
 The following characters cannot be used anywhere in a bare
 [Identifier](#identifier):
 
-* Any codepoint with hexadecimal value `0x20` or below.
-* Any codepoint with hexadecimal value higher than `0x10FFFF`.
-* Any of `\/(){}<>;[]=,"`
+* Any of `\/(){};[]="`
+* Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
+  documents.
 
 ### Line Continuation
 
@@ -137,6 +137,7 @@ characters and an optional single-line comment. It must be terminated by a
 Following a line continuation, processing of a Node can continue as usual.
 
 #### Example
+
 ```kdl
 my-node 1 2 \  // comments are ok after \
         3 4    // This is the actual end of the Node.
@@ -309,6 +310,10 @@ String Value can encompass multiple lines without behaving like a Newline for
 
 Strings _MUST_ be represented as UTF-8 values.
 
+Strings _MUST NOT_ include the code points for [disallowed literal
+code points](#disallowed-literal-code-points) directly. If needed, they can be
+specified with their corresponding `\u{}` escape.
+
 #### Escapes
 
 In addition to literal code points, a number of "escapes" are supported.
@@ -362,17 +367,27 @@ support `\`-escapes. They otherwise share the same properties as far as
 literal [Newline](#newline) characters go, and the requirement of UTF-8
 representation.
 
-Raw String literals are represented as `r`, followed by zero or more `#`
-characters, followed by `"`, followed by any number of UTF-8 literals. The string is then
-closed by a `"` followed by a _matching_ number of `#` characters. This means
-that the string sequence `"` or `"#` and such must not match the closing `"`
-with the same or more `#` characters as the opening `r`.
+Raw String literals are represented with one or more `#` characters, followed
+by `"`, followed by any number of UTF-8 literals. The string is then closed by
+a `"` followed by a _matching_ number of `#` characters. This means that the
+string sequence `"` or `"#` and such must not match the closing `"` with the
+same or more `#` characters as the opening `#`, in the body of the string.
+
+Like Strings, Raw Strings _MUST NOT_ include any of the [disallowed literal
+code-points](#disallowed-literal-code-points) as code points in their body.
+Unlike with Strings, these cannot simply be escaped, and are thus
+unrepresentable when using Raw Strings.
+
+Like Strings, Raw Strings _MUST NOT_ include any of the [disallowed literal
+code-points](#disallowed-literal-code-points) as code points in their body.
+Unlike with Strings, these cannot simply be escaped, and are thus
+unrepresentable when using Raw Strings.
 
 #### Example
 
 ```kdl
-just-escapes r"\n will be literal"
-quotes-and-escapes r#"hello\n\r\asd"world"#
+just-escapes #"\n will be literal"#
+quotes-and-escapes ##"hello\n\r\asd"#world"##
 ```
 
 ### Number
@@ -470,6 +485,16 @@ lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 
 Note that for the purpose of new lines, CRLF is considered _a single newline_.
 
+### Disallowed Literal Code Points
+
+The following code points may not appear literally anywhere in the document.
+They may be represented in Strings (but not Raw Strings) using `\u{}`.
+
+* Any codepoint with hexadecimal value `0x20` or below (various control characters).
+* `0x7F` (the Delete control character).
+* Any codepoint with hexadecimal value higher than `0x10FFFF`.
+* `0x2066-2069` and `0x202A-202E`, the [unicode "direction control" characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
+
 ## Full Grammar
 
 This is the full official grammar for KDL and should be considered
@@ -494,25 +519,24 @@ node-children := '{' nodes '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
-bare-identifier := (unambiguous-ident | numberish-ident | stringish-ident) - keyword
-unambiguous-ident := (identifier-char - digit - sign - "r") identifier-char*
+bare-identifier := (unambiguous-ident | numberish-ident) - keyword
+unambiguous-ident := (identifier-char - digit - sign - "#") identifier-char*
 numberish-ident := sign ((identifier-char - digit) identifier-char*)?
-stringish-ident := "r" ((identifier-char - "#") identifier-char*)?
-identifier-char := unicode - line-space - [\\/(){}<>;\[\]=,"]
+identifier-char := unicode - line-space - [\\/(){};\[\]="] - disallowed-literal-code-points
+
 keyword := boolean | 'null'
-prop := identifier '=' value
+prop := identifier '=' valuel
 value := type? (string | number | keyword)
 type := '(' identifier ')'
 
 string := raw-string | escaped-string
-escaped-string := '"' character* '"'
-character := '\' escape | [^\"]
+escaped-string := '"' string-character* '"'
+string-character := '\' escape | [^\"] - disallowed-literal-code-points
 escape := ["\\bfnrt] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
-raw-string := 'r' raw-string-hash
-raw-string-hash := '#' raw-string-hash '#' | raw-string-quotes
-raw-string-quotes := '"' .* '"'
+raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
+raw-string-quotes := '"' (unicode - disallowed-literal-code-points) '"'
 
 number := decimal | hex | octal | binary
 
@@ -528,13 +552,15 @@ binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 
 boolean := 'true' | 'false'
 
-escline := '\\' ws* (single-line-comment | newline)
+escline := '\\' ws* (single-line-comment | newline | eof)
 
 newline := See Table (All line-break white_space)
 
 ws := bom | unicode-space | multi-line-comment
 
 bom := '\u{FEFF}'
+
+disallowed-literal-code-points := See Table (Disallowed Literal Code Points)
 
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
