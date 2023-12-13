@@ -319,15 +319,37 @@ node prop=(regex).*
 
 Strings in KDL represent textual [Values](#value). They are delimited by `"`
 on either side of any number of literal string characters except unescaped
-`"` and `\`. This includes literal [Newline](#newline) characters, which means a
-String Value can encompass multiple lines without behaving like a Newline for
-[Node](#node) parsing purposes.
+`"` and `\`.
 
 Strings _MUST_ be represented as UTF-8 values.
 
 Strings _MUST NOT_ include the code points for [disallowed literal
 code points](#disallowed-literal-code-points) directly. If needed, they can be
 specified with their corresponding `\u{}` escape.
+
+#### Multi-line Strings
+
+Strings may span multiple lines with literal Newlines, in which case the
+resulting String is "dedented" according to the line with the fewest number of
+Whitespace characters preceding the first non-Whitespace character. That is,
+the number of Whitespace characters in the least-indented line in the String
+body is subtracted from the Whitespace of all other lines.
+
+Multi-line strings _MUST_ have a single [Newline](#newline) immediately
+following their opening `"`, after which they may have any number of newlines.
+Finally, there must be a Newline, followed by any number of Whitespace, before
+the closing `"`.
+
+The first Newline, the last Newline, along with Whitespace following the last
+Newline, are not included in the value of the String. The first and last
+Newline can be the same character (that is, empty multi-line strings are
+legal).
+
+Furthermore, any lines in the string body that only contain literal whitespace
+are stripped to only contain the single Newline character.
+
+Strings with literal Newlines that do not immediately start with a Newline and
+whose final `"` is not preceeded by whitespace and a Newline are illegal.
 
 #### Escapes
 
@@ -366,8 +388,10 @@ For example, these strings are all semantically identical:
 
 "Hello\nWorld"
 
-"Hello
-World"
+"
+  Hello
+  World
+"
 ```
 
 ##### Invalid escapes
@@ -398,11 +422,49 @@ code-points](#disallowed-literal-code-points) as code points in their body.
 Unlike with Strings, these cannot simply be escaped, and are thus
 unrepresentable when using Raw Strings.
 
+#### Multi-line Raw Strings
+
+Raw Strings may span multiple lines with literal newlines, in which case the
+resulting string is "dedented" according to the line with the fewest number of
+Whitespace characters preceding its first non-Whitespace character. That is,
+the number of Whitespace characters in the least-indented line in the Raw
+String body is subtracted from the Whitespace of all other lines.
+
+Multi-line strings _MUST_ have a single [Newline](#newline) immediately
+following their opening `#"`, after which they may have any number of newlines.
+Finally, there must be a Newline, followed by any number of Whitespace, before
+the closing `"#`.
+
+The first Newline, the last Newline, along with Whitespace following the last
+Newline, are not included in the value of the Raw String. The first and last
+Newline can be the same character (that is, empty multi-line strings are
+legal).
+
+Furthermore, any lines in the Raw String body that only contain literal
+whitespace are stripped to only contain the single Newline character.
+
+Raw Strings with literal Newlines that do not immediately start with a Newline
+and whose final `"#` is not preceeded by whitespace and a Newline are illegal.
+
 #### Example
 
 ```kdl
 just-escapes #"\n will be literal"#
 quotes-and-escapes ##"hello\n\r\asd"#world"##
+
+multi-line #"
+        foo
+    This is the base indentation
+           bar
+  "#
+```
+
+The last example's string value will be:
+
+```
+    foo
+This is the base indentation
+        bar
 ```
 
 ### Number
@@ -548,13 +610,17 @@ value := type? optional-node-space (identifier | string | number | keyword)
 type := '(' optional-node-space identifier optional-node-space ')'
 
 string := raw-string | escaped-string
-escaped-string := '"' string-character* '"'
+escaped-string := '"' (single-line-string-body | newline multi-line-string-body newline ws*) '"'
+single-line-string-body := (string-character - newline)*
+multi-line-string-body := string-character*
 string-character := '\' escape | [^\\"] - disallowed-literal-code-points
 escape := ["\\bfnrt] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
-raw-string-quotes := '"' (unicode - disallowed-literal-code-points) '"'
+raw-string-quotes := '"' (single-line-raw-string-body | newline multi-line-raw-string-body newline ws*) '"'
+single-line-raw-string-body := (unicode - newline - disallowed-literal-code-points)*
+multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
 
 number := decimal | hex | octal | binary
 

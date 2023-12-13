@@ -55,6 +55,10 @@
   * Around `=` for props (`x = 1`)
 * The BOM is now only allowed as the first character in a document. It was
   previously treated as generic whitespace.
+* Multi-line strings are now automatically dedented, according to the
+  least-indented line in the body. Multiline strings and raw strings now must
+  have a newline immediately following their opening `"`, and a final newline
+  preceding the closing `"`.
 
 ### KQL
 
