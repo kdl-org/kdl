@@ -93,16 +93,26 @@ foo 1 key="val" 3 {
 ### Identifier
 
 A bare Identifier is composed of any Unicode codepoint other than [non-initial
-characters](#non-initial-characters), followed by any number of Unicode
-code points other than [non-identifier characters](#non-identifier-characters),
-so long as this doesn't produce something confusable for a [Number](#number),
-[Boolean](#boolean), or [Null](#null). For example, both a [Number](#number)
-and an Identifier can start with `-`, but when an Identifier starts with `-`
-the second character cannot be a digit. This is precicely specified in the
-[Full Grammar](#full-grammar) below.
+characters](#non-initial-characters), followed by any number of Unicode code
+points other than [non-identifier characters](#non-identifier-characters), so
+long as this doesn't produce something confusable for a [Number](#number). For
+example, both a [Number](#number) and an Identifier can start with `-`, but
+when an Identifier starts with `-` the second character cannot be a digit.
+This is precicely specified in the [Full Grammar](#full-grammar) below.
+
+When Identifiers are used as the values in [Arguments](#argument) and
+[Properties](#property), they are treated as strings, just like they are with
+node names and property keys.
 
 Identifiers are terminated by [Whitespace](#whitespace) or
 [Newlines](#newline).
+
+In all places where Identifiers are used, [Strings](#string) and [Raw
+Strings](#raw-string) can be used in the same place, without an Identifier's
+character restrictions.
+
+The literal identifiers `true`, `false`, and `null` are illegal identifiers,
+and _MUST_ be treated as a syntax error.
 
 ### Non-initial characters
 
@@ -112,17 +122,18 @@ The following characters cannot be the first character in a bare
 * Any decimal digit (0-9)
 * Any [non-identifier characters](#non-identifier-characters)
 
-Be aware that the `-` character can only be used as an initial
-character if the second character is not a digit. This allows
-identifiers to look like `--this`, and removes the ambiguity
-of having an identifier look like a negative number.
+Additionally, the `-` character can only be used as an initial character if
+the second character is *not* a digit. This allows identifiers to look like
+`--this`, and removes the ambiguity of having an identifier look like a
+negative number.
 
 ### Non-identifier characters
 
 The following characters cannot be used anywhere in a bare
 [Identifier](#identifier):
 
-* Any of `\/(){};[]="`
+* Any of `(){}[]/\="#;`
+* Any [Whitespace](#whitespace) or [Newline](#newline).
 * Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
   documents.
 
@@ -180,7 +191,7 @@ make it act as plain whitespace, even if it spreads across multiple lines.
 #### Example
 
 ```kdl
-my-node 1 2 3 "a" "b" "c"
+my-node 1 2 3 a b c
 ```
 
 ### Children Block
@@ -205,8 +216,9 @@ parent { child1; child2; }
 
 ### Value
 
-A value is either: a [String](#string), a [Raw String](#raw-string), a
-[Number](#number), a [Boolean](#boolean), or [Null](#null)
+A value is either: an [Identifier](#identifier), a [String](#string), a [Raw
+String](#raw-string), a [Number](#number), a [Boolean](#boolean), or
+[Null](#null)
 
 Values _MUST_ be either [Arguments](#argument) or values of
 [Properties](#property).
@@ -221,9 +233,9 @@ or as a _context-specific elaboration_ of the more generic type the node name
 indicates.
 
 Type annotations are written as a set of `(` and `)` with a single
-[Identifier](#identifier) in it. Any valid identifier is considered a valid
-type annotation. There must be no whitespace between a type annotation and its
-associated Node Name or Value.
+[Identifier](#identifier) in it. Any valid identifier or string is considered
+a valid type annotation. There must be no whitespace between a type annotation
+and its associated Node Name or Value.
 
 KDL does not specify any restrictions on what implementations might do with
 these annotations. They are free to ignore them, or use them to make decisions
@@ -295,7 +307,7 @@ IEEE 754-2008 decimal floating point numbers
 
 ```kdl
 node (u8)123
-node prop=(regex)".*"
+node prop=(regex).*
 (published)date "1970-01-01"
 (contributor)person name="Foo McBar"
 ```
@@ -411,27 +423,26 @@ There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
 
 ### Boolean
 
-A boolean [Value](#value) is either the symbol `true` or `false`. These
+A boolean [Value](#value) is either the symbol `#true` or `#false`. These
 _SHOULD_ be represented by implementation as boolean logical values, or some
 approximation thereof.
 
 #### Example
 
 ```kdl
-my-node true value=false
+my-node true value=#false
 ```
 
 ### Null
 
-The symbol `null` represents a null [Value](#value). It's up to the
+The symbol `#null` represents a null [Value](#value). It's up to the
 implementation to decide how to represent this, but it generally signals the
-"absence" of a value. It is reasonable for an implementation to ignore null
-values altogether when deserializing.
+"absence" of a value.
 
 #### Example
 
 ```kdl
-my-node null key=null
+my-node #null key=#null
 ```
 
 ### Whitespace
@@ -519,19 +530,19 @@ node-children := '{' nodes '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
-bare-identifier := (unambiguous-ident | numberish-ident) - keyword
-unambiguous-ident := (identifier-char - digit - sign - "#") identifier-char*
+bare-identifier := (unambiguous-ident - boolean - 'null') | numberish-ident
+unambiguous-ident := (identifier-char - digit - sign) identifier-char*
 numberish-ident := sign ((identifier-char - digit) identifier-char*)?
-identifier-char := unicode - line-space - [\\/(){};\[\]="] - disallowed-literal-code-points
+identifier-char := unicode - line-space - [\\/(){};\[\]="#] - disallowed-literal-code-points
 
-keyword := boolean | 'null'
-prop := identifier '=' valuel
-value := type? (string | number | keyword)
+keyword := '#' (boolean | 'null')
+prop := identifier '=' value
+value := type? (identifier | string | number | keyword)
 type := '(' identifier ')'
 
 string := raw-string | escaped-string
 escaped-string := '"' string-character* '"'
-string-character := '\' escape | [^\"] - disallowed-literal-code-points
+string-character := '\' escape | [^\\"] - disallowed-literal-code-points
 escape := ["\\bfnrt] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
