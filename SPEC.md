@@ -381,6 +381,7 @@ interpreted as described in the following table:
 | Quotation Mark (Double Quote) | `\"`   | `U+0022` |
 | Backspace                     | `\b`   | `U+0008` |
 | Form Feed                     | `\f`   | `U+000C` |
+| Space                         | `\s`   | `U+0020` |
 | Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, as long as it represents a [Unicode Scalar Value](https://unicode.org/glossary/#unicode_scalar_value) |
 | Whitespace Escape             | See below | N/A   |
 

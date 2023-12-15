@@ -5,6 +5,8 @@
 ### Grammar
 
 * Solidus/Forward slash (`/`) is no longer an escaped character.
+* Space (`U+0020`) can now be written into quoted strings with the `\s`
+  escape.
 * Single line comments (`//`) can now be immediately followed by a newline.
 * All literal whitespace following a `\` in a string is now discarded.
 * Vertical tabs (`U+000B`) are now considered to be whitespace.
