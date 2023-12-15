@@ -404,3 +404,7 @@ microsyntax for losslessly encoding XML](XML-IN-KDL.md).
 This license applies to the text and assets _in this repository_.
 Implementations of this specification are not "derivative works", and thus are
 not bound by the restrictions of CC-BY-SA.
+
+The KDL logo design and files were generously contributed by Timothy Merritt
+([@timmybytes](https://github.com/timmybytes)), and are also available under
+the same license.
