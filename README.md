@@ -249,7 +249,7 @@ specific meanings.
 
 ```kdl
 numbers (u8)10 (i32)20 myfloat=(f32)1.5 {
-  strings (uuid)123e4567-e89b-12d3-a456-426614174000 (date)"2021-02-03" filter=(regex)#"$\d+"#
+  strings (uuid)"123e4567-e89b-12d3-a456-426614174000" (date)"2021-02-03" filter=(regex)#"$\d+"#
   (author)person name=Alex
 }
 ```

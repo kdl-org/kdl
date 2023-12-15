@@ -94,10 +94,9 @@ foo 1 key="val" 3 {
 ### Identifier
 
 An Identifier is either a [Bare Identifier](#bare-identifier), which is an
-unquoted string like `node` or `item`, a [String](#string), or a [Raw
-String](#raw-string). There's no semantic difference between the kinds of
-identifier; this simply allows for the use of quotes to have unusual
-identifiers that are inexpressible as bare identifiers.
+unquoted string like `node` or `item`, a [String](#string), or a [Raw String](#raw-string).
+There's no semantic difference between the kinds of identifier; this simply allows
+for the use of quotes to have unusual identifiers that are inexpressible as bare identifiers.
 
 ### Bare Identifier
 
@@ -335,7 +334,7 @@ specified with their corresponding `\u{}` escape.
 Strings may span multiple lines with literal Newlines, in which case the
 resulting String is "dedented" according to the line with the fewest number of
 Whitespace characters preceding the first non-Whitespace character. That is,
-the number of Whitespace characters in the least-indented line in the String
+the number of literal Whitespace characters in the least-indented line in the String
 body is subtracted from the Whitespace of all other lines.
 
 Multi-line strings _MUST_ have a single [Newline](#newline) immediately
@@ -393,8 +392,8 @@ and all of that whitespace are discarded. For example, `"Hello World"` and
 `"Hello \    World"` are semantically identical. See [whitespace](#whitespace)
 and [newlines](#newlines) for how whitespace is defined.
 
-Note that only literal whitespace is escaped; *escaped* whitespace is retained.
-For example, these strings are all semantically identical:
+Note that only literal whitespace is escaped; whitespace escapes (`\n` and
+such) are retained. For example, these strings are all semantically identical:
 
 ```kdl
 "Hello\       \nWorld"
@@ -437,8 +436,17 @@ unrepresentable when using Raw Strings.
 
 ```kdl
 just-escapes #"\n will be literal"#
-quotes-and-escapes ##"hello\n\r\asd"#world"##
+```
 
+The string contains the literal characters `\n will be literal`.
+
+```kdl
+quotes-and-escapes ##"hello\n\r\asd"#world"##
+```
+
+The string contains the literal characters `hello\n\r\asd"#world`
+
+```kdl
 multi-line #"
         foo
     This is the base indentation
