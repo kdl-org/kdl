@@ -1,9 +1,9 @@
 # The KDL Document Language
 
-KDL is a small, pleasing document language with xml-like semantics that looks
-like you're invoking a bunch of CLI commands! It's meant to be used both as a
-serialization format and a configuration language, much like JSON, YAML, or
-XML. It looks like this:
+KDL is a small, pleasant document language with XML-like node semantics that
+looks like you're invoking a bunch of CLI commands! It's meant to be used both
+as a serialization format and a configuration language, much like JSON, YAML,
+or XML. It looks like this:
 
 ```kdl
 package {
@@ -17,7 +17,7 @@ package {
   }
 
   scripts {
-    // "Raw" and multi-line strings are supported.
+    // "Raw" and dedented multi-line strings are supported.
     build #"
       echo "foo"
       node -c "console.log('hello, world!');"
@@ -100,7 +100,7 @@ entirety, but in the future, may be required to in order to be included here.
 
 ### Basics
 
-A KDL node is a node name, followed by zero or more "arguments", and
+A KDL node is a node name string, followed by zero or more "arguments", and
 children.
 
 ```kdl
@@ -113,7 +113,7 @@ You can also have multiple values in a single node!
 bookmarks 12 15 188 1234
 ```
 
-Nodes can have properties.
+Nodes can have properties, with string keys.
 
 ```kdl
 author "Alex Monad" email=alex@example.com active=#true
@@ -141,7 +141,7 @@ node1; node2; node3;
 
 KDL supports 4 data types:
 
-* Strings: `"hello world"` or just `foo`
+* Strings: `unquoted`, `"hello world"`, or `#"hello world"#`
 * Numbers: `123.45`
 * Booleans: `#true` and `#false`
 * Null: `#null`
@@ -156,9 +156,18 @@ node2 "this\nhas\tescapes"
 node3 #"C:\Users\zkat\raw\string"#
 ```
 
+You don't have to quote strings unless they contain whitespace, or if any the
+following apply:
+  * The string contains `[]{}()\/#=";`.
+  * The string contains whitespace.
+  * The string is one of `true`, `false`, or `null`.
+  * The strings starts with a digit, or `+`/`-` and a digit.
+
+In essence, if it can get confused for other KDL syntax, it needs quotes.
+
 Both types of quoted string can be multiline as-is, without a different
 syntax. Additionally, these multi-line strings will be "dedented" according to
-the indentation of the least-indented line:
+the common indentation that all lines share:
 
 ```kdl
 string "
@@ -168,8 +177,21 @@ string "
 "
 ```
 
-Raw strings, you can add any number of `#`s before and after the opening and
-closing `#` to disambiguate literal `#"` sequences:
+Raw strings, which do not support `\` escapes and can be used when you want
+certain kinds of strings to look nicer without having to escape a lot:
+
+```kdl
+exec #"
+  echo "foo"
+  echo "bar"
+  cd C:\path\to\dir
+"#
+
+regex #"\d{3} "[^/"]+""#
+```
+
+You can add any number of `#`s before and after the opening and
+closing `#` to disambiguate literal closing `#"` sequences:
 
 ```kdl
 other-raw ##"hello"#world"##
@@ -177,7 +199,7 @@ other-raw ##"hello"#world"##
 
 #### Numbers
 
-There's 4 ways to represent numbers in KDL. KDL does not prescribe any
+There are 4 ways to represent numbers in KDL. KDL does not prescribe any
 representation for these numbers, and it's entirely up to individual
 implementations whether to represent all numbers with a single type, or to
 have different representations for different forms.
@@ -265,9 +287,9 @@ title \
 // Files must be utf8 encoded!
 smile 😁
 
-// Instead of anonymous nodes, nodes and properties can be wrapped
-// in "" for arbitrary node names.
-"!@#$@$%\\/()[]Q#$%~@!40" "1.2.3" "#null"=#true
+// Node names and property keys are just strings, so you can write them like
+// quoted or raw strings, too!
+"illegal{}[]/\\=#;identifier" #"1.2.3"# "#false"=#true
 
 // Identifiers are very flexible. The following is a legal bare identifier:
 <@foo123~!$%^&*.:'|?+>
