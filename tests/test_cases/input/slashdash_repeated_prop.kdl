@@ -1,1 +1,1 @@
-node arg="correct" /- arg="wrong"
+node arg=correct /- arg=wrong

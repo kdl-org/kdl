@@ -1,3 +1,2 @@
-node_1 prop=r"arg\n"
-node_2 prop=r#""arg"\n"#
-node_3 prop=r##"#"arg"#\n"##
+node_1 prop=#""arg#"\n"#
+node_2 prop=##"#"arg#"#\n"##
