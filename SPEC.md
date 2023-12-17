@@ -600,7 +600,8 @@ They may be represented in Strings (but not Raw Strings) using `\u{}`.
 * `0x7F` (the Delete control character).
 * Any codepoint that is not a [Unicode Scalar
   Value](https://unicode.org/glossary/#unicode_scalar_value).
-* `0x2066-2069` and `0x202A-202E`, the [unicode "direction control"
+* `0x2066-2069`, `0x202A-202E`, `0x200E`, and `0x200F`, the [unicode
+  "direction control"
   characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
 
 ## Full Grammar
