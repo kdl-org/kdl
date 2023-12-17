@@ -50,8 +50,8 @@ baz
 ### Node
 
 Being a node-oriented language means that the real core component of any KDL
-document is the "node". Every node must have a name, which is an
-[Identifier](#identifier).
+document is the "node". Every node must have a name, which must be a
+[String](#string).
 
 The name may be preceded by a [Type Annotation](#type-annotation) to further
 clarify its type, particularly in relation to its parent node. (For example,
@@ -75,9 +75,9 @@ By contrast, Property order _SHOULD NOT_ matter to implementations.
 [Children](#children-block) should be used if an order-sensitive key/value
 data structure must be represented in KDL.
 
-Nodes _MAY_ be prefixed with `/-` to "comment out" the entire node, including
-its properties, arguments, and children, and make it act as plain whitespace,
-even if it spreads across multiple lines.
+Nodes _MAY_ be prefixed with [Slashdash](#slashdash-comments) to "comment out"
+the entire node, including its properties, arguments, and children, and make
+it act as plain whitespace, even if it spreads across multiple lines.
 
 Finally, a node is terminated by either a [Newline](#newline), a semicolon (`;`)
 or the end of the file/stream (an `EOF`).
@@ -85,63 +85,11 @@ or the end of the file/stream (an `EOF`).
 #### Example
 
 ```kdl
-foo 1 key="val" 3 {
+foo 1 key=val 3 {
     bar
     (role)baz 1 2
 }
 ```
-
-### Identifier
-
-An Identifier is either a [Bare Identifier](#bare-identifier), which is an
-unquoted string like `node` or `item`, a [String](#string), or a [Raw String](#raw-string).
-There's no semantic difference between the kinds of identifier; this simply allows
-for the use of quotes to have unusual identifiers that are inexpressible as bare identifiers.
-
-### Bare Identifier
-
-A Bare Identifier is composed of any [Unicode Scalar
-Value](https://unicode.org/glossary/#unicode_scalar_value) other than
-[non-initial characters](#non-initial-characters), followed by any number of
-Unicode Scalar Values other than [non-identifier
-characters](#non-identifier-characters), so long as this doesn't produce
-something confusable for a [Number](#number). For example, both a
-[Number](#number) and an Identifier can start with `-`, but when an Identifier
-starts with `-` the second character cannot be a digit. This is precicely
-specified in the [Full Grammar](#full-grammar) below.
-
-When Identifiers are used as the values in [Arguments](#argument) and
-[Properties](#property), they are treated as strings, just like they are with
-node names and property keys.
-
-Bare Identifiers are terminated by [Whitespace](#whitespace) or
-[Newlines](#newline).
-
-The literal identifiers `true`, `false`, and `null` are illegal Bare Identifiers,
-and _MUST_ be treated as a syntax error.
-
-### Non-initial characters
-
-The following characters cannot be the first character in a
-[Bare Identifier](#identifier):
-
-* Any decimal digit (0-9)
-* Any [non-identifier characters](#non-identifier-characters)
-
-Additionally, the `-` character can only be used as an initial character if
-the second character is *not* a digit. This allows identifiers to look like
-`--this`, and removes the ambiguity of having an identifier look like a
-negative number.
-
-### Non-identifier characters
-
-The following characters cannot be used anywhere in a [Bare Identifier](#identifier):
-
-* Any of `(){}[]/\"#;`
-* Any [Equals Sign](#equals-sign)
-* Any [Whitespace](#whitespace) or [Newline](#newline).
-* Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
-  documents.
 
 ### Line Continuation
 
@@ -164,7 +112,7 @@ my-node 1 2 \  // comments are ok after \
 ### Property
 
 A Property is a key/value pair attached to a [Node](#node). A Property is
-composed of an [Identifier](#identifier), followed immediately by an [equals
+composed of a [String](#string), followed immediately by an [equals
 sign](#equals-sign), and then a [Value](#value).
 
 Properties should be interpreted left-to-right, with rightmost properties with
@@ -234,11 +182,12 @@ parent { child1; child2; }
 
 ### Value
 
-A value is either: an [Identifier](#identifier), a [String](#string), a
-[Number](#number), a [Boolean](#boolean), or [Null](#null).
+A value is either: a [String](#string), a [Number](#number), a
+[Boolean](#boolean), or [Null](#null).
 
 Values _MUST_ be either [Arguments](#argument) or values of
-[Properties](#property).
+[Properties](#property). Only [String](#string) values may be used as
+[Node](#node) names or [Property](#property) keys.
 
 Values (both as arguments and as properties) _MAY_ be prefixed by a single
 [Type Annotation](#type-annotation).
@@ -251,7 +200,7 @@ or as a _context-specific elaboration_ of the more generic type the node name
 indicates.
 
 Type annotations are written as a set of `(` and `)` with a single
-[Identifier](#identifier) in it. It may contain Whitespace after the `(` and before
+[String](#string) in it. It may contain Whitespace after the `(` and before
 the `)`, and may be separated from its target by Whitespace.
 
 KDL does not specify any restrictions on what implementations might do with
@@ -331,40 +280,64 @@ node prop=(regex).*
 
 ### String
 
-Strings in KDL represent textual [Values](#value), or unusual identifiers. A
-String is either a [Quoted String](#quoted-string) or a
-[Raw String](#raw-string). Quoted Strings may include escaped characters, while
-Raw Strings always contain only the literal characters that are present.
+Strings in KDL represent textual UTF-8 [Values](#value). A String is either an
+[Identifier String](#identifier-string), a [Quoted String](#quoted-string) or
+a [Raw String](#raw-string). Quoted Strings may include escaped characters,
+while Raw Strings always contain only the literal characters that are present.
+Identifier Strings don't user delimiters.
 
 Strings _MUST_ be represented as UTF-8 values.
 
-Strings _MUST NOT_ include the code points for [disallowed literal
-code points](#disallowed-literal-code-points) directly. If needed, they can be
-specified with their corresponding `\u{}` escape.
+Strings _MUST NOT_ include the code points for [disallowed literal code
+points](#disallowed-literal-code-points) directly. Quoted Strings may include
+these code points as _values_ by representing them with their corresponding
+`\u{...}` escape.
 
-### Multi-line Strings
+### Identifier String
 
-Strings may span multiple lines with literal Newlines, in which case the
-resulting String is "dedented" according to the line with the fewest number of
-Whitespace characters preceding the first non-Whitespace character. That is,
-the number of literal Whitespace characters in the least-indented line in the String
-body is subtracted from the Whitespace of all other lines.
+An Identifier String (sometimes referred to as just an "identifier") is
+composed of any [Unicode Scalar
+Value](https://unicode.org/glossary/#unicode_scalar_value) other than
+[non-initial characters](#non-initial-characters), followed by any number of
+Unicode Scalar Values other than [non-identifier
+characters](#non-identifier-characters), so long as this doesn't produce
+something confusable for a [Number](#number). For example, both a
+[Number](#number) and an Identifier can start with `-`, but when an Identifier
+starts with `-` the second character cannot be a digit. This is precicely
+specified in the [Full Grammar](#full-grammar) below.
 
-Multi-line strings _MUST_ have a single [Newline](#newline) immediately
-following their opening `"`, after which they may have any number of newlines.
-Finally, there must be a Newline, followed by any number of Whitespace, before
-the closing `"`.
+When Identifiers are used as the values in [Arguments](#argument) and
+[Properties](#property), they are treated as strings, just like they are with
+node names and property keys.
 
-The first Newline, the last Newline, along with Whitespace following the last
-Newline, are not included in the value of the String. The first and last
-Newline can be the same character (that is, empty multi-line strings are
-legal).
+Identifier Strings are terminated by [Whitespace](#whitespace) or
+[Newlines](#newline).
 
-Furthermore, any lines in the string body that only contain literal whitespace
-are stripped to only contain the single Newline character.
+The literal identifiers `true`, `false`, and `null` are illegal Identifier
+Strings, and _MUST_ be treated as a syntax error.
 
-Strings with literal Newlines that do not immediately start with a Newline and
-whose final `"` is not preceeded by whitespace and a Newline are illegal.
+#### Non-initial characters
+
+The following characters cannot be the first character in an
+[Identifier String](#identifier-string):
+
+* Any decimal digit (0-9)
+* Any [non-identifier characters](#non-identifier-characters)
+
+Additionally, the `-` character can only be used as an initial character if
+the second character is *not* a digit. This allows identifiers to look like
+`--this`, and removes the ambiguity of having an identifier look like a
+negative number.
+
+#### Non-identifier characters
+
+The following characters cannot be used anywhere in a [Identifier String](#identifier-string):
+
+* Any of `(){}[]/\"#;`
+* Any [Equals Sign](#equals-sign)
+* Any [Whitespace](#whitespace) or [Newline](#newline).
+* Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
+  documents.
 
 ### Quoted String
 
@@ -377,7 +350,8 @@ purposes.
 Like Strings, Quoted Strings _MUST NOT_ include any of the [disallowed literal
 code-points](#disallowed-literal-code-points) as code points in their body.
 
-Quoted Strings also follow the Multi-line rules specified in [String](#string).
+Quoted Strings also follow the Multi-line rules specified in [Multi-line
+String](#multi-line-strings).
 
 #### Escapes
 
@@ -441,9 +415,9 @@ a `"` followed by a _matching_ number of `#` characters. This means that the
 string sequence `"` or `"#` and such must not match the closing `"` with the
 same or more `#` characters as the opening `#`, in the body of the string.
 
-Like Strings, Raw Strings _MUST NOT_ include any of the [disallowed literal
-code-points](#disallowed-literal-code-points) as code points in their body.
-Unlike with Strings, these cannot simply be escaped, and are thus
+Like other Strings, Raw Strings _MUST NOT_ include any of the [disallowed
+literal code-points](#disallowed-literal-code-points) as code points in their
+body. Unlike with Quoted Strings, these cannot simply be escaped, and are thus
 unrepresentable when using Raw Strings.
 
 #### Example
@@ -475,6 +449,31 @@ The last example's string value will be:
 This is the base indentation
         bar
 ```
+
+### Multi-line Strings
+
+Quoted and Raw Strings may span multiple lines with literal Newlines, in which
+case the resulting String is "dedented" according to the line with the fewest
+number of Whitespace characters preceding the first non-Whitespace character.
+That is, the number of literal Whitespace characters in the least-indented
+line in the String body is subtracted from the Whitespace of all other lines.
+
+Multi-line strings _MUST_ have a single [Newline](#newline) immediately
+following their opening `"`, after which they may have any number of newlines.
+Finally, there must be a Newline, followed by any number of Whitespace, before
+the closing `"`.
+
+The first Newline, the last Newline, along with Whitespace following the last
+Newline, are not included in the value of the String. The first and last
+Newline can be the same character (that is, empty multi-line strings are
+legal).
+
+Furthermore, any lines in the string body that only contain literal whitespace
+are stripped to only contain the single Newline character.
+
+Strings with literal Newlines that do not immediately start with a Newline and
+whose final `"` is not preceeded by whitespace and a Newline are illegal.
+
 
 ### Number
 
@@ -545,12 +544,34 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Medium Mathematical Space | `U+205F`  |
 | Ideographic Space    | `U+3000`  |
 
+#### Single-line comments
+
+Any text after `//`, until the next literal [Newline](#newline) is "commented
+out", and is considered to be [Whitespace](#whitespace).
+
 #### Multi-line comments
 
 In addition to single-line comments using `//`, comments can also be started
 with `/*` and ended with `*/`. These comments can span multiple lines. They
 are allowed in all positions where [Whitespace](#whitespace) is allowed and
 can be nested.
+
+#### Slashdash comments
+
+Finally, a special kind of comment called a "slashdash", denoted by `/-`, can
+be used to comment out entire _components_ of a KDL document logically, and
+have those elements be treated as whitespace.
+
+Slashdash comments can be used before:
+
+* A [Node](#node) name (or its type annotation): the entire Node is
+  treated as Whitespace, including all props, args, and children.
+* A node [Argument](#argument) (or its type annotation), in which case
+  the Argument value is treated as Whitespace.
+* A [Property](#property) key, in which case the entire property, both
+  key and value, is treated as Whitespace.
+* A [Children Block](#children-block), in which case the entire block,
+  including all children within, is treated as Whitespace.
 
 ### Newline
 
@@ -574,10 +595,13 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 The following code points may not appear literally anywhere in the document.
 They may be represented in Strings (but not Raw Strings) using `\u{}`.
 
-* Any codepoint with hexadecimal value `0x20` or below (various control characters).
+* Any codepoint with hexadecimal value `0x20` or below (various control
+  characters).
 * `0x7F` (the Delete control character).
-* Any codepoint that is not a [Unicode Scalar Value](https://unicode.org/glossary/#unicode_scalar_value).
-* `0x2066-2069` and `0x202A-202E`, the [unicode "direction control" characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
+* Any codepoint that is not a [Unicode Scalar
+  Value](https://unicode.org/glossary/#unicode_scalar_value).
+* `0x2066-2069` and `0x202A-202E`, the [unicode "direction control"
+  characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
 
 ## Full Grammar
 
