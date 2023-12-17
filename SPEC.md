@@ -137,7 +137,8 @@ negative number.
 
 The following characters cannot be used anywhere in a [Bare Identifier](#identifier):
 
-* Any of `(){}[]/\="#;`
+* Any of `(){}[]/\"#;`
+* Any [Equals Sign](#equals-sign)
 * Any [Whitespace](#whitespace) or [Newline](#newline).
 * Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
   documents.
@@ -163,7 +164,8 @@ my-node 1 2 \  // comments are ok after \
 ### Property
 
 A Property is a key/value pair attached to a [Node](#node). A Property is
-composed of an [Identifier](#identifier), followed immediately by a `=`, and then a [Value](#value).
+composed of an [Identifier](#identifier), followed immediately by an [equals
+sign](#equals-sign), and then a [Value](#value).
 
 Properties should be interpreted left-to-right, with rightmost properties with
 identical names overriding earlier properties. That is:
@@ -180,6 +182,17 @@ still be spec-compliant.
 
 Properties _MAY_ be prefixed with `/-` to "comment out" the entire token and
 make it act as plain whitespace, even if it spreads across multiple lines.
+
+#### Equals Sign
+
+Any of the following characters may be used as equals signs in properties:
+
+| Name | Character | Code Point |
+|----|-----|----|
+| EQUALS SIGN | `=` | `U+003D` |
+| SMALL EQUALS SIGN | `﹦` | `U+FE66` |
+| FULLWIDTH EQUALS SIGN | `＝` | `U+FF1D` |
+| HEAVY EQUALS SIGN | `🟰` | `U+1F7F0` |
 
 ### Argument
 
@@ -600,9 +613,10 @@ numberish-ident := sign ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - line-space - [\\/(){};\[\]="#] - disallowed-literal-code-points
 
 keyword := '#' (boolean | 'null')
-prop := identifier optional-node-space '=' optional-node-space value
+prop := identifier optional-node-space equals-sign optional-node-space value
 value := type? optional-node-space (identifier | string | number | keyword)
 type := '(' optional-node-space identifier optional-node-space ')'
+equals-sign := See Table (Equals Sign)
 
 string := raw-string | escaped-string
 escaped-string := '"' (single-line-string-body | newline multi-line-string-body newline ws*) '"'

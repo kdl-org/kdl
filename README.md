@@ -158,10 +158,12 @@ node3 #"C:\Users\zkat\raw\string"#
 
 You don't have to quote strings unless they contain whitespace, or if any the
 following apply:
-  * The string contains `[]{}()\/#=";`.
+  * The string contains `[]{}()\/#";`.
   * The string contains whitespace.
   * The string is one of `true`, `false`, or `null`.
   * The strings starts with a digit, or `+`/`-` and a digit.
+  * The string contains an equals sign (including unicode equals signs `﹦`,
+    `＝`, and `🟰`).
 
 In essence, if it can get confused for other KDL syntax, it needs quotes.
 
@@ -294,8 +296,8 @@ smile 😁
 // Identifiers are very flexible. The following is a legal bare identifier:
 <@foo123~!$%^&*.:'|?+>
 
-// And you can also use unicode!
-ノード　お名前=☜(ﾟヮﾟ☜)
+// And you can also use unicode, even for the equals sign!
+ノード　お名前＝☜(ﾟヮﾟ☜)
 
 // kdl specifically allows properties and values to be
 // interspersed with each other, much like CLI commands.
