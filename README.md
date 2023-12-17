@@ -158,7 +158,7 @@ node3 #"C:\Users\zkat\raw\string"#
 
 You don't have to quote strings unless they contain whitespace, or if any the
 following apply:
-  * The string contains `[]{}()\/#";`.
+  * The string contains any of `[]{}()\/#";`.
   * The string contains whitespace.
   * The string is one of `true`, `false`, or `null`.
   * The strings starts with a digit, or `+`/`-` and a digit.
