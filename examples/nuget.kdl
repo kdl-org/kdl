@@ -82,7 +82,7 @@ Project {
     Reference Include=System.Net.Http
     Reference Include=System.Xml
     Reference Include=System.Xml.Linq
-    Reference Include=NuGet.Core" {
+    Reference Include=NuGet.Core {
       HintPath #"$(SolutionPackagesFolder)nuget.core\2.14.0-rtm-832\lib\net40-Client\NuGet.Core.dll"#
       Aliases CoreV2
     }
