@@ -301,7 +301,7 @@ Unicode Scalar Values other than [non-identifier
 characters](#non-identifier-characters), so long as this doesn't produce
 something confusable for a [Number](#number). For example, both a
 [Number](#number) and an Identifier can start with `-`, but when an Identifier
-starts with `-` the second character cannot be a digit. This is precicely
+starts with `-` the second character cannot be a digit. This is precisely
 specified in the [Full Grammar](#full-grammar) below.
 
 When Identifiers are used as the values in [Arguments](#argument) and
@@ -345,7 +345,7 @@ string characters except unescaped `"` and `\`. This includes literal
 multiple lines without behaving like a Newline for [Node](#node) parsing
 purposes.
 
-Like Strings, Quoted Strings _MUST NOT_ include any of the [disallowed literal
+Like Identifier Strings, Quoted Strings _MUST NOT_ include any of the [disallowed literal
 code-points](#disallowed-literal-code-points) as code points in their body.
 
 Quoted Strings also follow the Multi-line rules specified in [Multi-line
