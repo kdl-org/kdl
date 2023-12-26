@@ -589,8 +589,9 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 The following code points may not appear literally anywhere in the document.
 They may be represented in Strings (but not Raw Strings) using `\u{}`.
 
-* Any codepoint with hexadecimal value `0x20` or below (various control
-  characters).
+* The codepoints `U+0000`-`U+0009`,
+    the codepoint `U+000B`,
+    or the codepoints `U+000E`-`U+001F`  (various control characters).
 * `0x7F` (the Delete control character).
 * Any codepoint that is not a [Unicode Scalar
   Value](https://unicode.org/glossary/#unicode_scalar_value).
