@@ -304,10 +304,6 @@ something confusable for a [Number](#number). For example, both a
 starts with `-` the second character cannot be a digit. This is precisely
 specified in the [Full Grammar](#full-grammar) below.
 
-When Identifiers are used as the values in [Arguments](#argument) and
-[Properties](#property), they are treated as strings, just like they are with
-node names and property keys.
-
 Identifier Strings are terminated by [Whitespace](#whitespace) or
 [Newlines](#newline).
 
