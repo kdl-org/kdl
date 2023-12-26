@@ -22,7 +22,7 @@ package {
       echo "foo"
       node -c "console.log('hello, world!');"
       echo "foo" > some-file.txt
-    "#
+      "#
   }
 
   // `\` breaks up a single node across multiple lines.
