@@ -388,7 +388,7 @@ such) are retained. For example, these strings are all semantically identical:
 "
   Hello
   World
-"
+  "
 ```
 
 ##### Invalid escapes
@@ -428,12 +428,42 @@ quotes-and-escapes ##"hello\n\r\asd"#world"##
 
 The string contains the literal characters `hello\n\r\asd"#world`
 
+
+### Multi-line Strings
+
+When a Quoted or Raw String spans multiple lines with literal, non-escaped Newlines,
+it follows a special multi-line syntax
+that automatically "dedents" the string,
+allowing its value to be indented to a visually matching level if desired.
+
+A Multi-line string _MUST_ start with a [Newline](#newline)
+immediately following its opening `"`.
+Its final line, preceding the closing `"`,
+_MUST_ contain only whitespace.
+All in-between lines that contain non-whitespace characters
+_MUST_ start with the exact same whitespace as the final line
+(precisely matching codepoints, not merely counting characters).
+
+The value of the Multi-line String omits the first and last Newline,
+the Whitespace of the last line,
+the matching Whitespace prefix on all intermediate lines,
+and all Whitespace on intermediate Whitespace-only lines.
+The first and last Newline can be the same character
+(that is, empty multi-line strings are legal).
+
+Strings with literal Newlines that do not immediately start with a Newline and
+whose final `"` is not preceeded by optional whitespace and a Newline are illegal.
+
+In other words, the final line specifies the whitespace prefix that will be removed from all other lines.
+
+#### Example
+
 ```kdl
-multi-line #"
+multi-line "
         foo
     This is the base indentation
-           bar
-  "#
+            bar
+    "
 ```
 
 The last example's string value will be:
@@ -444,29 +474,52 @@ This is the base indentation
         bar
 ```
 
-### Multi-line Strings
+Equivalent to `"    foo\nThis is the base indentation\n        bar"`.
 
-Quoted and Raw Strings may span multiple lines with literal Newlines, in which
-case the resulting String is "dedented" according to the line with the fewest
-number of Whitespace characters preceding the first non-Whitespace character.
-That is, the number of literal Whitespace characters in the least-indented
-line in the String body is subtracted from the Whitespace of all other lines.
+---------
 
-Multi-line strings _MUST_ have a single [Newline](#newline) immediately
-following their opening `"`, after which they may have any number of newlines.
-Finally, there must be a Newline, followed by any number of Whitespace, before
-the closing `"`.
+If the last line wasn't indented as far,
+it won't dedent the rest of the lines as much:
 
-The first Newline, the last Newline, along with Whitespace following the last
-Newline, are not included in the value of the String. The first and last
-Newline can be the same character (that is, empty multi-line strings are
-legal).
+```kdl
+multi-line "
+        foo
+    This is no longer on the left edge
+            bar
+  "
+```
 
-Furthermore, any lines in the string body that only contain literal whitespace
-are stripped to only contain the single Newline character.
+This example's string value will be:
 
-Strings with literal Newlines that do not immediately start with a Newline and
-whose final `"` is not preceeded by whitespace and a Newline are illegal.
+```
+      foo
+  This is no longer on the left edge
+          bar
+```
+
+Equivalent to `"      foo\n  This is no longer on the left edge\n          bar"`.
+
+-----------
+
+Empty lines can contain any whitespace, or none at all, and will be reflected as empty in the value:
+
+```kdl
+multi-line "
+    Indented a bit
+
+    A second indented paragraph.
+    "
+```
+
+This example's string value will be:
+
+```
+Indented a bit.
+
+A second indented paragraph.
+```
+
+Equivalent to `"Indented a bit.\n\nA second indented paragraph."`
 
 
 ### Number
