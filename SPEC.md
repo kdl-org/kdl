@@ -349,7 +349,7 @@ String](#multi-line-strings).
 
 #### Escapes
 
-In addition to literal code points, a number of "escapes" are supported.
+In addition to literal code points, a number of "escapes" are supported in Quoted Strings.
 "Escapes" are the character `\` followed by another character, and are
 interpreted as described in the following table:
 
