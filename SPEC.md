@@ -281,10 +281,8 @@ node prop=(regex).*
 ### String
 
 Strings in KDL represent textual UTF-8 [Values](#value). A String is either an
-[Identifier String](#identifier-string), a [Quoted String](#quoted-string) or
-a [Raw String](#raw-string). Quoted Strings may include escaped characters,
-while Raw Strings always contain only the literal characters that are present.
-Identifier Strings don't user delimiters.
+[Identifier String](#identifier-string) (like `foo`), a [Quoted String](#quoted-string) (like `"foo"`) or
+a [Raw String](#raw-string) (like `#"foo"#`). Identifier Strings let you write short, "single-word" strings with a minimum of syntax; Quoted Strings let you write strings with whitespace (including newlines!) or escapes; Raw Strings let you write strings with whitespace *but without escapes*, allowing you to not worry about the string's content containing anything that might look like an escape.
 
 Strings _MUST_ be represented as UTF-8 values.
 
