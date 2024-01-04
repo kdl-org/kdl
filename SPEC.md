@@ -689,7 +689,6 @@ node-prop-or-arg := prop | value
 node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
-keyword := '#' (boolean | 'null')
 prop := string optional-node-space equals-sign optional-node-space value
 value := type? optional-node-space (string | number | keyword)
 type := '(' optional-node-space string optional-node-space ')'
@@ -697,9 +696,9 @@ equals-sign := See Table (Equals Sign)
 
 string := identifier-string | quoted-string | raw-string
 
-identifier-string := (unambiguous-ident - boolean - 'null') | numberish-ident | dotted-ident
-unambiguous-ident := (identifier-char - digit - sign - '.') identifier-char*
-numberish-ident := sign ((identifier-char - digit - '.') identifier-char*)?
+identifier-string := unambiguous-ident | signed-ident | dotted-ident
+unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - 'true' - 'false' - 'null'
+signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - line-space - [\\/(){};\[\]="#] - disallowed-literal-code-points
 
@@ -727,7 +726,9 @@ hex := sign? '0x' hex-digit (hex-digit | '_')*
 octal := sign? '0o' [0-7] [0-7_]*
 binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 
-boolean := 'true' | 'false'
+keyword := boolean | '#null'
+
+boolean := '#true' | '#false'
 
 escline := '\\' ws* (single-line-comment | newline | eof)
 
