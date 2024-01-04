@@ -682,28 +682,28 @@ node-space := plain-node-space+ ('/-' plain-node-space* (node-prop-or-arg | node
 required-node-space := node-space* plain-node-space+
 optional-node-space := node-space*
 
-base-node := type? optional-node-space identifier (required-node-space node-prop-or-arg)* (required-node-space node-children)?
+base-node := type? optional-node-space string (required-node-space node-prop-or-arg)* (required-node-space node-children)?
 node := base-node optional-node-space node-terminator
 final-node := base-node optional-node-space node-terminator?
 node-prop-or-arg := prop | value
 node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
-identifier := string | bare-identifier
-bare-identifier := (unambiguous-ident - boolean - 'null') | numberish-ident | dotted-ident
+keyword := '#' (boolean | 'null')
+prop := string optional-node-space equals-sign optional-node-space value
+value := type? optional-node-space (string | number | keyword)
+type := '(' optional-node-space string optional-node-space ')'
+equals-sign := See Table (Equals Sign)
+
+string := identifier-string | quoted-string | raw-string
+
+identifier-string := (unambiguous-ident - boolean - 'null') | numberish-ident | dotted-ident
 unambiguous-ident := (identifier-char - digit - sign - '.') identifier-char*
 numberish-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - line-space - [\\/(){};\[\]="#] - disallowed-literal-code-points
 
-keyword := '#' (boolean | 'null')
-prop := identifier optional-node-space equals-sign optional-node-space value
-value := type? optional-node-space (identifier | string | number | keyword)
-type := '(' optional-node-space identifier optional-node-space ')'
-equals-sign := See Table (Equals Sign)
-
-string := raw-string | escaped-string
-escaped-string := '"' (single-line-string-body | newline multi-line-string-body newline ws*) '"'
+quoted-string := '"' (single-line-string-body | newline multi-line-string-body newline ws*) '"'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := string-character*
 string-character := '\' escape | [^\\"] - disallowed-literal-code-points
