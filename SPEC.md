@@ -298,17 +298,22 @@ composed of any [Unicode Scalar
 Value](https://unicode.org/glossary/#unicode_scalar_value) other than
 [non-initial characters](#non-initial-characters), followed by any number of
 Unicode Scalar Values other than [non-identifier
-characters](#non-identifier-characters), so long as this doesn't produce
-something confusable for a [Number](#number). For example, both a
-[Number](#number) and an Identifier can start with `-`, but when an Identifier
-starts with `-` the second character cannot be a digit. This is precisely
-specified in the [Full Grammar](#full-grammar) below.
+characters](#non-identifier-characters).
+
+A handful of patterns are disallowed, to avoid confusion with other values:
+
+* idents that appear to start with a [Number](#number)
+    (like `1.0v2` or `-1em`)
+    or the "almost a number" pattern of a decimal point without a leading digit
+    (like `.1`)
+* idents that are the language keywords (`true`, `false`, and `null`) without their leading `#`
+
+Identifiers that match these patterns _MUST_ be treated as a syntax error;
+such values can only be written as quoted or raw strings.
+The precise details of the identifier syntax is specified in the [Full Grammar](#full-grammar) below.
 
 Identifier Strings are terminated by [Whitespace](#whitespace) or
 [Newlines](#newline).
-
-The literal identifiers `true`, `false`, and `null` are illegal Identifier
-Strings, and _MUST_ be treated as a syntax error.
 
 #### Non-initial characters
 
@@ -540,6 +545,11 @@ There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
     * They may optionally include a decimal separator `.`, followed by more digits, which may again be separated by `_`.
     * They may optionally be followed by `E` or `e`, an optional `-` or `+`, and more digits, to represent an exponent value.
 
+Note that, similar to JSON and some other languages,
+numbers without an integer digit (such as `.1`) are illegal.
+They must be written with at least one integer digit, like `0.1`.
+(These patterns are also disallowed from [Identifier Strings](#identifier-string), to avoid confusion.)
+
 ### Boolean
 
 A boolean [Value](#value) is either the symbol `#true` or `#false`. These
@@ -680,9 +690,10 @@ node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 identifier := string | bare-identifier
-bare-identifier := (unambiguous-ident - boolean - 'null') | numberish-ident
-unambiguous-ident := (identifier-char - digit - sign) identifier-char*
-numberish-ident := sign ((identifier-char - digit) identifier-char*)?
+bare-identifier := (unambiguous-ident - boolean - 'null') | numberish-ident | dotted-ident
+unambiguous-ident := (identifier-char - digit - sign - '.') identifier-char*
+numberish-ident := sign ((identifier-char - digit - '.') identifier-char*)?
+dotted-ident := '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - line-space - [\\/(){};\[\]="#] - disallowed-literal-code-points
 
 keyword := '#' (boolean | 'null')
