@@ -699,7 +699,7 @@ string := identifier-string | quoted-string | raw-string
 identifier-string := unambiguous-ident | signed-ident | dotted-ident
 unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - 'true' - 'false' - 'null'
 signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
-dotted-ident := '.' ((identifier-char - digit) identifier-char*)?
+dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - line-space - [\\/(){};\[\]="#] - disallowed-literal-code-points
 
 quoted-string := '"' (single-line-string-body | newline multi-line-string-body newline ws*) '"'
