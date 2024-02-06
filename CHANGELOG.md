@@ -62,6 +62,8 @@
   EQUALS SIGN (`U+1F7F0`) are now treated the same as `=` and can be used for
   properties (e.g. `お名前＝☜(ﾟヮﾟ☜)`). They are also no longer valid in bare
   identifiers.
+* `.1`, `+.1` etc are no longer valid identifiers, to prevent confusion and
+  conflicts with numbers.
 
 ### KQL
 
