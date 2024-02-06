@@ -51,7 +51,7 @@ Language](SCHEMA-SPEC.md) loosely based on JSON Schema.
 The language is based on [SDLang](https://sdlang.org), with a number of
 modifications and clarifications on its syntax and behavior.
 
-The current version of the KDL spec is `2.0.0-draft.1`.
+The current version of the KDL spec is `2.0.0-draft.2`.
 
 [Play with it in your browser!](https://kdl-play.danini.dev/)
 
