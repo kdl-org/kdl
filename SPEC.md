@@ -582,7 +582,7 @@ approximation thereof.
 #### Example
 
 ```kdl
-my-node true value=#false
+my-node #true value=#false
 ```
 
 ### Null
