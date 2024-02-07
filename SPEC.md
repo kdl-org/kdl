@@ -436,30 +436,31 @@ The string contains the literal characters `hello\n\r\asd"#world`
 
 ### Multi-line Strings
 
-When a Quoted or Raw String spans multiple lines with literal, non-escaped Newlines,
-it follows a special multi-line syntax
-that automatically "dedents" the string,
-allowing its value to be indented to a visually matching level if desired.
+When a Quoted or Raw String spans multiple lines with literal, non-escaped
+Newlines, it follows a special multi-line syntax that automatically "dedents"
+the string, allowing its value to be indented to a visually matching level if
+desired.
 
-A Multi-line string _MUST_ start with a [Newline](#newline)
-immediately following its opening `"`.
-Its final line, preceding the closing `"`,
-_MUST_ contain only whitespace.
-All in-between lines that contain non-whitespace characters
-_MUST_ start with the exact same whitespace as the final line
-(precisely matching codepoints, not merely counting characters).
+A Multi-line string _MUST_ start with a [Newline](#newline) immediately
+following its opening `"`. Its final line _MUST_ contain only whitespace,
+followed by a single closing `"`. All in-between lines that contain
+non-whitespace characters _MUST_ start with the exact same whitespace as the
+final line (precisely matching codepoints, not merely counting characters).
 
-The value of the Multi-line String omits the first and last Newline,
-the Whitespace of the last line,
-the matching Whitespace prefix on all intermediate lines,
-and all Whitespace on intermediate Whitespace-only lines.
-The first and last Newline can be the same character
-(that is, empty multi-line strings are legal).
+The value of the Multi-line String omits the first and last Newline, the
+Whitespace of the last line, and the matching Whitespace prefix on all
+intermediate lines. The first and last Newline can be the same character (that
+is, empty multi-line strings are legal).
 
 Strings with literal Newlines that do not immediately start with a Newline and
-whose final `"` is not preceeded by optional whitespace and a Newline are illegal.
+whose final `"` is not preceeded by optional whitespace and a Newline are
+illegal.
 
-In other words, the final line specifies the whitespace prefix that will be removed from all other lines.
+In other words, the final line specifies the whitespace prefix that will be
+removed from all other lines.
+
+It is a syntax error for any body lines of the multi-line string to not match
+the whitespace prefix of the last line with the final quote.
 
 #### Example
 
@@ -526,6 +527,28 @@ A second indented paragraph.
 
 Equivalent to `"Indented a bit.\n\nA second indented paragraph."`
 
+-----------
+
+The following yield syntax errors:
+
+```kdl
+multi-line "
+  closing quote with non-whitespace prefix"
+```
+
+```kdl
+multi-line "stuff
+  "
+```
+
+```kdl
+// Every line must share the exact same prefix as the closing line.
+multi-line "[\n]
+[tab]a[\n]
+[space][space]b[\n]
+[space][tab][\n]
+[tab]"
+```
 
 ### Number
 

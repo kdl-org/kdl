@@ -54,10 +54,10 @@
   * Around `=` for props (`x = 1`)
 * The BOM is now only allowed as the first character in a document. It was
   previously treated as generic whitespace.
-* Multi-line strings are now automatically dedented, according to the
-  least-indented line in the body. Multiline strings and raw strings now must
-  have a newline immediately following their opening `"`, and a final newline
-  preceding the closing `"`.
+* Multi-line strings are now automatically dedented, according to the common
+  whitespace matching the whitespace prefix of the closing line. Multiline
+  strings and raw strings now must have a newline immediately following their
+  opening `"`, and a final newline plus whitespace preceding the closing `"`.
 * SMALL EQUALS SIGN (`U+FE66`), FULLWIDTH EQUALS SIGN (`U+FF1D`), and HEAVY
   EQUALS SIGN (`U+1F7F0`) are now treated the same as `=` and can be used for
   properties (e.g. `お名前＝☜(ﾟヮﾟ☜)`). They are also no longer valid in bare
