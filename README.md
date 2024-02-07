@@ -156,20 +156,20 @@ node2 "this\nhas\tescapes"
 node3 #"C:\Users\zkat\raw\string"#
 ```
 
-You don't have to quote strings unless they contain whitespace, or if any the
-following apply:
-  * The string contains any of `[]{}()\/#";`.
+You don't have to quote strings unless any the following apply:
   * The string contains whitespace.
+  * The string contains any of `[]{}()\/#";`.
   * The string is one of `true`, `false`, or `null`.
-  * The strings starts with a digit, or `+`/`-` and a digit.
+  * The strings starts with a digit, or `+`/`-`/`.`/`-.`,`+.` and a digit.
   * The string contains an equals sign (including unicode equals signs `﹦`,
     `＝`, and `🟰`).
 
-In essence, if it can get confused for other KDL syntax, it needs quotes.
+In essence, if it can get confused for other KDL or KQL syntax, it needs
+quotes.
 
 Both types of quoted string can be multiline as-is, without a different
-syntax. Additionally, these multi-line strings will be "dedented" according to
-the common indentation that all lines share:
+syntax. Additionally, common indentation shared with the line containing the
+closing quote will be stripped/dedented:
 
 ```kdl
 string "
@@ -196,7 +196,7 @@ You can add any number of `#`s before and after the opening and
 closing `#` to disambiguate literal closing `#"` sequences:
 
 ```kdl
-other-raw ##"hello"#world"##
+other-raw ##"hello#"world"##
 ```
 
 #### Numbers
@@ -248,7 +248,7 @@ hello
 ```
 
 On top of that, KDL supports `/-` "slashdash" comments, which can be used to
-comment out individual nodes, arguments, or children:
+comment out individual nodes, arguments, or child blocks:
 
 ```kdl
 // This entire node and its children are all commented out.
