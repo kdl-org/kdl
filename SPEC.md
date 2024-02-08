@@ -714,7 +714,8 @@ node-terminator := single-line-comment | newline | ';' | eof
 prop := string optional-node-space equals-sign optional-node-space value
 value := type? optional-node-space (string | number | keyword)
 type := '(' optional-node-space string optional-node-space ')'
-equals-sign := See Table (Equals Sign)
+
+equals-sign := See Table ([Equals Sign](#equals-sign))
 
 string := identifier-string | quoted-string | raw-string
 
@@ -761,8 +762,6 @@ ws := unicode-space | multi-line-comment
 bom := '\u{FEFF}'
 
 disallowed-literal-code-points := See Table (Disallowed Literal Code Points)
-
-equals-sign := See Table ([Equals Sign](#equals-sign))
 
 unicode-space := See Table (All [White_Space](#whitespace) unicode characters which are not `newline`)
 
