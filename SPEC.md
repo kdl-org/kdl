@@ -675,13 +675,12 @@ Note that for the purpose of new lines, CRLF is considered _a single newline_.
 The following code points may not appear literally anywhere in the document.
 They may be represented in Strings (but not Raw Strings) using `\u{}`.
 
-* The codepoints `U+0000-0009`,
-    the codepoint `U+000B`,
-    or the codepoints `U+000E-001F`  (various control characters).
+* The codepoints `U+0000-0008` or the codepoints `U+000E-001F`  (various
+  control characters).
 * `U+007F` (the Delete control character).
 * Any codepoint that is not a [Unicode Scalar
-  Value](https://unicode.org/glossary/#unicode_scalar_value).
-* `U+2066-2069`, `U+202A-202E`, `U+200E`, and `U+200F`, the [unicode
+  Value](https://unicode.org/glossary/#unicode_scalar_value) (`U+D800-DFFF`).
+* `U+200E-200F`, `U+202A-202E`, and `U+2066-2069`, the [unicode
   "direction control"
   characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
 
@@ -723,7 +722,7 @@ identifier-string := unambiguous-ident | signed-ident | dotted-ident
 unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - 'true' - 'false' - 'null'
 signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
-identifier-char := unicode - line-space - [\\/(){};\[\]="#] - disallowed-literal-code-points
+identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#] - disallowed-literal-code-points - equals-sign
 
 quoted-string := '"' (single-line-string-body | newline multi-line-string-body newline ws*) '"'
 single-line-string-body := (string-character - newline)*
@@ -763,7 +762,9 @@ bom := '\u{FEFF}'
 
 disallowed-literal-code-points := See Table (Disallowed Literal Code Points)
 
-unicode-space := See Table (All White_Space unicode characters which are not `newline`)
+equals-sign := See Table ([Equals Sign](#equals-sign))
+
+unicode-space := See Table (All [White_Space](#whitespace) unicode characters which are not `newline`)
 
 single-line-comment := '//' ^newline* (newline | eof)
 multi-line-comment := '/*' commented-block
