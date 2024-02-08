@@ -65,6 +65,8 @@
   identifiers.
 * `.1`, `+.1` etc are no longer valid identifiers, to prevent confusion and
   conflicts with numbers.
+* Multi-line strings' literal Newline sequences are now normalized to single
+  `LF`s.
 
 ### KQL
 

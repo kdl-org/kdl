@@ -463,6 +463,18 @@ removed from all other lines.
 It is a syntax error for any body lines of the multi-line string to not match
 the whitespace prefix of the last line with the final quote.
 
+#### Newline Normalization
+
+Literal Newline sequences in Multi-line Strings must be normalized to a single
+`U+000A` (`LF`) during deserialization. This means, for example, that `CR LF`
+becomes a single `LF` during parsing.
+
+This normalization does not apply to non-literal Newlines entered using escape
+sequences.
+
+For clarity: this normalization is for individual sequences. That is, the
+literal sequence `CRLF CRLF` becomes `LF LF`, not `LF`.
+
 #### Example
 
 ```kdl
