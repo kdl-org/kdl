@@ -19,8 +19,8 @@ jobs {
         components rustfmt
         override #true
       }
-      step rustfmt run="cargo fmt --all -- --check"
-      step docs run="cargo doc --no-deps"
+      step rustfmt { run cargo fmt --all -- --check }
+      step docs { run cargo doc --no-deps }
     }
   }
   build_and_test "Build & Test" {
@@ -40,8 +40,8 @@ jobs {
         components clippy
         override #true
       }
-      step Clippy run="cargo clippy --all -- -D warnings"
-      step "Run tests" run="cargo test --all --verbose"
+      step Clippy { run cargo clippy --all -- -D warnings }
+      step "Run tests" { run cargo test --all --verbose }
       step "Other Stuff" run="
         echo foo
         echo bar

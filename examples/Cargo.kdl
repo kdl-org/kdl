@@ -1,7 +1,7 @@
 package {
     name kdl
     version "0.0.0"
-    description "kat's document language"
+    description "The kdl document language"
     authors "Kat Marchán <kzm@zkat.tech>"
     license-file LICENSE.md
     edition "2018"

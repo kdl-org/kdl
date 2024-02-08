@@ -6,13 +6,13 @@ html lang=en {
         meta \
             name=description \
             content="kdl is a document language, mostly based on SDLang, with xml-like semantics that looks like you're invoking a bunch of CLI commands!"
-        title "kdl - Kat's Document Language"
+        title "kdl - The KDL Document Language"
         link rel=stylesheet href="/styles/global.css"
     }
     body {
         main {
             header class="py-10 bg-gray-300" {
-                h1 class="text-4xl text-center" "kdl - Kat's Document Language"
+                h1 class="text-4xl text-center" "kdl - The KDL Document Language"
             }
             section class=kdl-section id=description {
                 p {
