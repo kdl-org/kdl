@@ -342,12 +342,13 @@ The following characters cannot be used anywhere in a [Identifier String](#ident
 
 A Quoted String is delimited by `"` on either side of any number of literal
 string characters except unescaped `"` and `\`. This includes literal
-[Newline](#newline) characters, which means a String Value can encompass
-multiple lines without behaving like a Newline for [Node](#node) parsing
-purposes.
+[Newline](#newline) characters, which means a single String Value can span
+multiple lines, following specific [Multi-line String](#multi-line-strings)
+rules.
 
-Like Identifier Strings, Quoted Strings _MUST NOT_ include any of the [disallowed literal
-code-points](#disallowed-literal-code-points) as code points in their body.
+Like Identifier Strings, Quoted Strings _MUST NOT_ include any of the
+[disallowed literal code-points](#disallowed-literal-code-points) as code
+points in their body.
 
 Quoted Strings also follow the Multi-line rules specified in [Multi-line
 String](#multi-line-strings).
