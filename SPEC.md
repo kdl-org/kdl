@@ -445,7 +445,7 @@ desired.
 A Multi-line string _MUST_ start with a [Newline](#newline) immediately
 following its opening `"`. Its final line _MUST_ contain only whitespace,
 followed by a single closing `"`. All in-between lines that contain
-non-whitespace characters _MUST_ start with the exact same whitespace as the
+non-newline characters _MUST_ start with the exact same whitespace as the
 final line (precisely matching codepoints, not merely counting characters).
 
 The value of the Multi-line String omits the first and last Newline, the
@@ -738,7 +738,7 @@ signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#] - disallowed-literal-code-points - equals-sign
 
-quoted-string := '"' (single-line-string-body | newline multi-line-string-body newline ws*) '"'
+quoted-string := '"' (single-line-string-body | newline multi-line-string-body newline unicode-space*) '"'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := string-character*
 string-character := '\' escape | [^\\"] - disallowed-literal-code-points
@@ -746,7 +746,7 @@ escape := ["\\bfnrt] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
-raw-string-quotes := '"' (single-line-raw-string-body | newline multi-line-raw-string-body newline ws*) '"'
+raw-string-quotes := '"' (single-line-raw-string-body | newline multi-line-raw-string-body newline unicode-space*) '"'
 single-line-raw-string-body := (unicode - newline - disallowed-literal-code-points)*
 multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
 

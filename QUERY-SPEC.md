@@ -107,15 +107,15 @@ Then the following queries are valid:
 For rules that are not defined in this grammar, see [the KDL grammar](https://github.com/kdl-org/kdl/blob/main/SPEC.md#full-grammar).
 
 ```
+query-str := bom? query
 query := selector q-ws* "||" q-ws* query | selector
 selector := filter q-ws* selector-operator q-ws* selector | filter
 selector-operator := ">>" | ">" | "++" | "+"
-filter := matcher+
-matcher := "top()"| "()" | identifier | type | accessor-matcher
-accessor-matcher := "[" (comparison | accessor)? "]"
+filter := ( "top(" q-ws* ")" | "(" q-ws* ")" | type ) string? accessor-matcher*
+accessor-matcher := "[" q-ws* (comparison | accessor)? q-ws* "]"
 comparison := accessor q-ws* matcher-operator q-ws* (type | identifier | string | number | keyword)
-accessor := "val(" number ")" | "prop(" identifier ")" | "name()" | "tag()" | "values()" | "props()" | identifier
+accessor := "val(" q-ws* integer q-ws* ")" | "prop(" q-ws* identifier q-ws* ")" | "name(" q-ws* ")" | "tag(" q-ws* ")" | "values(" q-ws* ")" | "props(" q-ws* ")" | identifier
 matcher-operator := "=" | "!=" | ">" | "<" | ">=" | "<=" | "^=" | "$=" | "*="
 
-q-ws := bom | unicode-space
+q-ws := unicode-space
 ```
