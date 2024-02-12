@@ -45,7 +45,7 @@ jobs {
       step "Other Stuff" run="
         echo foo
         echo bar
-          echo baz
+        echo baz
       "
     }
   }
