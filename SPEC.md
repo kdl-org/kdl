@@ -800,7 +800,7 @@ Specifically:
 * `[]` are used for regex-style character matches, where any character between
   the brackets will be a single match. `\` is used to escape `\`, `[`, and
   `]`. They also support character ranges (`0-9`), and negation (`^`)
-* `-` is used for "except for" or "minus" whatever follows it. For example, `a
-  - `'x'` means "any `a`, except something that matches the literal `'x'`".
+* `-` is used for "except for" or "minus" whatever follows it. For example,
+  `a - 'x'` means "any `a`, except something that matches the literal `'x'`".
 * The prefix `^` means "something that does not match" whatever follows it.
   For example, `^foo` means "must not match `foo`".
