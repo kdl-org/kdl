@@ -74,4 +74,7 @@
   spaces for that purpose.
 * The "any sibling" selector is now `++` instead of `~`, for consistency with
   the new descendant selector.
+* Some parsing logic around the grammar has changed.
+* Multi- and single-line comments are now supported, as well as line
+  continuations with `\`.
 * Map operators have been removed entirely.

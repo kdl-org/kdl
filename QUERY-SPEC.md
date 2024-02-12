@@ -104,18 +104,22 @@ Then the following queries are valid:
 
 ## Full Grammar
 
-For rules that are not defined in this grammar, see [the KDL grammar](https://github.com/kdl-org/kdl/blob/main/SPEC.md#full-grammar).
+Rules that are not defined in this grammar are prefixed with `$`, see [the KDL
+grammar](https://github.com/kdl-org/kdl/blob/main/SPEC.md#full-grammar) for
+what they expand to.
 
 ```
-query-str := bom? query
+query-str := $bom? query
 query := selector q-ws* "||" q-ws* query | selector
 selector := filter q-ws* selector-operator q-ws* selector | filter
 selector-operator := ">>" | ">" | "++" | "+"
-filter := ( "top(" q-ws* ")" | "(" q-ws* ")" | type ) string? accessor-matcher*
+filter := "top(" q-ws* ")" | matchers
+matchers := type-matcher $string? accessor-matcher* | $string accessor-matcher* | accessor-matcher+
+type-matcher := "(" q-ws* ")" | $type
 accessor-matcher := "[" q-ws* (comparison | accessor)? q-ws* "]"
-comparison := accessor q-ws* matcher-operator q-ws* (type | identifier | string | number | keyword)
-accessor := "val(" q-ws* integer q-ws* ")" | "prop(" q-ws* identifier q-ws* ")" | "name(" q-ws* ")" | "tag(" q-ws* ")" | "values(" q-ws* ")" | "props(" q-ws* ")" | identifier
+comparison := accessor q-ws* matcher-operator q-ws* ($type | $string | $number | $keyword)
+accessor := "val(" q-ws* $integer q-ws* ")" | "prop(" q-ws* $string q-ws* ")" | "name(" q-ws* ")" | "tag(" q-ws* ")" | "values(" q-ws* ")" | "props(" q-ws* ")" | $string
 matcher-operator := "=" | "!=" | ">" | "<" | ">=" | "<=" | "^=" | "$=" | "*="
 
-q-ws := unicode-space
+q-ws := $plain-node-space
 ```
