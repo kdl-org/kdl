@@ -302,11 +302,11 @@ characters](#non-identifier-characters).
 
 A handful of patterns are disallowed, to avoid confusion with other values:
 
-* idents that appear to start with a [Number](#number)
-    (like `1.0v2` or `-1em`)
-    or the "almost a number" pattern of a decimal point without a leading digit
-    (like `.1`)
-* idents that are the language keywords (`true`, `false`, and `null`) without their leading `#`
+* idents that appear to start with a [Number](#number) (like `1.0v2` or
+    `-1em`) or the "almost a number" pattern of a decimal point without a
+    leading digit (like `.1`)/
+* idents that are the language keywords (`inf`, `-inf`, `nan`, `true`,
+  `false`, and `null`) without their leading `#`.
 
 Identifiers that match these patterns _MUST_ be treated as a syntax error;
 such values can only be written as quoted or raw strings.
@@ -569,9 +569,9 @@ Numbers in KDL represent numerical [Values](#value). There is no logical distinc
 between real numbers, integers, and floating point numbers. It's up to
 individual implementations to determine how to represent KDL numbers.
 
-There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
+There are five syntaxes for Numbers: Keywords, Decimal, Hexadecimal, Octal, and Binary.
 
-* All numbers may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
+* All non-[Keyword](#keyword-numbers) numbers may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
 * Binary numbers start with `0b` and only allow `0` and `1` as digits, which may be separated by `_`. They represent numbers in radix 2.
 * Octal numbers start with `0o` and only allow digits between `0` and `7`, which may be separated by `_`. They represent numbers in radix 8.
 * Hexadecimal numbers start with `0x` and allow digits between `0` and `9`, as well as letters `A` through `F`, in either lower or upper case, which may be separated by `_`. They represent numbers in radix 16.
@@ -585,6 +585,19 @@ Note that, similar to JSON and some other languages,
 numbers without an integer digit (such as `.1`) are illegal.
 They must be written with at least one integer digit, like `0.1`.
 (These patterns are also disallowed from [Identifier Strings](#identifier-string), to avoid confusion.)
+
+#### Keyword Numbers
+
+There are three special "keyword" numbers included in KDL to accomodate the
+widespread use of [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floats:
+
+* `#inf` - floating point positive infinity.
+* `#-inf` - floating point negative infinity.
+* `#nan` - floating point NaN/Not a Number.
+
+To go along with this and prevent foot guns, the bare [Identifier
+Strings](#identifier-string) `inf`, `-inf`, and `nan` are considered illegal
+identifiers and should yield a syntax error.
 
 ### Boolean
 

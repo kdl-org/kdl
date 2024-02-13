@@ -67,6 +67,11 @@
   conflicts with numbers.
 * Multi-line strings' literal Newline sequences are now normalized to single
   `LF`s.
+* `#inf`, `#-inf`, and `#nan` have been added in order to properly support
+  IEEE floats for implementations that choose to represent their decimals that
+  way.
+* Correspondingly, the identifiers `inf`, `-inf`, and `nan` are now syntax
+  errors.
 
 ### KQL
 
