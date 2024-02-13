@@ -746,7 +746,7 @@ equals-sign := See Table ([Equals Sign](#equals-sign))
 string := identifier-string | quoted-string | raw-string
 
 identifier-string := unambiguous-ident | signed-ident | dotted-ident
-unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - 'true' - 'false' - 'null'
+unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
 signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#] - disallowed-literal-code-points - equals-sign
@@ -763,7 +763,7 @@ raw-string-quotes := '"' (single-line-raw-string-body | newline multi-line-raw-s
 single-line-raw-string-body := (unicode - newline - disallowed-literal-code-points)*
 multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
 
-number := hex | octal | binary | decimal
+number := keyword-number | hex | octal | binary | decimal
 
 decimal := sign? integer ('.' integer)? exponent?
 exponent := ('e' | 'E') sign? integer
@@ -775,7 +775,9 @@ hex := sign? '0x' hex-digit (hex-digit | '_')*
 octal := sign? '0o' [0-7] [0-7_]*
 binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 
-keyword := boolean | '#null'
+keyword := keyword-number | boolean | '#null'
+
+keyword-number := '#inf' | '#-inf' | '#nan'
 
 boolean := '#true' | '#false'
 
