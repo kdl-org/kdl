@@ -706,7 +706,7 @@ language syntax](#grammar-language) is defined below.
 ```
 document := bom? nodes
 
-nodes := (line-space* node)* line-space*
+nodes := ('/-' plain-node-space* node)? (line-space* node)* line-space*
 
 plain-line-space := newline | ws | single-line-comment
 plain-node-space := ws* escline ws* | ws+
