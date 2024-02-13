@@ -3,8 +3,8 @@
 This is the semi-formal specification for KDL, including the intended data
 model and the grammar.
 
-This document describes KDL version `2.0.0-draft.3`. It was released on
-2024-02-07.
+This document describes KDL version `2.0.0-draft.4`. It was released on
+2024-02-12.
 
 ## Introduction
 
