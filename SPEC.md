@@ -802,7 +802,7 @@ hex := sign? '0x' hex-digit (hex-digit | '_')*
 octal := sign? '0o' [0-7] [0-7_]*
 binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 
-keyword := keyword-number | boolean | '#null'
+keyword := boolean | '#null'
 
 keyword-number := '#inf' | '#-inf' | '#nan'
 
