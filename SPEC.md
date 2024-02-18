@@ -719,12 +719,12 @@ language syntax](#grammar-language) is defined below.
 ```
 document := bom? nodes
 
-nodes := ('/-' plain-node-space* node)? (line-space* node)* line-space*
+nodes := (line-space* node)* line-space*
 
 plain-line-space := newline | ws | single-line-comment
 plain-node-space := ws* escline ws* | ws+
 
-line-space := plain-line-space+ ('/-' plain-node-space* node)?
+line-space := plain-line-space+ | '/-' plain-node-space* node
 node-space := plain-node-space+ ('/-' plain-node-space* (node-prop-or-arg | node-children))?
 
 required-node-space := node-space* plain-node-space+
