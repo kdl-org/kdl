@@ -290,7 +290,7 @@ document {
                                     type number
                                 }
                             }
-                            node >= description="Only used for numeric values. Constrains them to be greater than or equal to the given number(s)" {
+                            node ">=" description="Only used for numeric values. Constrains them to be greater than or equal to the given number(s)" {
                                 max 1
                                 value {
                                     min 1
@@ -306,7 +306,7 @@ document {
                                     type number
                                 }
                             }
-                            node <= description="Only used for numeric values. Constrains them to be less than or equal to the given number(s)" {
+                            node "<=" description="Only used for numeric values. Constrains them to be less than or equal to the given number(s)" {
                                 max 1
                                 value {
                                     min 1
