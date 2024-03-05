@@ -378,7 +378,7 @@ In addition to escaping individual characters, `\` can also escape whitespace.
 When a `\` is followed by one or more literal whitespace characters, the `\`
 and all of that whitespace are discarded. For example, `"Hello World"` and
 `"Hello \    World"` are semantically identical. See [whitespace](#whitespace)
-and [newlines](#newlines) for how whitespace is defined.
+and [newlines](#newline) for how whitespace is defined.
 
 Note that only literal whitespace is escaped; whitespace escapes (`\n` and
 such) are retained. For example, these strings are all semantically identical:
