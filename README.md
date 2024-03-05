@@ -187,7 +187,7 @@ exec #"
   echo "foo"
   echo "bar"
   cd C:\path\to\dir
-"#
+  "#
 
 regex #"\d{3} "[^/"]+""#
 ```
