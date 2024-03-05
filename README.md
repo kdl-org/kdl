@@ -176,7 +176,7 @@ string "
   my
     multiline
   value
-"
+  "
 ```
 
 Raw strings, which do not support `\` escapes and can be used when you want
