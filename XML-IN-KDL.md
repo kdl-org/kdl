@@ -25,7 +25,7 @@ XML elements and KDL nodes have a direct correspondence. In XiK, an XML element 
 * making the attributes into KDL properties
 * making the child nodes as KDL child nodes
 
-For example, the XML `<element foo="bar"><child baz="qux" /></element>` is encoded into XiK as `element foo="bar" { child baz="qux" }`.
+For example, the XML `<element foo="bar"><child baz="qux" /></element>` is encoded into XiK as `element foo=bar { child baz=quux }`.
 
 XML namespaces are encoded the same as XML: the node name simply contains a `:` character. Note that KDL identifier syntax allows `:` directly in an ident, so a name like `xml:space` or `xlink:href` is a valid node or property name.
 
@@ -35,9 +35,9 @@ Raw text contents of an element can be encoded in two possible ways.
 
 If the element contains *only* text, it should be encoded as a final string unnamed argument. For example, the XML `<a href="http://example.com">here's a link</a>` can be encoded as `a href="http://example.com" "here's a link"`.
 
-If the element contains mixed text and element children, the text can be encoded as a KDL node with the name `-` with a single string unnamed argument. For example, the XML `<span>some <b>bold</b> text</span>` can be encoded as `span { - "some "; b "bold"; - " text" }`.
+If the element contains mixed text and element children, the text can be encoded as a KDL node with the name `-` with a single string unnamed argument. For example, the XML `<span>some <b>bold</b> text</span>` can be encoded as `span { - "some "; b bold; - " text" }`.
 
-An element that contains only text *is allowed to* encode it as `-` children. For example, `<span>foo</span>` *may* be encoded as `span { - "foo" }` instead of `span "foo"`. However, an element cannot mix the "final string attribute" with child nodes; `span "foo" { b "bar" }` is an **invalid** encoding of `<span>foo<b>bar</b></span>`. (It must be encoded as `span { - "foo"; b "bar" }`.)
+An element that contains only text *is allowed to* encode it as `-` children. For example, `<span>foo</span>` *may* be encoded as `span { - foo }` instead of `span foo`. However, an element cannot mix the "final string attribute" with child nodes; `span foo { b bar }` is an **invalid** encoding of `<span>foo<b>bar</b></span>`. (It must be encoded as `span { - foo; b bar }`.)
 
 CDATA sections are not preserved in this encoding, as they are merely a source convenience so you don't have to escape a bunch of characters. They are encoded as normal textual contents would be.
 
@@ -53,13 +53,13 @@ Processing instructions and XML declarations (nodes that look like `<?foo ... ?>
 
 The contents of a PI are technically completely unstructured. However, in practice most PIs' contents look like start-tag attributes. If this is the case, they should be encoded as properties on the node, with string values. For example, `<?xml version="1.0"?>` is encoded as `?xml version="1.0"`.
 
-If the contents of a PI do *not* look like attributes, then instead the entire contents (from the end of the whitespace following the PI name, to the closing `?>` characters) are encoded as a single unnamed string value. For example, the preceding XML declaration *could* be alternately encoded as `?xml r#"version="1.0""#` (but shouldn't be).
+If the contents of a PI do *not* look like attributes, then instead the entire contents (from the end of the whitespace following the PI name, to the closing `?>` characters) are encoded as a single unnamed string value. For example, the preceding XML declaration *could* be alternately encoded as `?xml #"version="1.0""#` (but shouldn't be).
 
 (Note that XML declarations are not needed when writing XiK directly; the version is always 1.0, and the encoding is always UTF-8 since it's KDL.)
 
 ----
 
-Doctypes (nodes that look like `<!DOCTYPE ...>`) are encoded similarly to unstructured Processing Instructions. They have a node name of `!doctype`, and the entire contents of the node, from the end of the whitespace following the "DOCTYPE" to the closing `>`, are encoded as a single unnamed string value. For example, the HTML doctype `<!DOCTYPE html>` is encoded as `!doctype "html"`, while the XHTML 1 Strict doctype would be encoded as `!doctype r#"html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd""#`
+Doctypes (nodes that look like `<!DOCTYPE ...>`) are encoded similarly to unstructured Processing Instructions. They have a node name of `!doctype`, and the entire contents of the node, from the end of the whitespace following the "DOCTYPE" to the closing `>`, are encoded as a single unnamed string value. For example, the HTML doctype `<!DOCTYPE html>` is encoded as `!doctype html`, while the XHTML 1 Strict doctype would be encoded as `!doctype #"html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd""#`
 
 ----
 

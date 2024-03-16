@@ -1,1 +1,1 @@
-node /- key="value" "arg"
+node /- key=value arg
