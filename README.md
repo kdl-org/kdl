@@ -80,6 +80,8 @@ free to jump in and give us your 2 cents!
 * Nim: [kdl-nim](https://github.com/Patitotective/kdl-nim)
 * Common Lisp: [kdlcl](https://github.com/chee/kdlcl)
 * Go: [gokdl](https://github.com/lunjon/gokdl), [kdl-go](https://github.com/sblinch/kdl-go)
+* Swift: [kdl-swift](https://github.com/danini-the-panini/kdl-swift)
+* Crystal: [kdl-cr](https://github.com/danini-the-panini/kdl-cr)
 
 ## Compatibility Test Suite
 
