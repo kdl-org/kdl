@@ -709,6 +709,8 @@ They may be represented in Strings (but not Raw Strings) using `\u{}`.
 * `U+200E-200F`, `U+202A-202E`, and `U+2066-2069`, the [unicode
   "direction control"
   characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
+* `U+FEFF`, aka Zero-width Non-breaking Space (ZWNBSP)/Byte Order Mark (BOM),
+  except as the first code point in a document.
 
 ## Full Grammar
 
@@ -755,7 +757,7 @@ quoted-string := '"' (single-line-string-body | newline multi-line-string-body n
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := string-character*
 string-character := '\' escape | [^\\"] - disallowed-literal-code-points
-escape := ["\\bfnrt] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
+escape := ["\\bfnrts] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
