@@ -304,7 +304,7 @@ A handful of patterns are disallowed, to avoid confusion with other values:
 
 * idents that appear to start with a [Number](#number) (like `1.0v2` or
     `-1em`) or the "almost a number" pattern of a decimal point without a
-    leading digit (like `.1`)/
+    leading digit (like `.1`).
 * idents that are the language keywords (`inf`, `-inf`, `nan`, `true`,
   `false`, and `null`) without their leading `#`.
 
@@ -395,6 +395,31 @@ such) are retained. For example, these strings are all semantically identical:
   Hello
   World
   "
+```
+
+Escapes MUST be processed _after_ [Multi-line String](#multi-line-strings)
+processing. That is, the following strings are illegal:
+
+```kdl
+// Indentation checks are processed before whitespace escapes.
+  "
+  foo\
+bar
+  "
+
+// Essentially trying to escape `foo\nbar\`, which is an error due to missing
+// escape character.
+  "
+  foo
+  bar\
+  "
+```
+
+But the following is legal, since it doesn't use Multi-line String rules:
+
+```kdl
+  "foo\
+ bar"
 ```
 
 ##### Invalid escapes
