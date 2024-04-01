@@ -397,31 +397,6 @@ such) are retained. For example, these strings are all semantically identical:
   "
 ```
 
-Escapes MUST be processed _after_ [Multi-line String](#multi-line-strings)
-processing. That is, the following strings are illegal:
-
-```kdl
-// Indentation checks are processed before whitespace escapes.
-  "
-  foo\
-bar
-  "
-
-// Essentially trying to escape `foo\nbar\`, which is an error due to missing
-// escape character.
-  "
-  foo
-  bar\
-  "
-```
-
-But the following is legal, since it doesn't use Multi-line String rules:
-
-```kdl
-  "foo\
- bar"
-```
-
 ##### Invalid escapes
 
 Except as described in the escapes table, above, `\` *MUST NOT* precede any
@@ -499,6 +474,42 @@ sequences.
 
 For clarity: this normalization is for individual sequences. That is, the
 literal sequence `CRLF CRLF` becomes `LF LF`, not `LF`.
+
+#### Interaction with Whitespace Escapes
+
+Multi-line strings support the same mechanism for escaping whitespace. When
+Processing a Multi-line String, implementations MUST resolve all whitespace
+escapes _before_ dedenting the string.
+
+For example, the following is legal:
+
+```kdl
+  "
+  foo \
+bar
+  baz
+  "
+  // becomes:
+  "foo bar\nbaz"
+```
+
+But the following is not, because the whitespace escape would consume the
+indentation prior to dedenting:
+
+```kdl
+  "
+  foo
+  bar\
+  "
+
+  // equivalent to writing:
+
+  "
+  foo
+  bar"
+
+  // which is illegal.
+```
 
 #### Example
 
