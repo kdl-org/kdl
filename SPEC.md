@@ -478,37 +478,26 @@ literal sequence `CRLF CRLF` becomes `LF LF`, not `LF`.
 #### Interaction with Whitespace Escapes
 
 Multi-line strings support the same mechanism for escaping whitespace. When
-Processing a Multi-line String, implementations MUST resolve all whitespace
-escapes _before_ dedenting the string.
+processing a Multi-line String, implementations MUST resolve all whitespace
+escapes _after_ dedenting the string. Furthermore, a whitespace escape that
+attempts to escape the final line's newline and/or whitespace prefix is
+invalid, since this technically means it's trying to escape "nothing".
 
-For example, the following is legal:
+For example, the following example are both illegal:
 
 ```kdl
+  // All multi-line strings must have the right dedent.
   "
   foo \
 bar
   baz
   "
-  // becomes:
-  "foo bar\nbaz"
-```
 
-But the following is not, because the whitespace escape would consume the
-indentation prior to dedenting:
-
-```kdl
+  // Equivalent to trying to write a string containing `foo\nbar\`.
   "
   foo
   bar\
   "
-
-  // equivalent to writing:
-
-  "
-  foo
-  bar"
-
-  // which is illegal.
 ```
 
 #### Example
