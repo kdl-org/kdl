@@ -818,6 +818,8 @@ bom := '\u{FEFF}'
 
 disallowed-literal-code-points := See Table (Disallowed Literal Code Points)
 
+unicode := Any Unicode Scalar Value
+
 unicode-space := See Table (All [White_Space](#whitespace) unicode characters which are not `newline`)
 
 single-line-comment := '//' ^newline* (newline | eof)
