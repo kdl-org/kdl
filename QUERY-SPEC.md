@@ -30,6 +30,11 @@ properties, node names, etc). With the exception of `top()` and `()`, they are a
 used inside a `[]` selector. Some matchers are unary, but most of them involve
 binary operators.
 
+The `top()` matcher can only be used as the first matcher of a selector. This means
+that it cannot be the right operand of the `>`, `>>`, `+`, or `++` operators. As `||`
+combines selectors, the `top()` can appear just after it. For instance,
+ `a > b || top() > b` is valid, but `a > top()` is not.
+
 * `top()`: Returns all toplevel children of the current document.
 * `top() > []`: Equivalent to `top()` on its own.
 * `(foo)`: Selects any element whose type annotation is `foo`.
