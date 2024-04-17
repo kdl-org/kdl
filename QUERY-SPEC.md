@@ -115,9 +115,9 @@ what they expand to.
 
 ```
 query-str := $bom? query
-query := selector-start q-ws* "||" q-ws* query | selector-start
-selector-start := filter q-ws* selector-operator q-ws* selector | filter
-selector := matchers q-ws* selector-operator q-ws* selector | matchers
+query := selector q-ws* "||" q-ws* query | selector
+selector := filter q-ws* selector-operator q-ws* selector-subsequent | filter
+selector-subsequent := matchers q-ws* selector-operator q-ws* selector-subsequent | matchers
 selector-operator := ">>" | ">" | "++" | "+"
 filter := "top(" q-ws* ")" | matchers
 matchers := type-matcher $string? accessor-matcher* | $string accessor-matcher* | accessor-matcher+
