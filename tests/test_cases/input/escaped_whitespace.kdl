@@ -6,10 +6,14 @@ node \
 		World
 	" \
 	"Hello\n\      \tWorld" \
-	"Hello\n\
-    \tWorld" \
-	"Hello\n\t\
-        World"
+	"
+ 	Hello\n\
+ 	\tWorld
+ 	" \
+	"
+  	 Hello\n\t\
+  	       World
+  	 "
 
 // Note that this file deliberately mixes space and newline indentation for
 // test purposes

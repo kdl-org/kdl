@@ -386,8 +386,10 @@ such) are retained. For example, these strings are all semantically identical:
 ```kdl
 "Hello\       \nWorld"
 
-    "Hello\n\
-    World"
+    "
+    Hello\n\
+        World
+    "
 
 "Hello\nWorld"
 
@@ -437,10 +439,9 @@ The string contains the literal characters `hello\n\r\asd"#world`
 
 ### Multi-line Strings
 
-When a Quoted or Raw String spans multiple lines with literal, non-escaped
-Newlines, it follows a special multi-line syntax that automatically "dedents"
-the string, allowing its value to be indented to a visually matching level if
-desired.
+When a Quoted or Raw String spans multiple lines with literal Newlines, it
+follows a special multi-line syntax that automatically "dedents" the string,
+allowing its value to be indented to a visually matching level if desired.
 
 A Multi-line string _MUST_ start with a [Newline](#newline) immediately
 following its opening `"`. Its final line _MUST_ contain only whitespace,
