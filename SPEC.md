@@ -475,31 +475,6 @@ sequences.
 For clarity: this normalization is for individual sequences. That is, the
 literal sequence `CRLF CRLF` becomes `LF LF`, not `LF`.
 
-#### Interaction with Whitespace Escapes
-
-Multi-line strings support the same mechanism for escaping whitespace. When
-processing a Multi-line String, implementations MUST resolve all whitespace
-escapes _after_ dedenting the string. Furthermore, a whitespace escape that
-attempts to escape the final line's newline and/or whitespace prefix is
-invalid, since this technically means it's trying to escape "nothing".
-
-For example, the following example are both illegal:
-
-```kdl
-  // All multi-line strings must have the right dedent.
-  "
-  foo \
-bar
-  baz
-  "
-
-  // Equivalent to trying to write a string containing `foo\nbar\`.
-  "
-  foo
-  bar\
-  "
-```
-
 #### Example
 
 ```kdl
@@ -510,7 +485,7 @@ multi-line "
     "
 ```
 
-The last example's string value will be:
+This example's string value will be:
 
 ```
     foo
@@ -518,7 +493,8 @@ This is the base indentation
         bar
 ```
 
-Equivalent to `"    foo\nThis is the base indentation\n        bar"`.
+which is equivalent to `"    foo\nThis is the base indentation\n        bar"`
+when written as a single-line string.
 
 ---------
 
@@ -586,6 +562,39 @@ multi-line "[\n]
 [space][space]b[\n]
 [space][tab][\n]
 [tab]"
+```
+
+#### Interaction with Whitespace Escapes
+
+Multi-line strings support the same mechanism for escaping whitespace. When
+processing a Multi-line String, implementations MUST dedent the string _after_
+resolving all whitespace escapes, but _before_ resolving other backslash escapes.
+Furthermore, a whitespace escape that attempts to escape the final line's newline
+and/or whitespace prefix is invalid since the multi-line string has to still be
+valid with the escaped whitespace removed.
+
+For example, the following example is illegal:
+
+```kdl
+  // Equivalent to trying to write a string containing `foo\nbar\`.
+  "
+  foo
+  bar\
+  "
+```
+
+while the following example is allowed
+```kdl
+  "
+  foo \
+bar
+  baz
+  \   "
+  // this is equivalent to
+  "
+  foo bar
+  baz
+  "
 ```
 
 ### Number
