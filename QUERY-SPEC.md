@@ -5,20 +5,20 @@ documents to extract nodes and even specific data. It is loosely based on CSS
 selectors for familiarity and ease of use. Think of it as CSS Selectors or
 XPath, but for KDL!
 
-This document describes KQL `1.0.0`. It was released on September 11, 2021.
+This document describes KQL `next`. It is unreleased.
 
 ## Selectors
 
 Selectors use selection operators to filter nodes that will be returned by an
 API using KQL. The main differences between this and CSS selectors are the
-lack of `*` (use `[]` instead), and the specific syntax for
+lack of `*` (use `[]` instead), the specific syntax for descendants and siblings, and the specific syntax for
 [matchers](#matchers) (the stuff between `[` and `]`), which is similar, but not identical to CSS.
 
 * `a > b`: Selects any `b` element that is a direct child of an `a` element.
-* `a b`: Selects any `b` element that is a _descendant_ of an `a` element.
-* `a b || a c`: Selects all `b` and `c` elements that are descendants of an `a` element. Any selector may be on either side of the `||`. Multiple `||` are supported.
+* `a >> b`: Selects any `b` element that is a _descendant_ of an `a` element.
+* `a >> b || a >> c`: Selects all `b` and `c` elements that are descendants of an `a` element. Any selector may be on either side of the `||`. Multiple `||` are supported.
 * `a + b`: Selects any `b` element that is placed immediately after a sibling `a` element.
-* `a ~ b`: Selects any `b` element that follows an `a` element as a sibling, either immediately or later.
+* `a ++ b`: Selects any `b` element that follows an `a` element as a sibling, either immediately or later.
 * `[accessor()]`: Selects any element, filtered by [an accessor](#accessors). (`accessor()` is a placeholder, not an actual accessor)
 * `a[accessor()]`: Selects any `a` element, filtered by an accessor.
 * `[]`: Selects any element.
@@ -29,6 +29,11 @@ Matchers are used to filter nodes by their various attributes (such as values,
 properties, node names, etc). With the exception of `top()` and `()`, they are all
 used inside a `[]` selector. Some matchers are unary, but most of them involve
 binary operators.
+
+The `top()` matcher can only be used as the first matcher of a selector. This means
+that it cannot be the right operand of the `>`, `>>`, `+`, or `++` operators. As `||`
+combines selectors, the `top()` can appear just after it. For instance,
+ `a > b || top() > b` is valid, but `a > top()` is not.
 
 * `top()`: Returns all toplevel children of the current document.
 * `top() > []`: Equivalent to `top()` on its own.
@@ -44,8 +49,8 @@ Attribute matchers support certain binary operators:
 * `[val() = 1]`: Selects any element whose first value is 1.
 * `[prop(name) = 1]`: Selects any element with a property `name` whose value is 1.
 * `[name = 1]`: Equivalent to the above.
-* `[name() = "hi"]`: Selects any element whose _node name_ is `"hi"`. Equivalent to just `hi`, but more useful when using string operators.
-* `[tag() = "hi"]`: Selects any element whose type annotation is `"hi"`. Equivalent to just `(hi)`, but more useful when using string operators.
+* `[name() = hi]`: Selects any element whose _node name_ is "hi". Equivalent to just `hi`, but more useful when using string operators.
+* `[tag() = hi]`: Selects any element whose tag is "hi". Equivalent to just `(hi)`, but more useful when using string operators.
 * `[val() != 1]`: Selects any element whose first value exists, and is not 1.
 
 The following operators work with any `val()` or `prop()` values.
@@ -60,41 +65,14 @@ never coerced to 1, and there is no "universal" ordering across all types.):
 The following operators work only with string `val()`, `prop()`, `tag()`, or `name()` values.
 If the value is not a string, the matcher will always fail:
 
-* `[val() ^= "foo"]`: Selects any element whose first value starts with "foo".
-* `[val() $= "foo"]`: Selects any element whose first value ends with "foo".
-* `[val() *= "foo"]`: Selects any element whose first value contains "foo".
+* `[val() ^= foo]`: Selects any element whose first value starts with "foo".
+* `[val() $= foo]`: Selects any element whose first value ends with "foo".
+* `[val() *= foo]`: Selects any element whose first value contains "foo".
 
 The following operators work only with `val()` or `prop()` values. If the value
 is not one of those, the matcher will always fail:
 
 * `[val() = (foo)]`: Selects any element whose type annotation is `foo`.
-
-## Map Operator
-
-KQL implementations MAY support a "map operator", `=>`, that allows selection
-of specific parts of the selected notes, essentially "mapping" over a
-selector's result set.
-
-Only a single map operator may be used, and it must be the last element in a
-selector string.
-
-The map operator's right hand side is either an [`accessor`](#accessors) on
-its own, or a tuple of accessors, denoted by a comma-separated list wrapped in
-`()` (for example, `(a, b, c)`).
-
-## Accessors
-
-Accessors access/extract specific parts of a node. They are used with the [map
-operator](#map-operator), and have syntactic overlap with some
-[matchers](#matchers).
-
-* `name()`: Returns the name of the node itself.
-* `val(2)`: Returns the third value in a node.
-* `val()`: Equivalent to `val(0)`.
-* `prop(foo)`: Returns the value of the property `foo` in the node.
-* `foo`: Equivalent to `prop(foo)`.
-* `props()`: Returns all properties of the node as an object.
-* `values()`: Returns all values of the node as an array.
 
 ## Examples
 
@@ -102,22 +80,22 @@ Given this document:
 
 ```kdl
 package {
-    name "foo"
+    name foo
     version "1.0.0"
-    dependencies platform="windows" {
+    dependencies platform=windows {
         winapi "1.0.0" path="./crates/my-winapi-fork"
     }
     dependencies {
-        miette "2.0.0" dev=true
+        miette "2.0.0" dev=#true integrity=(sri)sha512-deadbeef
     }
 }
 ```
 
 Then the following queries are valid:
 
-* `package name`
+* `package >> name`
     * -> fetches the `name` node itself
-* `top() > package name`
+* `top() > package >> name`
     * -> fetches the `name` node, guaranteeing that `package` is in the document root.
 * `dependencies`
     * -> deep-fetches both `dependencies` nodes
@@ -129,14 +107,25 @@ Then the following queries are valid:
     * -> fetches all direct-child nodes of any `dependencies` nodes in the
          document. In this case, it will fetch both `miette` and `winapi` nodes.
 
-If using an API that supports the [map operator](#map-operator), the following
-are valid queries:
+## Full Grammar
 
-* `package name => val()`
-    * -> `["foo"]`.
-* `dependencies[platform] => platform`
-    * -> `["windows"]`
-* `dependencies > [] => (name(), val(), path)`
-    * -> `[("winapi", "1.0.0", "./crates/my-winapi-fork"), ("miette", "2.0.0", None)]`
-* `dependencies > [] => (name(), values(), props())`
-    * -> `[("winapi", ["1.0.0"], {"platform": "windows"}), ("miette", ["2.0.0"], {"dev": true})]`
+Rules that are not defined in this grammar are prefixed with `$`, see [the KDL
+grammar](https://github.com/kdl-org/kdl/blob/main/SPEC.md#full-grammar) for
+what they expand to.
+
+```
+query-str := $bom? query
+query := selector q-ws* "||" q-ws* query | selector
+selector := filter q-ws* selector-operator q-ws* selector-subsequent | filter
+selector-subsequent := matchers q-ws* selector-operator q-ws* selector-subsequent | matchers
+selector-operator := ">>" | ">" | "++" | "+"
+filter := "top(" q-ws* ")" | matchers
+matchers := type-matcher $string? accessor-matcher* | $string accessor-matcher* | accessor-matcher+
+type-matcher := "(" q-ws* ")" | $type
+accessor-matcher := "[" q-ws* (comparison | accessor)? q-ws* "]"
+comparison := accessor q-ws* matcher-operator q-ws* ($type | $string | $number | $keyword)
+accessor := "val(" q-ws* $integer q-ws* ")" | "prop(" q-ws* $string q-ws* ")" | "name(" q-ws* ")" | "tag(" q-ws* ")" | "values(" q-ws* ")" | "props(" q-ws* ")" | $string
+matcher-operator := "=" | "!=" | ">" | "<" | ">=" | "<=" | "^=" | "$=" | "*="
+
+q-ws := $plain-node-space
+```
