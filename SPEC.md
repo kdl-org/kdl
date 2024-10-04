@@ -445,8 +445,9 @@ desired.
 A Multi-line string _MUST_ start with a [Newline](#newline) immediately
 following its opening `"`. Its final line _MUST_ contain only whitespace,
 followed by a single closing `"`. All in-between lines that contain
-non-newline characters _MUST_ start with the exact same whitespace as the
-final line (precisely matching codepoints, not merely counting characters).
+non-newline characters _MUST_ start with _at least_ the exact same whitespace
+as the final line (precisely matching codepoints, not merely counting characters).
+They may contain additional whitespace following this prefix.
 
 The value of the Multi-line String omits the first and last Newline, the
 Whitespace of the last line, and the matching Whitespace prefix on all
