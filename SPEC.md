@@ -697,16 +697,16 @@ Finally, a special kind of comment called a "slashdash", denoted by `/-`, can
 be used to comment out entire _components_ of a KDL document logically, and
 have those elements be treated as whitespace.
 
-Slashdash comments can be used before:
+Slashdash comments can be used before the following, including before their type
+annotations, if present:
 
-* A [Node](#node) name (or its type annotation): the entire Node is
+* A [Node](#node) name: the entire Node is
   treated as Whitespace, including all props, args, and children.
-* A node [Argument](#argument) (or its type annotation), in which case
-  the Argument value is treated as Whitespace.
-* A [Property](#property) key, in which case the entire property, both
-  key and value, is treated as Whitespace.
-* A [Children Block](#children-block), in which case the entire block,
-  including all children within, is treated as Whitespace.
+* A node [Argument](#argument): the Argument value is treated as Whitespace.
+* A [Property](#property) key: the entire property, including both key and value,
+  is treated as Whitespace. A slashdash of just the property value is not allowed.
+* A [Children Block](#children-block): the entire block, including all children within,
+  is treated as Whitespace. Other node items may follow a slashdashed children block.
 
 ### Newline
 

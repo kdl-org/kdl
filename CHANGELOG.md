@@ -36,7 +36,7 @@
 * Bare identifiers can now be used as values in Arguments and Properties, and are interpreted as string values.
 * The spec prose now more explicitly states that strings and raw strings can
   be used as type annotations.
-* A statement in the spec prose that said "It is reasonable for an
+* Removed a statement in the spec prose that said "It is reasonable for an
   implementation to ignore null values altogether when deserializing". This is
   no longer encouraged or desired.
 * Code points have been constrained to [Unicode Scalar
@@ -69,6 +69,7 @@
 * Correspondingly, the identifiers `inf`, `-inf`, and `nan` are now syntax
   errors.
 * `u128` and `i128` have been added as well-known number type annotations.
+* Slashdash (`/-`) -compatible locations adjusted to be more clear and intuitive.
 
 ### KQL
 
