@@ -59,10 +59,6 @@
   whitespace matching the whitespace prefix of the closing line. Multiline
   strings and raw strings now must have a newline immediately following their
   opening `"`, and a final newline plus whitespace preceding the closing `"`.
-* SMALL EQUALS SIGN (`U+FE66`), FULLWIDTH EQUALS SIGN (`U+FF1D`), and HEAVY
-  EQUALS SIGN (`U+1F7F0`) are now treated the same as `=` and can be used for
-  properties (e.g. `お名前＝☜(ﾟヮﾟ☜)`). They are also no longer valid in bare
-  identifiers.
 * `.1`, `+.1` etc are no longer valid identifiers, to prevent confusion and
   conflicts with numbers.
 * Multi-line strings' literal Newline sequences are now normalized to single

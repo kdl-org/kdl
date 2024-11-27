@@ -112,8 +112,8 @@ my-node 1 2 \  // comments are ok after \
 ### Property
 
 A Property is a key/value pair attached to a [Node](#node). A Property is
-composed of a [String](#string), followed immediately by an [equals
-sign](#equals-sign), and then a [Value](#value).
+composed of a [String](#string), followed immediately by an equals sign (`=`, `U+003D`),
+and then a [Value](#value).
 
 Properties should be interpreted left-to-right, with rightmost properties with
 identical names overriding earlier properties. That is:
@@ -130,14 +130,6 @@ still be spec-compliant.
 
 Properties _MAY_ be prefixed with `/-` to "comment out" the entire token and
 make it act as plain whitespace, even if it spreads across multiple lines.
-
-#### Equals Sign
-
-Only the following character may be used as equals signs in properties:
-
-| Name | Character | Code Point |
-|----|-----|----|
-| EQUALS SIGN | `=` | `U+003D` |
 
 ### Argument
 
