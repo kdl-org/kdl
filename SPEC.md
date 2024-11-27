@@ -695,18 +695,19 @@ can be nested.
 
 Finally, a special kind of comment called a "slashdash", denoted by `/-`, can
 be used to comment out entire _components_ of a KDL document logically, and
-have those elements be treated as whitespace.
+have those elements not be included as part of the parsed document data.
 
 Slashdash comments can be used before the following, including before their type
 annotations, if present:
 
-* A [Node](#node) name: the entire Node is
-  treated as Whitespace, including all props, args, and children.
-* A node [Argument](#argument): the Argument value is treated as Whitespace.
+* A [Node](#node): the entire Node is treated as Whitespace, including all
+  props, args, and children.
+* An [Argument](#argument): the Argument value is treated as Whitespace.
 * A [Property](#property) key: the entire property, including both key and value,
   is treated as Whitespace. A slashdash of just the property value is not allowed.
-* A [Children Block](#children-block): the entire block, including all children within,
-  is treated as Whitespace. Other node items may follow a slashdashed children block.
+* A [Children Block](#children-block): the entire block, including all
+  children within, is treated as Whitespace. Only other children blocks, whether
+  slashdashed or not, may follow a slashdashed children block.
 
 ### Newline
 
@@ -752,25 +753,29 @@ document := bom? nodes
 
 nodes := (line-space* node)* line-space*
 
-plain-line-space := newline | ws | single-line-comment
-plain-node-space := ws* escline ws* | ws+
+slashdash := '/-'
 
-line-space := plain-line-space+ | '/-' plain-node-space* node
-node-space := plain-node-space+ ('/-' plain-node-space* (node-prop-or-arg | node-children))?
+// Whitespace where newlines are allowed.
+line-space := newline | ws | single-line-comment
 
-required-node-space := node-space* plain-node-space+
-optional-node-space := node-space*
+// Whitespace within nodes, where newline-ish things must be esclined.
+node-space := ws* escline ws* | ws+
 
-base-node := type? optional-node-space string (required-node-space node-prop-or-arg)* (required-node-space node-children)?
-node := base-node optional-node-space node-terminator
-final-node := base-node optional-node-space node-terminator?
-node-prop-or-arg := prop | value
+base-node := slashdash? type? node-space* string
+      (node-space+ node-prop-or-arg)*
+      // slashdashed node-children must always be after props and args.
+      (node-space+ slashdash node-children)*
+      (node-space+ node-children)?
+      (node-space+ slashdash node-children)*
+node := base-node node-space* node-terminator
+final-node := base-node node-space* node-terminator?
+node-prop-or-arg := slashdash? (prop | value)
 node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
-prop := string optional-node-space '=' optional-node-space value
-value := type? optional-node-space (string | number | keyword)
-type := '(' optional-node-space string optional-node-space ')'
+prop := string node-space* '=' node-space* value
+value := type? node-space* (string | number | keyword)
+type := '(' node-space* string node-space* ')'
 
 string := identifier-string | quoted-string | raw-string
 
@@ -850,3 +855,6 @@ Specifically:
   `a - 'x'` means "any `a`, except something that matches the literal `'x'`".
 * The prefix `^` means "something that does not match" whatever follows it.
   For example, `^foo` means "must not match `foo`".
+* A single definition may be split over multiple lines. Newlines are treated as
+  spaces.
+* `//` at the beginning of a line is used for comments.
