@@ -634,6 +634,10 @@ To go along with this and prevent foot guns, the bare [Identifier
 Strings](#identifier-string) `inf`, `-inf`, and `nan` are considered illegal
 identifiers and should yield a syntax error.
 
+The existence of these keywords does not imply that any numbers be represented
+as IEEE 754 floats. These are simply for clarity and convenience for any
+implementation that chooses to represent their numbers in this way.
+
 ### Boolean
 
 A boolean [Value](#value) is either the symbol `#true` or `#false`. These
