@@ -218,6 +218,7 @@ Signed integers of various sizes (the number is the bit size):
 * `i16`
 * `i32`
 * `i64`
+* `i128`
 
 Unsigned integers of various sizes (the number is the bit size):
 
@@ -225,6 +226,7 @@ Unsigned integers of various sizes (the number is the bit size):
 * `u16`
 * `u32`
 * `u64`
+* `u128`
 
 Platform-dependent integer types, both signed and unsigned:
 

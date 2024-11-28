@@ -72,6 +72,7 @@
   way.
 * Correspondingly, the identifiers `inf`, `-inf`, and `nan` are now syntax
   errors.
+* `u128` and `i128` have been added as well-known number type annotations.
 
 ### KQL
 
