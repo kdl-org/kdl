@@ -159,10 +159,10 @@ node3 #"C:\Users\zkat\raw\string"#
 You don't have to quote strings unless any the following apply:
   * The string contains whitespace.
   * The string contains any of `[]{}()\/#";`.
-  * The string is one of `true`, `false`, or `null`.
+  * The string is one of `true`, `false`, `null`, `inf`, `-inf`, or `nan`.
   * The strings starts with a digit, or `+`/`-`/`.`/`-.`,`+.` and a digit.
-  * The string contains an equals sign (including unicode equals signs `﹦`,
-    `＝`, and `🟰`).
+    (aka "looks like a number")
+  * The string contains an equals sign.
 
 In essence, if it can get confused for other KDL or KQL syntax, it needs
 quotes.
@@ -296,8 +296,8 @@ smile 😁
 // Identifiers are very flexible. The following is a legal bare identifier:
 <@foo123~!$%^&*.:'|?+>
 
-// And you can also use unicode, even for the equals sign!
-ノード　お名前＝☜(ﾟヮﾟ☜)
+// And you can also use unicode!
+ノード　お名前=ฅ^•ﻌ•^ฅ
 
 // kdl specifically allows properties and values to be
 // interspersed with each other, much like CLI commands.
@@ -335,9 +335,9 @@ SDLang, but that had some design choices I disagreed with.
 
 #### Ok, then, why not SDLang?
 
-SDLang is designed for use cases that are not interesting to me, but are very
-relevant to the D-lang community. KDL is very similar in many ways, but is
-different in the following ways:
+SDLang is an excellent base, but I wanted some details ironed out, and some
+things removed that only really made sense for SDLang's current use-cases, including
+some restrictions about data representation. KDL is very similar in many ways, except:
 
 * The grammar and expected semantics are [well-defined and specified](SPEC.md).
 * There is only one "number" type. KDL does not prescribe representations.
