@@ -1,0 +1,10 @@
+node foo /-{
+    one
+} \
+/-{
+    two
+} {
+    three
+} /-{
+    four
+}
