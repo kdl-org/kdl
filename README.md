@@ -1,5 +1,12 @@
 # The KDL Document Language
 
+> [!WARNING]  
+> The main branch of this repository shows the latest v2.0.0 draft, which is a
+> work in progress and not considered the "mainline" KDL yet. Most KDL
+> implementations in the wild are based on the [v1.0.0
+> spec](https://github.com/kdl-org/kdl/tree/1.0.0) instead, so you may want to
+> refer to that if you're using KDL today.
+
 KDL is a small, pleasant document language with XML-like node semantics that
 looks like you're invoking a bunch of CLI commands! It's meant to be used both
 as a serialization format and a configuration language, much like JSON, YAML,
@@ -44,22 +51,23 @@ There's a living [specification](SPEC.md), as well as various
 [implementations](#implementations). You can also check out the [FAQ](#faq) to
 answer all your burning questions!
 
+The current version of the KDL spec is `2.0.0-draft.5`.
+
 In addition to a spec for KDL itself, there are also standard specs for [a KDL
 Query Language](QUERY-SPEC.md) based on CSS selectors, and [a KDL Schema
 Language](SCHEMA-SPEC.md) loosely based on JSON Schema.
 
-The language is based on [SDLang](https://sdlang.org), with a number of
-modifications and clarifications on its syntax and behavior.
-
-The current version of the KDL spec is `2.0.0-draft.5`.
+The language is based on [SDLang](https://sdlang.org), with a [number of
+modifications and clarifications on its syntax and behavior](#why-not-sdlang).
 
 [Play with it in your browser!](https://kdl-play.danini.dev/)
 
 ## Design and Discussion
 
-KDL is still extremely new, and discussion about the format should happen over
-on the [discussions page](https://github.com/kdl-org/kdl/discussions). Feel
-free to jump in and give us your 2 cents!
+KDL 2.0 design is still in progress. Discussions and questions about the format
+should happen over on the [discussions
+page](https://github.com/kdl-org/kdl/discussions). Feel free to jump in and give
+us your 2 cents!
 
 ## Implementations
 
@@ -261,6 +269,8 @@ mynode /-commented "not commented" /-key=value /-{
   a
   b
 }
+// The above is equivalent to:
+mynode "not commented"
 ```
 
 ### Type Annotations
@@ -332,6 +342,7 @@ Same as "cuddle".
 Because nothing out there felt quite right. The closest one I found was
 SDLang, but that had some design choices I disagreed with.
 
+<a name="why-not-sdlang"></a>
 #### Ok, then, why not SDLang?
 
 SDLang is an excellent base, but I wanted some details ironed out, and some
@@ -339,18 +350,23 @@ things removed that only really made sense for SDLang's current use-cases, inclu
 some restrictions about data representation. KDL is very similar in many ways, except:
 
 * The grammar and expected semantics are [well-defined and specified](SPEC.md).
-* There is only one "number" type. KDL does not prescribe representations.
+* There is only one "number" type. KDL does not prescribe representations, but
+  does have keywords for NaN, infinity, and negative infinity if decimal numbers
+  are intended to be represtented as IEEE754 floats.
 * Slashdash (`/-`) comments are great and useful!
-* I am not interested in having first-class date types, and SDLang's are very
-  non-standard.
+* Quoteless "identifier" strings are supported. (e.g. `node foo=bar`, vs `node foo="bar"`)
+* KDL does not have first-class date or binary data types. Instead, it
+  supports arbitrary type annotations for any custom data type you might need:
+  `(date)"2021-02-03"`, `(binary)"deadbeefbadc0ffee"`.
 * Values and properties can be interspersed with each other, rather than one
   having to follow the other.
-* KDL does not have a first-class binary data type. Just use strings with base64.
-* All strings in KDL are multi-line, and raw strings are written with
-  Rust-style syntax (`r"foo"`), instead of backticks.
-* KDL identifiers can use UTF-8 and are much more lax about symbols than SDLang.
+* All strings in KDL are multi-line, and multi-line strings are automatically dedented to match their closing quote's indentation level.
+* Raw strings are written with `#` (`#"foo\bar"#`), instead of backticks.
+* KDL identifiers can use UTF-8 and are more lax about symbols than SDLang.
 * KDL does not support "anonymous" nodes.
-* Instead, KDL supports arbitrary identifiers for node names and attribute
+* Namespaces are not supported, but `:` is a legal identifier character, and applications
+  can choose to implement namespaces as they see fit.
+* KDL supports arbitrary identifiers for node names and attribute
   names, meaning you can use arbitrary strings for those: `"123" "value"=1` is
   a valid node, for example. This makes it easier to use KDL for
   representing arbitrary key/value pairs.
