@@ -112,8 +112,8 @@ my-node 1 2 \  // comments are ok after \
 ### Property
 
 A Property is a key/value pair attached to a [Node](#node). A Property is
-composed of a [String](#string), followed immediately by an [equals
-sign](#equals-sign), and then a [Value](#value).
+composed of a [String](#string), followed immediately by an equals sign (`=`, `U+003D`),
+and then a [Value](#value).
 
 Properties should be interpreted left-to-right, with rightmost properties with
 identical names overriding earlier properties. That is:
@@ -130,17 +130,6 @@ still be spec-compliant.
 
 Properties _MAY_ be prefixed with `/-` to "comment out" the entire token and
 make it act as plain whitespace, even if it spreads across multiple lines.
-
-#### Equals Sign
-
-Any of the following characters may be used as equals signs in properties:
-
-| Name | Character | Code Point |
-|----|-----|----|
-| EQUALS SIGN | `=` | `U+003D` |
-| SMALL EQUALS SIGN | `﹦` | `U+FE66` |
-| FULLWIDTH EQUALS SIGN | `＝` | `U+FF1D` |
-| HEAVY EQUALS SIGN | `🟰` | `U+1F7F0` |
 
 ### Argument
 
@@ -334,8 +323,7 @@ negative number.
 
 The following characters cannot be used anywhere in a [Identifier String](#identifier-string):
 
-* Any of `(){}[]/\"#;`
-* Any [Equals Sign](#equals-sign)
+* Any of `(){}[]/\"#;=`
 * Any [Whitespace](#whitespace) or [Newline](#newline).
 * Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
   documents.
@@ -780,11 +768,9 @@ node-prop-or-arg := prop | value
 node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
-prop := string optional-node-space equals-sign optional-node-space value
+prop := string optional-node-space '=' optional-node-space value
 value := type? optional-node-space (string | number | keyword)
 type := '(' optional-node-space string optional-node-space ')'
-
-equals-sign := See Table ([Equals Sign](#equals-sign))
 
 string := identifier-string | quoted-string | raw-string
 
@@ -792,7 +778,7 @@ identifier-string := unambiguous-ident | signed-ident | dotted-ident
 unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
 signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
-identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#] - disallowed-literal-code-points - equals-sign
+identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points
 
 quoted-string := '"' (single-line-string-body | newline multi-line-string-body newline unicode-space*) '"'
 single-line-string-body := (string-character - newline)*
