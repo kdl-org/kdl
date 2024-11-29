@@ -158,11 +158,10 @@ node3 #"C:\Users\zkat\raw\string"#
 
 You don't have to quote strings unless any the following apply:
   * The string contains whitespace.
-  * The string contains any of `[]{}()\/#";`.
+  * The string contains any of `[]{}()\/#";=`.
   * The string is one of `true`, `false`, `null`, `inf`, `-inf`, or `nan`.
   * The strings starts with a digit, or `+`/`-`/`.`/`-.`,`+.` and a digit.
     (aka "looks like a number")
-  * The string contains an equals sign.
 
 In essence, if it can get confused for other KDL or KQL syntax, it needs
 quotes.
