@@ -1,0 +1,5 @@
+node /-{
+    child
+} foo {
+    bar
+}
