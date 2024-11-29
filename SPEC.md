@@ -3,7 +3,8 @@
 This is the semi-formal specification for KDL, including the intended data
 model and the grammar.
 
-This document describes KDL version `1.0.0`. It was released on September 11, 2021.
+This document describes KDL version `2.0.0-draft.5`. It was released on
+2024-11-28.
 
 ## Introduction
 
@@ -49,8 +50,8 @@ baz
 ### Node
 
 Being a node-oriented language means that the real core component of any KDL
-document is the "node". Every node must have a name, which is an
-[Identifier](#identifier).
+document is the "node". Every node must have a name, which must be a
+[String](#string).
 
 The name may be preceded by a [Type Annotation](#type-annotation) to further
 clarify its type, particularly in relation to its parent node. (For example,
@@ -74,9 +75,9 @@ By contrast, Property order _SHOULD NOT_ matter to implementations.
 [Children](#children-block) should be used if an order-sensitive key/value
 data structure must be represented in KDL.
 
-Nodes _MAY_ be prefixed with `/-` to "comment out" the entire node, including
-its properties, arguments, and children, and make it act as plain whitespace,
-even if it spreads across multiple lines.
+Nodes _MAY_ be prefixed with [Slashdash](#slashdash-comments) to "comment out"
+the entire node, including its properties, arguments, and children, and make
+it act as plain whitespace, even if it spreads across multiple lines.
 
 Finally, a node is terminated by either a [Newline](#newline), a semicolon (`;`)
 or the end of the file/stream (an `EOF`).
@@ -84,62 +85,20 @@ or the end of the file/stream (an `EOF`).
 #### Example
 
 ```kdl
-foo 1 key="val" 3 {
+foo 1 key=val 3 {
     bar
     (role)baz 1 2
 }
 ```
-
-### Identifier
-
-An Identifier is either a [Bare Identifier](#bare-identifier), which is an
-unquoted string like `node` or `item`, or a [String](#string), which is quoted,
-like `"node"` or `"two words"`. There's no semantic difference between the
-kinds of identifier; this simply allows for the use of quotes to have unusual
-identifiers that are inexpressible as bare identifiers.
-
-### Bare Identifier
-
-A Bare Identifier is composed of any Unicode codepoint other than [non-initial
-characters](#non-initial-characters), followed by any number of Unicode
-codepoints other than [non-identifier characters](#non-identifier-characters),
-so long as this doesn't produce something confusable for a [Number](#number),
-[Boolean](#boolean), or [Null](#null). For example, both a [Number](#number)
-and an Identifier can start with `-`, but when an Identifier starts with `-`
-the second character cannot be a digit. This is precisely specified in the
-[Full Grammar](#full-grammar) below.
-
-Identifiers are terminated by [Whitespace](#whitespace) or
-[Newlines](#newline).
-
-### Non-initial characters
-
-The following characters cannot be the first character in a
-[Bare Identifier](#identifier):
-
-* Any decimal digit (0-9)
-* Any [non-identifier characters](#non-identifier-characters)
-
-Be aware that the `-` character can only be used as an initial
-character if the second character is not a digit. This allows
-identifiers to look like `--this`, and removes the ambiguity
-of having an identifier look like a negative number.
-
-### Non-identifier characters
-
-The following characters cannot be used anywhere in a [Bare Identifier](#identifier):
-
-* Any codepoint with hexadecimal value `0x20` or below.
-* Any codepoint with hexadecimal value higher than `0x10FFFF`.
-* Any of `\/(){}<>;[]=,"`
 
 ### Line Continuation
 
 Line continuations allow [Nodes](#node) to be spread across multiple lines.
 
 A line continuation is a `\` character followed by zero or more whitespace
-characters and an optional single-line comment. It must be terminated by a
-[Newline](#newline) (including the Newline that is part of single-line comments).
+items (including multiline comments) and an optional single-line comment. It
+must be terminated by a [Newline](#newline) (including the Newline that is
+part of single-line comments).
 
 Following a line continuation, processing of a Node can continue as usual.
 
@@ -153,7 +112,8 @@ my-node 1 2 \  // comments are ok after \
 ### Property
 
 A Property is a key/value pair attached to a [Node](#node). A Property is
-composed of an [Identifier](#identifier), followed immediately by a `=`, and then a [Value](#value).
+composed of a [String](#string), followed immediately by an equals sign (`=`, `U+003D`),
+and then a [Value](#value).
 
 Properties should be interpreted left-to-right, with rightmost properties with
 identical names overriding earlier properties. That is:
@@ -186,7 +146,7 @@ make it act as plain whitespace, even if it spreads across multiple lines.
 #### Example
 
 ```kdl
-my-node 1 2 3 "a" "b" "c"
+my-node 1 2 3 a b c
 ```
 
 ### Children Block
@@ -215,7 +175,8 @@ A value is either: a [String](#string), a [Number](#number), a
 [Boolean](#boolean), or [Null](#null).
 
 Values _MUST_ be either [Arguments](#argument) or values of
-[Properties](#property).
+[Properties](#property). Only [String](#string) values may be used as
+[Node](#node) names or [Property](#property) keys.
 
 Values (both as arguments and as properties) _MAY_ be prefixed by a single
 [Type Annotation](#type-annotation).
@@ -227,10 +188,9 @@ includes a _suggestion_ of what type the value is _intended_ to be treated as,
 or as a _context-specific elaboration_ of the more generic type the node name
 indicates.
 
-Type annotations are written as a set of `(` and `)` with an
-[Identifier](#identifier) in it. Any valid identifier is considered a valid
-type annotation. There must be no whitespace between a type annotation and its
-associated Node Name or Value.
+Type annotations are written as a set of `(` and `)` with a single
+[String](#string) in it. It may contain Whitespace after the `(` and before
+the `)`, and may be separated from its target by Whitespace.
 
 KDL does not specify any restrictions on what implementations might do with
 these annotations. They are free to ignore them, or use them to make decisions
@@ -247,6 +207,7 @@ Signed integers of various sizes (the number is the bit size):
 * `i16`
 * `i32`
 * `i64`
+* `i128`
 
 Unsigned integers of various sizes (the number is the bit size):
 
@@ -254,6 +215,7 @@ Unsigned integers of various sizes (the number is the bit size):
 * `u16`
 * `u32`
 * `u64`
+* `u128`
 
 Platform-dependent integer types, both signed and unsigned:
 
@@ -302,29 +264,97 @@ IEEE 754-2008 decimal floating point numbers
 
 ```kdl
 node (u8)123
-node prop=(regex)".*"
+node prop=(regex).*
 (published)date "1970-01-01"
 (contributor)person name="Foo McBar"
 ```
 
 ### String
 
-Strings in KDL represent textual [Values](#value), or unusual identifiers. A
-String is either a [Quoted String](#quoted-string) or a
-[Raw String](#raw-string). Quoted Strings may include escaped characters, while
-Raw Strings always contain only the literal characters that are present.
+Strings in KDL represent textual UTF-8 [Values](#value). A String is either an
+[Identifier String](#identifier-string) (like `foo`), a [Quoted
+String](#quoted-string) (like `"foo"`) or a [Raw String](#raw-string) (like
+`#"foo"#`):
+
+* Identifier Strings let you write short, "single-word" strings with a
+  minimum of syntax
+* Quoted Strings let you write strings with whitespace
+  (including newlines!) or escapes
+* Raw Strings let you write strings with whitespace *but without escapes*,
+  allowing you to not worry about the string's content containing anything that
+  might look like an escape.
+
+Strings _MUST_ be represented as UTF-8 values.
+
+Strings _MUST NOT_ include the code points for [disallowed literal code
+points](#disallowed-literal-code-points) directly. Quoted Strings may include
+these code points as _values_ by representing them with their corresponding
+`\u{...}` escape.
+
+### Identifier String
+
+An Identifier String (sometimes referred to as just an "identifier") is
+composed of any [Unicode Scalar
+Value](https://unicode.org/glossary/#unicode_scalar_value) other than
+[non-initial characters](#non-initial-characters), followed by any number of
+Unicode Scalar Values other than [non-identifier
+characters](#non-identifier-characters).
+
+A handful of patterns are disallowed, to avoid confusion with other values:
+
+* idents that appear to start with a [Number](#number) (like `1.0v2` or
+    `-1em`) or the "almost a number" pattern of a decimal point without a
+    leading digit (like `.1`).
+* idents that are the language keywords (`inf`, `-inf`, `nan`, `true`,
+  `false`, and `null`) without their leading `#`.
+
+Identifiers that match these patterns _MUST_ be treated as a syntax error; such
+values can only be written as quoted or raw strings. The precise details of the
+identifier syntax is specified in the [Full Grammar](#full-grammar) below.
+
+Identifier Strings are terminated by [Whitespace](#whitespace) or
+[Newlines](#newline).
+
+#### Non-initial characters
+
+The following characters cannot be the first character in an
+[Identifier String](#identifier-string):
+
+* Any decimal digit (0-9)
+* Any [non-identifier characters](#non-identifier-characters)
+
+Additionally, the `-` character can only be used as an initial character if
+the second character is *not* a digit. This allows identifiers to look like
+`--this`, and removes the ambiguity of having an identifier look like a
+negative number.
+
+#### Non-identifier characters
+
+The following characters cannot be used anywhere in a [Identifier String](#identifier-string):
+
+* Any of `(){}[]/\"#;=`
+* Any [Whitespace](#whitespace) or [Newline](#newline).
+* Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
+  documents.
 
 ### Quoted String
 
 A Quoted String is delimited by `"` on either side of any number of literal
 string characters except unescaped `"` and `\`. This includes literal
-[Newline](#newline) characters, which means a String Value can encompass
-multiple lines without behaving like a Newline for [Node](#node) parsing
-purposes.
+[Newline](#newline) characters, which means a single String Value can span
+multiple lines, following specific [Multi-line String](#multi-line-strings)
+rules.
 
-Strings _MUST_ be represented as UTF-8 values.
+Like Identifier Strings, Quoted Strings _MUST NOT_ include any of the
+[disallowed literal code-points](#disallowed-literal-code-points) as code
+points in their body.
 
-In addition to literal code points, a number of "escapes" are supported.
+Quoted Strings also follow the Multi-line rules specified in [Multi-line
+String](#multi-line-strings).
+
+#### Escapes
+
+In addition to literal code points, a number of "escapes" are supported in Quoted Strings.
 "Escapes" are the character `\` followed by another character, and are
 interpreted as described in the following table:
 
@@ -334,32 +364,237 @@ interpreted as described in the following table:
 | Carriage Return               | `\r`   | `U+000D` |
 | Character Tabulation (Tab)    | `\t`   | `U+0009` |
 | Reverse Solidus (Backslash)   | `\\`   | `U+005C` |
-| Solidus (Forwardslash)        | `\/`   | `U+002F` |
 | Quotation Mark (Double Quote) | `\"`   | `U+0022` |
 | Backspace                     | `\b`   | `U+0008` |
 | Form Feed                     | `\f`   | `U+000C` |
-| Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, up to `10FFFF` |
+| Space                         | `\s`   | `U+0020` |
+| Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, as long as it represents a [Unicode Scalar Value](https://unicode.org/glossary/#unicode_scalar_value) |
+| Whitespace Escape             | See below | N/A   |
+
+##### Escaped Whitespace
+
+In addition to escaping individual characters, `\` can also escape whitespace.
+When a `\` is followed by one or more literal whitespace characters, the `\`
+and all of that whitespace are discarded. For example, `"Hello World"` and
+`"Hello \    World"` are semantically identical. See [whitespace](#whitespace)
+and [newlines](#newline) for how whitespace is defined.
+
+Note that only literal whitespace is escaped; whitespace escapes (`\n` and
+such) are retained. For example, these strings are all semantically identical:
+
+```kdl
+"Hello\       \nWorld"
+
+    "Hello\n\
+    World"
+
+"Hello\nWorld"
+
+"
+  Hello
+  World
+  "
+```
+
+##### Invalid escapes
+
+Except as described in the escapes table, above, `\` *MUST NOT* precede any
+other characters in a string.
 
 ### Raw String
 
 Raw Strings in KDL are much like [Quoted Strings](#quoted-string), except they
 do not support `\`-escapes. They otherwise share the same properties as far as
-literal [Newline](#newline) characters go, and the requirement of UTF-8
-representation.
+literal [Newline](#newline) characters go, multi-line rules, and the requirement
+of UTF-8 representation.
 
-Raw String literals are represented as `r`, followed by zero or more `#`
-characters, followed by `"`, followed by any number of UTF-8 literals. The
-string is then closed by a `"` followed by a _matching_ number of `#`
-characters. This allows them to contain raw `"` or `#` characters; only the
-precise terminator (resembling `"##`, for example) ends the raw string. This
-means that the string sequence `"` or `"#` and such must not match the closing
-`"` with the same or more `#` characters as the opening `r`.
+Raw String literals are represented with one or more `#` characters, followed
+by `"`, followed by any number of UTF-8 literals. The string is then closed by
+a `"` followed by a _matching_ number of `#` characters. This means that the
+string sequence `"` or `"#` and such must not match the closing `"` with the
+same or more `#` characters as the opening `#`, in the body of the string.
+
+Like other Strings, Raw Strings _MUST NOT_ include any of the [disallowed
+literal code-points](#disallowed-literal-code-points) as code points in their
+body. Unlike with Quoted Strings, these cannot simply be escaped, and are thus
+unrepresentable when using Raw Strings.
 
 #### Example
 
 ```kdl
-just-escapes r"\n will be literal"
-quotes-and-escapes r#"hello\n\r\asd"world"#
+just-escapes #"\n will be literal"#
+```
+
+The string contains the literal characters `\n will be literal`.
+
+```kdl
+quotes-and-escapes ##"hello\n\r\asd"#world"##
+```
+
+The string contains the literal characters `hello\n\r\asd"#world`
+
+
+### Multi-line Strings
+
+When a Quoted or Raw String spans multiple lines with literal, non-escaped
+Newlines, it follows a special multi-line syntax that automatically "dedents"
+the string, allowing its value to be indented to a visually matching level if
+desired.
+
+A Multi-line string _MUST_ start with a [Newline](#newline) immediately
+following its opening `"`. Its final line _MUST_ contain only whitespace,
+followed by a single closing `"`. All in-between lines that contain
+non-newline characters _MUST_ start with _at least_ the exact same whitespace
+as the final line (precisely matching codepoints, not merely counting characters).
+They may contain additional whitespace following this prefix.
+
+The value of the Multi-line String omits the first and last Newline, the
+Whitespace of the last line, and the matching Whitespace prefix on all
+intermediate lines. The first and last Newline can be the same character (that
+is, empty multi-line strings are legal).
+
+Strings with literal Newlines that do not immediately start with a Newline and
+whose final `"` is not preceeded by optional whitespace and a Newline are
+illegal.
+
+In other words, the final line specifies the whitespace prefix that will be
+removed from all other lines.
+
+It is a syntax error for any body lines of the multi-line string to not match
+the whitespace prefix of the last line with the final quote.
+
+#### Newline Normalization
+
+Literal Newline sequences in Multi-line Strings must be normalized to a single
+`U+000A` (`LF`) during deserialization. This means, for example, that `CR LF`
+becomes a single `LF` during parsing.
+
+This normalization does not apply to non-literal Newlines entered using escape
+sequences.
+
+For clarity: this normalization is for individual sequences. That is, the
+literal sequence `CRLF CRLF` becomes `LF LF`, not `LF`.
+
+#### Example
+
+```kdl
+multi-line "
+        foo
+    This is the base indentation
+            bar
+    "
+```
+
+This example's string value will be:
+
+```
+    foo
+This is the base indentation
+        bar
+```
+
+which is equivalent to `"    foo\nThis is the base indentation\n        bar"`
+when written as a single-line string.
+
+---------
+
+If the last line wasn't indented as far,
+it won't dedent the rest of the lines as much:
+
+```kdl
+multi-line "
+        foo
+    This is no longer on the left edge
+            bar
+  "
+```
+
+This example's string value will be:
+
+```
+      foo
+  This is no longer on the left edge
+          bar
+```
+
+Equivalent to `"      foo\n  This is no longer on the left edge\n          bar"`.
+
+-----------
+
+Empty lines can contain any whitespace, or none at all, and will be reflected as empty in the value:
+
+```kdl
+multi-line "
+    Indented a bit
+
+    A second indented paragraph.
+    "
+```
+
+This example's string value will be:
+
+```
+Indented a bit.
+
+A second indented paragraph.
+```
+
+Equivalent to `"Indented a bit.\n\nA second indented paragraph."`
+
+-----------
+
+The following yield syntax errors:
+
+```kdl
+multi-line "
+  closing quote with non-whitespace prefix"
+```
+
+```kdl
+multi-line "stuff
+  "
+```
+
+```kdl
+// Every line must share the exact same prefix as the closing line.
+multi-line "[\n]
+[tab]a[\n]
+[space][space]b[\n]
+[space][tab][\n]
+[tab]"
+```
+
+#### Interaction with Whitespace Escapes
+
+Multi-line strings support the same mechanism for escaping whitespace. When
+processing a Multi-line String, implementations MUST dedent the string _after_
+resolving all whitespace escapes, but _before_ resolving other backslash escapes.
+Furthermore, a whitespace escape that attempts to escape the final line's newline
+and/or whitespace prefix is invalid since the multi-line string has to still be
+valid with the escaped whitespace removed.
+
+For example, the following example is illegal:
+
+```kdl
+  // Equivalent to trying to write a string containing `foo\nbar\`.
+  "
+  foo
+  bar\
+  "
+```
+
+while the following example is allowed
+```kdl
+  "
+  foo \
+bar
+  baz
+  \   "
+  // this is equivalent to
+  "
+  foo bar
+  baz
+  "
 ```
 
 ### Number
@@ -368,9 +603,9 @@ Numbers in KDL represent numerical [Values](#value). There is no logical distinc
 between real numbers, integers, and floating point numbers. It's up to
 individual implementations to determine how to represent KDL numbers.
 
-There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
+There are five syntaxes for Numbers: Keywords, Decimal, Hexadecimal, Octal, and Binary.
 
-* All numbers may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
+* All non-[Keyword](#keyword-numbers) numbers may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
 * Binary numbers start with `0b` and only allow `0` and `1` as digits, which may be separated by `_`. They represent numbers in radix 2.
 * Octal numbers start with `0o` and only allow digits between `0` and `7`, which may be separated by `_`. They represent numbers in radix 8.
 * Hexadecimal numbers start with `0x` and allow digits between `0` and `9`, as well as letters `A` through `F`, in either lower or upper case, which may be separated by `_`. They represent numbers in radix 16.
@@ -380,29 +615,50 @@ There are four syntaxes for Numbers: Decimal, Hexadecimal, Octal, and Binary.
     * They may optionally include a decimal separator `.`, followed by more digits, which may again be separated by `_`.
     * They may optionally be followed by `E` or `e`, an optional `-` or `+`, and more digits, to represent an exponent value.
 
+Note that, similar to JSON and some other languages,
+numbers without an integer digit (such as `.1`) are illegal.
+They must be written with at least one integer digit, like `0.1`.
+(These patterns are also disallowed from [Identifier Strings](#identifier-string), to avoid confusion.)
+
+#### Keyword Numbers
+
+There are three special "keyword" numbers included in KDL to accomodate the
+widespread use of [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floats:
+
+* `#inf` - floating point positive infinity.
+* `#-inf` - floating point negative infinity.
+* `#nan` - floating point NaN/Not a Number.
+
+To go along with this and prevent foot guns, the bare [Identifier
+Strings](#identifier-string) `inf`, `-inf`, and `nan` are considered illegal
+identifiers and should yield a syntax error.
+
+The existence of these keywords does not imply that any numbers be represented
+as IEEE 754 floats. These are simply for clarity and convenience for any
+implementation that chooses to represent their numbers in this way.
+
 ### Boolean
 
-A boolean [Value](#value) is either the symbol `true` or `false`. These
+A boolean [Value](#value) is either the symbol `#true` or `#false`. These
 _SHOULD_ be represented by implementation as boolean logical values, or some
 approximation thereof.
 
 #### Example
 
 ```kdl
-my-node true value=false
+my-node #true value=#false
 ```
 
 ### Null
 
-The symbol `null` represents a null [Value](#value). It's up to the
+The symbol `#null` represents a null [Value](#value). It's up to the
 implementation to decide how to represent this, but it generally signals the
-"absence" of a value. It is reasonable for an implementation to ignore null
-values altogether when deserializing.
+"absence" of a value.
 
 #### Example
 
 ```kdl
-my-node null key=null
+my-node #null key=#null
 ```
 
 ### Whitespace
@@ -413,6 +669,7 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Name                 | Code Pt |
 |----------------------|---------|
 | Character Tabulation | `U+0009`  |
+| Line Tabulation      | `U+000B`  |
 | Space                | `U+0020`  |
 | No-Break Space       | `U+00A0`  |
 | Ogham Space Mark     | `U+1680`  |
@@ -431,6 +688,11 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Medium Mathematical Space | `U+205F`  |
 | Ideographic Space    | `U+3000`  |
 
+#### Single-line comments
+
+Any text after `//`, until the next literal [Newline](#newline) is "commented
+out", and is considered to be [Whitespace](#whitespace).
+
 #### Multi-line comments
 
 In addition to single-line comments using `//`, comments can also be started
@@ -438,9 +700,30 @@ with `/*` and ended with `*/`. These comments can span multiple lines. They
 are allowed in all positions where [Whitespace](#whitespace) is allowed and
 can be nested.
 
+#### Slashdash comments
+
+Finally, a special kind of comment called a "slashdash", denoted by `/-`, can
+be used to comment out entire _components_ of a KDL document logically, and
+have those elements not be included as part of the parsed document data.
+
+Slashdash comments can be used before the following, including before their type
+annotations, if present:
+
+* A [Node](#node): the entire Node is treated as Whitespace, including all
+  props, args, and children.
+* An [Argument](#argument): the Argument value is treated as Whitespace.
+* A [Property](#property) key: the entire property, including both key and value,
+  is treated as Whitespace. A slashdash of just the property value is not allowed.
+* A [Children Block](#children-block): the entire block, including all
+  children within, is treated as Whitespace. Only other children blocks, whether
+  slashdashed or not, may follow a slashdashed children block.
+  
+A slashdash may be be followed by any amount of whitespace, including newlines and
+comments, before the element that it comments out.
+
 ### Newline
 
-The following characters [should be treated as new
+The following character sequences [should be treated as new
 lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 
 | Acronym | Name            | Code Pt |
@@ -455,36 +738,76 @@ lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 
 Note that for the purpose of new lines, CRLF is considered _a single newline_.
 
+### Disallowed Literal Code Points
+
+The following code points may not appear literally anywhere in the document.
+They may be represented in Strings (but not Raw Strings) using `\u{}`.
+
+* The codepoints `U+0000-0008` or the codepoints `U+000E-001F`  (various
+  control characters).
+* `U+007F` (the Delete control character).
+* Any codepoint that is not a [Unicode Scalar
+  Value](https://unicode.org/glossary/#unicode_scalar_value) (`U+D800-DFFF`).
+* `U+200E-200F`, `U+202A-202E`, and `U+2066-2069`, the [unicode
+  "direction control"
+  characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
+* `U+FEFF`, aka Zero-width Non-breaking Space (ZWNBSP)/Byte Order Mark (BOM),
+  except as the first code point in a document.
+
 ## Full Grammar
 
-```
-nodes := linespace* (node nodes?)? linespace*
+This is the full official grammar for KDL and should be considered
+authoritative if something seems to disagree with the text above. The [grammar
+language syntax](#grammar-language) is defined below.
 
-node := ('/-' node-space*)? type? identifier (node-space+ node-prop-or-arg)* (node-space* node-children ws*)? node-space* node-terminator
-node-prop-or-arg := ('/-' node-space*)? (prop | value)
-node-children := ('/-' node-space*)? '{' nodes '}'
-node-space := ws* escline ws* | ws+
+```
+document := bom? nodes
+
+// Nodes
+nodes := (line-space* node)* line-space*
+
+base-node := slashdash? type? node-space* string
+      (node-space+ slashdash? node-prop-or-arg)*
+      // slashdashed node-children must always be after props and args.
+      (node-space+ slashdash node-children)*
+      (node-space+ node-children)?
+      (node-space+ slashdash node-children)*
+node := base-node node-space* node-terminator
+final-node := base-node node-space* node-terminator?
+
+// Entries
+node-prop-or-arg := prop | value
+node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
-identifier := string | bare-identifier
-bare-identifier := ((identifier-char - digit - sign) identifier-char* | sign ((identifier-char - digit) identifier-char*)?) - keyword
-identifier-char := unicode - linespace - [\/(){}<>;[]=,"]
-keyword := boolean | 'null'
-prop := identifier '=' value
-value := type? (string | number | keyword)
-type := '(' identifier ')'
+prop := string node-space* '=' node-space* value
+value := type? node-space* (string | number | keyword)
+type := '(' node-space* string node-space* ')'
 
-string := raw-string | escaped-string
-escaped-string := '"' character* '"'
-character := '\' escape | [^\"]
-escape := ["\\/bfnrt] | 'u{' hex-digit{1, 6} '}'
+// Strings
+string := identifier-string | quoted-string | raw-string
+
+identifier-string := unambiguous-ident | signed-ident | dotted-ident
+unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - disallowed-keyword-strings
+signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
+dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
+identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points - equals-sign
+disallowed-keyword-identifiers := 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
+
+quoted-string := '"' (single-line-string-body | newline multi-line-string-body newline unicode-space*) '"'
+single-line-string-body := (string-character - newline)*
+multi-line-string-body := string-character*
+string-character := '\' escape | [^\\"] - disallowed-literal-code-points
+escape := ["\\bfnrts] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
-raw-string := 'r' raw-string-hash
-raw-string-hash := '#' raw-string-hash '#' | raw-string-quotes
-raw-string-quotes := '"' .* '"'
+raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
+raw-string-quotes := '"' (single-line-raw-string-body | newline multi-line-raw-string-body newline unicode-space*) '"'
+single-line-raw-string-body := (unicode - newline - disallowed-literal-code-points)*
+multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
 
-number := hex | octal | binary | decimal
+// Numbers
+number := keyword-number | hex | octal | binary | decimal
 
 decimal := sign? integer ('.' integer)? exponent?
 exponent := ('e' | 'E') sign? integer
@@ -496,21 +819,54 @@ hex := sign? '0x' hex-digit (hex-digit | '_')*
 octal := sign? '0o' [0-7] [0-7_]*
 binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 
-boolean := 'true' | 'false'
+// Keywords and booleans.
+keyword := boolean | '#null'
+keyword-number := '#inf' | '#-inf' | '#nan'
+boolean := '#true' | '#false'
 
-escline := '\\' ws* (single-line-comment | newline)
-
-linespace := newline | ws | single-line-comment
-
-newline := See Table (All line-break white_space)
-
-ws := bom | unicode-space | multi-line-comment
-
+// Specific code points
 bom := '\u{FEFF}'
-
+disallowed-literal-code-points := See Table (Disallowed Literal Code Points)
+unicode := Any Unicode Scalar Value
 unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
-single-line-comment := '//' ^newline+ (newline | eof)
+// Comments
+single-line-comment := '//' ^newline* (newline | eof)
 multi-line-comment := '/*' commented-block
 commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
+slashdash := '/-' line-space*
+
+// Whitespace
+ws := unicode-space | multi-line-comment
+escline := '\\' ws* (single-line-comment | newline | eof)
+newline := See Table (All Newline White_Space)
+// Whitespace where newlines are allowed.
+line-space := newline | ws | single-line-comment
+// Whitespace within nodes, where newline-ish things must be esclined.
+node-space := ws* escline ws* | ws+
 ```
+
+### Grammar language
+
+The grammar language syntax is a combination of ABNF with some regex spice thrown in.
+Specifically:
+
+* Single quotes (`'`) are used to denote literal text. `\` within a literal
+  string is used for escaping other single-quotes, for initiating unicode
+  characters using hex values (`\u{FEFF}`), and for escaping `\` itself
+  (`\\`).
+* `*` is used for "zero or more", `+` is used for "one or more", and `?` is
+  used for "zero or one".
+* `()` can be used to group matches that must be matched together.
+* `a | b` means `a or b`, whichever matches first. If multipe items are before
+  a `|`, they are a single group. `a b c | d` is equivalent to `(a b c) | d`.
+* `[]` are used for regex-style character matches, where any character between
+  the brackets will be a single match. `\` is used to escape `\`, `[`, and
+  `]`. They also support character ranges (`0-9`), and negation (`^`)
+* `-` is used for "except for" or "minus" whatever follows it. For example,
+  `a - 'x'` means "any `a`, except something that matches the literal `'x'`".
+* The prefix `^` means "something that does not match" whatever follows it.
+  For example, `^foo` means "must not match `foo`".
+* A single definition may be split over multiple lines. Newlines are treated as
+  spaces.
+* `//` at the beginning of a line is used for comments.

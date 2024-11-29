@@ -1,28 +1,35 @@
 # The KDL Document Language
 
-KDL is a small, pleasing document language with xml-like semantics that looks
-like you're invoking a bunch of CLI commands! It's meant to be used both as a
-serialization format and a configuration language, much like JSON, YAML, or
-XML. It looks like this:
+> [!WARNING]  
+> The main branch of this repository shows the latest v2.0.0 draft, which is a
+> work in progress and not considered the "mainline" KDL yet. Most KDL
+> implementations in the wild are based on the [v1.0.0
+> spec](https://github.com/kdl-org/kdl/tree/1.0.0) instead, so you may want to
+> refer to that if you're using KDL today.
+
+KDL is a small, pleasant document language with XML-like node semantics that
+looks like you're invoking a bunch of CLI commands! It's meant to be used both
+as a serialization format and a configuration language, much like JSON, YAML,
+or XML. It looks like this:
 
 ```kdl
 package {
-  name "my-pkg"
+  name my-pkg
   version "1.2.3"
 
   dependencies {
     // Nodes can have standalone values as well as
     // key/value pairs.
-    lodash "^3.2.1" optional=true alias="underscore"
+    lodash "^3.2.1" optional=#true alias=underscore
   }
 
   scripts {
-    // "Raw" and multi-line strings are supported.
-    build r#"
+    // "Raw" and dedented multi-line strings are supported.
+    build #"
       echo "foo"
       node -c "console.log('hello, world!');"
       echo "foo" > some-file.txt
-    "#
+      "#
   }
 
   // `\` breaks up a single node across multiple lines.
@@ -33,8 +40,8 @@ package {
   // "Slashdash" comments operate at the node level,
   // with just `/-`.
   /-this-is-commented {
-    this "entire" "node" {
-      "is" "gone"
+    this entire node {
+      is gone
     }
   }
 }
@@ -44,22 +51,23 @@ There's a living [specification](SPEC.md), as well as various
 [implementations](#implementations). You can also check out the [FAQ](#faq) to
 answer all your burning questions!
 
+The current version of the KDL spec is `2.0.0-draft.5`.
+
 In addition to a spec for KDL itself, there are also standard specs for [a KDL
 Query Language](QUERY-SPEC.md) based on CSS selectors, and [a KDL Schema
 Language](SCHEMA-SPEC.md) loosely based on JSON Schema.
 
-The language is based on [SDLang](https://sdlang.org), with a number of
-modifications and clarifications on its syntax and behavior.
-
-The current version of the KDL spec is `1.0.0`.
+The language is based on [SDLang](https://sdlang.org), with a [number of
+modifications and clarifications on its syntax and behavior](#why-not-sdlang).
 
 [Play with it in your browser!](https://kdl-play.danini.dev/)
 
 ## Design and Discussion
 
-KDL is still extremely new, and discussion about the format should happen over
-on the [discussions page](https://github.com/kdl-org/kdl/discussions). Feel
-free to jump in and give us your 2 cents!
+KDL 2.0 design is still in progress. Discussions and questions about the format
+should happen over on the [discussions
+page](https://github.com/kdl-org/kdl/discussions). Feel free to jump in and give
+us your 2 cents!
 
 ## Implementations
 
@@ -104,7 +112,7 @@ entirety, but in the future, may be required to in order to be included here.
 
 ### Basics
 
-A KDL node is a node name, followed by zero or more "arguments", and
+A KDL node is a node name string, followed by zero or more "arguments", and
 children.
 
 ```kdl
@@ -117,10 +125,10 @@ You can also have multiple values in a single node!
 bookmarks 12 15 188 1234
 ```
 
-Nodes can have properties.
+Nodes can have properties, with string keys.
 
 ```kdl
-author "Alex Monad" email="alex@example.com" active=true
+author "Alex Monad" email=alex@example.com active=#true
 ```
 
 And they can have nested child nodes, too!
@@ -145,36 +153,66 @@ node1; node2; node3;
 
 KDL supports 4 data types:
 
-* Strings: `"hello world"`
+* Strings: `unquoted`, `"hello world"`, or `#"hello world"#`
 * Numbers: `123.45`
-* Booleans: `true` and `false`
-* Null: `null`
+* Booleans: `#true` and `#false`
+* Null: `#null`
 
 #### Strings
-It supports two different formats for string input: escaped and raw.
+
+It supports three different formats for string input: identifiers, quoted, and raw.
 
 ```kdl
-node "this\nhas\tescapes"
-other r"C:\Users\zkat\"
-```
-Both types of string can be multiline as-is, without a different syntax:
-
-```kdl
-string "my
-multiline
-value"
+node1 this-is-a-string
+node2 "this\nhas\tescapes"
+node3 #"C:\Users\zkat\raw\string"#
 ```
 
-And for raw strings, you can add any number of # after the r and the last " to
-disambiguate literal " characters:
+You don't have to quote strings unless any the following apply:
+  * The string contains whitespace.
+  * The string contains any of `[]{}()\/#";=`.
+  * The string is one of `true`, `false`, `null`, `inf`, `-inf`, or `nan`.
+  * The strings starts with a digit, or `+`/`-`/`.`/`-.`,`+.` and a digit.
+    (aka "looks like a number")
+
+In essence, if it can get confused for other KDL or KQL syntax, it needs
+quotes.
+
+Both types of quoted string can be multiline as-is, without a different
+syntax. Additionally, common indentation shared with the line containing the
+closing quote will be stripped/dedented:
 
 ```kdl
-other-raw r#"hello"world"#
+string "
+  my
+    multiline
+  value
+  "
+```
+
+Raw strings, which do not support `\` escapes and can be used when you want
+certain kinds of strings to look nicer without having to escape a lot:
+
+```kdl
+exec #"
+  echo "foo"
+  echo "bar"
+  cd C:\path\to\dir
+  "#
+
+regex #"\d{3} "[^/"]+""#
+```
+
+You can add any number of `#`s before and after the opening and
+closing `#` to disambiguate literal closing `#"` sequences:
+
+```kdl
+other-raw ##"hello#"world"##
 ```
 
 #### Numbers
 
-There's 4 ways to represent numbers in KDL. KDL does not prescribe any
+There are 4 ways to represent numbers in KDL. KDL does not prescribe any
 representation for these numbers, and it's entirely up to individual
 implementations whether to represent all numbers with a single type, or to
 have different representations for different forms.
@@ -213,7 +251,7 @@ comments can be nested.
 C style multiline
 */
 
-tag /*foo=true*/ bar=false
+tag /*foo=#true*/ bar=#false
 
 /*/*
 hello
@@ -221,20 +259,22 @@ hello
 ```
 
 On top of that, KDL supports `/-` "slashdash" comments, which can be used to
-comment out individual nodes, arguments, or children:
+comment out individual nodes, arguments, or child blocks:
 
 ```kdl
 // This entire node and its children are all commented out.
-/-mynode "foo" key=1 {
+/-mynode foo key=1 {
   a
   b
   c
 }
 
-mynode /-"commented" "not commented" /-key="value" /-{
+mynode /-commented "not commented" /-key=value /-{
   a
   b
 }
+// The above is equivalent to:
+mynode "not commented"
 ```
 
 ### Type Annotations
@@ -246,8 +286,8 @@ specific meanings.
 
 ```kdl
 numbers (u8)10 (i32)20 myfloat=(f32)1.5 {
-  strings (uuid)"123e4567-e89b-12d3-a456-426614174000" (date)"2021-02-03" filter=(regex)r"$\d+"
-  (author)person name="Alex"
+  strings (uuid)"123e4567-e89b-12d3-a456-426614174000" (date)"2021-02-03" filter=(regex)#"$\d+"#
+  (author)person name=Alex
 }
 ```
 
@@ -260,21 +300,21 @@ title \
 
 
 // Files must be utf8 encoded!
-smile "😁"
+smile 😁
 
-// Instead of anonymous nodes, nodes and properties can be wrapped
-// in "" for arbitrary node names.
-"!@#$@$%Q#$%~@!40" "1.2.3" "!!!!!"=true
+// Node names and property keys are just strings, so you can write them like
+// quoted or raw strings, too!
+"illegal{}[]/\\=#;identifier" #"1.2.3"# "#false"=#true
 
-// The following is a legal bare identifier:
-foo123~!@#$%^&*.:'|?+ "weeee"
+// Identifiers are very flexible. The following is a legal bare identifier:
+<@foo123~!$%^&*.:'|?+>
 
 // And you can also use unicode!
-ノード　お名前="☜(ﾟヮﾟ☜)"
+ノード　お名前=ฅ^•ﻌ•^ฅ
 
 // kdl specifically allows properties and values to be
 // interspersed with each other, much like CLI commands.
-foo bar=true "baz" quux=false 1 2 3
+foo bar=#true baz quux=#false 1 2 3
 ```
 
 ## Design Principles
@@ -306,25 +346,31 @@ Same as "cuddle".
 Because nothing out there felt quite right. The closest one I found was
 SDLang, but that had some design choices I disagreed with.
 
+<a name="why-not-sdlang"></a>
 #### Ok, then, why not SDLang?
 
-SDLang is designed for use cases that are not interesting to me, but are very
-relevant to the D-lang community. KDL is very similar in many ways, but is
-different in the following ways:
+SDLang is an excellent base, but I wanted some details ironed out, and some
+things removed that only really made sense for SDLang's current use-cases, including
+some restrictions about data representation. KDL is very similar in many ways, except:
 
 * The grammar and expected semantics are [well-defined and specified](SPEC.md).
-* There is only one "number" type. KDL does not prescribe representations.
+* There is only one "number" type. KDL does not prescribe representations, but
+  does have keywords for NaN, infinity, and negative infinity if decimal numbers
+  are intended to be represtented as IEEE754 floats.
 * Slashdash (`/-`) comments are great and useful!
-* I am not interested in having first-class date types, and SDLang's are very
-  non-standard.
+* Quoteless "identifier" strings are supported. (e.g. `node foo=bar`, vs `node foo="bar"`)
+* KDL does not have first-class date or binary data types. Instead, it
+  supports arbitrary type annotations for any custom data type you might need:
+  `(date)"2021-02-03"`, `(binary)"deadbeefbadc0ffee"`.
 * Values and properties can be interspersed with each other, rather than one
   having to follow the other.
-* KDL does not have a first-class binary data type. Just use strings with base64.
-* All strings in KDL are multi-line, and raw strings are written with
-  Rust-style syntax (`r"foo"`), instead of backticks.
-* KDL identifiers can use UTF-8 and are much more lax about symbols than SDLang.
+* All strings in KDL are multi-line, and multi-line strings are automatically dedented to match their closing quote's indentation level.
+* Raw strings are written with `#` (`#"foo\bar"#`), instead of backticks.
+* KDL identifiers can use UTF-8 and are more lax about symbols than SDLang.
 * KDL does not support "anonymous" nodes.
-* Instead, KDL supports arbitrary identifiers for node names and attribute
+* Namespaces are not supported, but `:` is a legal identifier character, and applications
+  can choose to implement namespaces as they see fit.
+* KDL supports arbitrary identifiers for node names and attribute
   names, meaning you can use arbitrary strings for those: `"123" "value"=1` is
   a valid node, for example. This makes it easier to use KDL for
   representing arbitrary key/value pairs.
@@ -401,3 +447,7 @@ microsyntax for losslessly encoding XML](XML-IN-KDL.md).
 This license applies to the text and assets _in this repository_.
 Implementations of this specification are not "derivative works", and thus are
 not bound by the restrictions of CC-BY-SA.
+
+The KDL logo design and files were generously contributed by Timothy Merritt
+([@timmybytes](https://github.com/timmybytes)), and are also available under
+the same license.

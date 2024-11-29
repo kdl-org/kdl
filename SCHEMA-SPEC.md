@@ -34,10 +34,10 @@ None.
 * [`node`](#node-node) - zero or more toplevel nodes for the KDL document this schema describes.
 * [`definitions`](#definitions-node) (optional): Definitions of nodes, values, props, and children block to reference in the toplevel nodes.
 * `node-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of child nodes.
-* `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `false`.
+* `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `#false`.
 * [`tag`](#tag-node) - zero or more toplevel tags for nodes in the KDL document that this schema describes.
 * `tag-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of tags of child nodes.
-* `other-tags-allowed` (optional): Whether to allow node tags other than the ones explicitly listed here. Defaults to `false`.
+* `other-tags-allowed` (optional): Whether to allow node tags other than the ones explicitly listed here. Defaults to `#false`.
 
 ### `info` node
 
@@ -113,7 +113,7 @@ Links to the schema itself, and to sources about the schema.
 
 #### Properties
 
-* `rel`: what the link is for (`"self"` or `"documentation"`)
+* `rel`: what the link is for (`self` or `documentation`)
 * `lang` (optional): An IETF BCP 47 language tag
 
 ### `license` node

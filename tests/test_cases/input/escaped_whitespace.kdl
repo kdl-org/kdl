@@ -1,0 +1,15 @@
+// All of these strings are the same
+node \
+	"Hello\n\tWorld" \
+	"
+	Hello
+		World
+	" \
+	"Hello\n\      \tWorld" \
+	"Hello\n\
+    \tWorld" \
+	"Hello\n\t\
+        World"
+
+// Note that this file deliberately mixes space and newline indentation for
+// test purposes

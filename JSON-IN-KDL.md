@@ -3,15 +3,15 @@ JSON-in-KDL (JiK)
 
 This specification describes a canonical way to losslessly encode [JSON](https://json.org) in [KDL](https://kdl.dev). While this isn't a very useful thing to want to do on its own, it's occasionally useful when using a KDL toolchain while speaking with a JSON-consuming or -emitting service.
 
-This is version 3.0.1 of JiK.
+This is version 4.0.0 of JiK.
 
 JSON-in-KDL (JiK from now on) is a kdl microsyntax consisting of named nodes that represent objects, arrays, or literal values.
 
 ----
 
-JSON literals are, luckily, a subset of KDL's literals. There are two ways to write a JSON literal into JiK:
+There are two ways to write a JSON literal into JiK:
 
-* As a node with any nodename and a single argument, like `- true` (for the JSON `true`) or `foo 5` (for the JSON `5`).
+* As a node with any nodename and a single argument, like `- #true` (for the JSON `true`) or `foo 5` (for the JSON `5`).
 * When nested in arrays or objects, literals can usually be written as arguments (for array nodes) or properties (for object nodes). See below for details.
 
 ----
@@ -25,7 +25,7 @@ Children can encode literals and/or nested arrays and objects. For example, the 
 ```kdl
 - {
 	- 1
-	- true false
+	- #true #false
 	- 3
 }
 ```
@@ -36,7 +36,7 @@ Arguments and children can be mixed, if desired. The preceding example could als
 
 ```kdl
 - 1 {
-	- true false
+	- #true #false
 	- 3
 }
 ```
@@ -54,10 +54,11 @@ The `(array)` type annotation can be used on any other valid array node if desir
 
 JSON objects are represented in JiK as a node with any nodename, with zero or more properties and/or zero or more children with any nodenames.
 
-Properties can encode literals - for example, the JSON `{"foo": 1, "bar": true}` can be written in JiK as `- foo=1 bar=true`.
+Properties can encode literals - for example, the JSON `{"foo": 1, "bar": true}` can be written in JiK as `- foo=1 bar=#true`.
 
 Children can encode literals and/or nested arrays and objects,
 using the nodename for the item's key. 
+
 For example, the JSON `{"foo": 1, "bar": [2, {"baz": 3}], "qux":4}` can be written in JiK as:
 
 ```kdl
