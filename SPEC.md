@@ -272,8 +272,17 @@ node prop=(regex).*
 ### String
 
 Strings in KDL represent textual UTF-8 [Values](#value). A String is either an
-[Identifier String](#identifier-string) (like `foo`), a [Quoted String](#quoted-string) (like `"foo"`) or
-a [Raw String](#raw-string) (like `#"foo"#`). Identifier Strings let you write short, "single-word" strings with a minimum of syntax; Quoted Strings let you write strings with whitespace (including newlines!) or escapes; Raw Strings let you write strings with whitespace *but without escapes*, allowing you to not worry about the string's content containing anything that might look like an escape.
+[Identifier String](#identifier-string) (like `foo`), a [Quoted
+String](#quoted-string) (like `"foo"`) or a [Raw String](#raw-string) (like
+`#"foo"#`):
+
+* Identifier Strings let you write short, "single-word" strings with a
+  minimum of syntax
+* Quoted Strings let you write strings with whitespace
+  (including newlines!) or escapes
+* Raw Strings let you write strings with whitespace *but without escapes*,
+  allowing you to not worry about the string's content containing anything that
+  might look like an escape.
 
 Strings _MUST_ be represented as UTF-8 values.
 
@@ -299,9 +308,9 @@ A handful of patterns are disallowed, to avoid confusion with other values:
 * idents that are the language keywords (`inf`, `-inf`, `nan`, `true`,
   `false`, and `null`) without their leading `#`.
 
-Identifiers that match these patterns _MUST_ be treated as a syntax error;
-such values can only be written as quoted or raw strings.
-The precise details of the identifier syntax is specified in the [Full Grammar](#full-grammar) below.
+Identifiers that match these patterns _MUST_ be treated as a syntax error; such
+values can only be written as quoted or raw strings. The precise details of the
+identifier syntax is specified in the [Full Grammar](#full-grammar) below.
 
 Identifier Strings are terminated by [Whitespace](#whitespace) or
 [Newlines](#newline).
@@ -708,10 +717,13 @@ annotations, if present:
 * A [Children Block](#children-block): the entire block, including all
   children within, is treated as Whitespace. Only other children blocks, whether
   slashdashed or not, may follow a slashdashed children block.
+  
+A slashdash may be be followed by any amount of whitespace, including newlines and
+comments, before the element that it comments out.
 
 ### Newline
 
-The following characters [should be treated as new
+The following character sequences [should be treated as new
 lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 
 | Acronym | Name            | Code Pt |
@@ -751,25 +763,20 @@ language syntax](#grammar-language) is defined below.
 ```
 document := bom? nodes
 
+// Nodes
 nodes := (line-space* node)* line-space*
 
-slashdash := '/-'
-
-// Whitespace where newlines are allowed.
-line-space := newline | ws | single-line-comment
-
-// Whitespace within nodes, where newline-ish things must be esclined.
-node-space := ws* escline ws* | ws+
-
 base-node := slashdash? type? node-space* string
-      (node-space+ node-prop-or-arg)*
+      (node-space+ slashdash? node-prop-or-arg)*
       // slashdashed node-children must always be after props and args.
       (node-space+ slashdash node-children)*
       (node-space+ node-children)?
       (node-space+ slashdash node-children)*
 node := base-node node-space* node-terminator
 final-node := base-node node-space* node-terminator?
-node-prop-or-arg := slashdash? (prop | value)
+
+// Entries
+node-prop-or-arg := prop | value
 node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
@@ -777,13 +784,15 @@ prop := string node-space* '=' node-space* value
 value := type? node-space* (string | number | keyword)
 type := '(' node-space* string node-space* ')'
 
+// Strings
 string := identifier-string | quoted-string | raw-string
 
 identifier-string := unambiguous-ident | signed-ident | dotted-ident
-unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
+unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - disallowed-keyword-strings
 signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
-identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points
+identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points - equals-sign
+disallowed-keyword-identifiers := 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
 
 quoted-string := '"' (single-line-string-body | newline multi-line-string-body newline unicode-space*) '"'
 single-line-string-body := (string-character - newline)*
@@ -797,6 +806,7 @@ raw-string-quotes := '"' (single-line-raw-string-body | newline multi-line-raw-s
 single-line-raw-string-body := (unicode - newline - disallowed-literal-code-points)*
 multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
 
+// Numbers
 number := keyword-number | hex | octal | binary | decimal
 
 decimal := sign? integer ('.' integer)? exponent?
@@ -809,29 +819,31 @@ hex := sign? '0x' hex-digit (hex-digit | '_')*
 octal := sign? '0o' [0-7] [0-7_]*
 binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
 
+// Keywords and booleans.
 keyword := boolean | '#null'
-
 keyword-number := '#inf' | '#-inf' | '#nan'
-
 boolean := '#true' | '#false'
 
-escline := '\\' ws* (single-line-comment | newline | eof)
-
-newline := See Table (All line-break white_space)
-
-ws := unicode-space | multi-line-comment
-
+// Specific code points
 bom := '\u{FEFF}'
-
 disallowed-literal-code-points := See Table (Disallowed Literal Code Points)
-
 unicode := Any Unicode Scalar Value
+unicode-space := See Table (All White_Space unicode characters which are not `newline`)
 
-unicode-space := See Table (All [White_Space](#whitespace) unicode characters which are not `newline`)
-
+// Comments
 single-line-comment := '//' ^newline* (newline | eof)
 multi-line-comment := '/*' commented-block
 commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
+slashdash := '/-' line-space*
+
+// Whitespace
+ws := unicode-space | multi-line-comment
+escline := '\\' ws* (single-line-comment | newline | eof)
+newline := See Table (All Newline White_Space)
+// Whitespace where newlines are allowed.
+line-space := newline | ws | single-line-comment
+// Whitespace within nodes, where newline-ish things must be esclined.
+node-space := ws* escline ws* | ws+
 ```
 
 ### Grammar language

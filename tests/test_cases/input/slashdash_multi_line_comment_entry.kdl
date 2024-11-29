@@ -1,0 +1,6 @@
+node 1 /- /*
+multi
+line
+comment
+here
+*/ 2 3
