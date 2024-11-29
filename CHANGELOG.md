@@ -1,6 +1,18 @@
 # KDL Changelog
 
-## 2.0.0 (2024-02-07)
+## 2.0.0-draft.5 (2024-11-28)
+
+* Equals signs other than `=` are no longer supported in properties.
+* 128-bit integer type annotations have been added to the list of "well-known"
+  type annotations.
+* Multiline string escape rules have been tweaked significantly.
+* `\s` is now a valid escape within a string, representing a space character.
+* Slashdash (`/-`)-compatible locations and related grammar adjusted to be more
+  clear and intuitive. This includes some changes relating to whitespace,
+  including comments and newlines, which are breaking changes.
+* Various updates to test suite to reflect changes.
+
+## 2.0.0 (Unreleased)
 
 ### Grammar
 
