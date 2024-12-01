@@ -772,8 +772,9 @@ base-node := slashdash? type? node-space* string
       (node-space+ slashdash node-children)*
       (node-space+ node-children)?
       (node-space+ slashdash node-children)*
-node := base-node node-space* node-terminator
-final-node := base-node node-space* node-terminator?
+      node-space*
+node := base-node node-terminator
+final-node := base-node node-terminator?
 
 // Entries
 node-prop-or-arg := prop | value
