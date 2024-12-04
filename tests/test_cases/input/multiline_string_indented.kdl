@@ -1,5 +1,5 @@
-node "
+node """
     hey
    everyone
      how goes?
-  "
+  """
