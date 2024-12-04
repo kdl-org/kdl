@@ -61,30 +61,34 @@ rather than the last-modified date, with `(published)date`.)
 Following the name are zero or more [Arguments](#argument) or
 [Properties](#property), separated by either [whitespace](#whitespace) or [a
 slash-escaped line continuation](#line-continuation). Arguments and Properties
-may be interspersed in any order, much like is common with positional
-arguments vs options in command line tools.
+may be interspersed in any order, much like is common with positional arguments
+vs options in command line tools. Collectively, Arguments and Properties may be
+referred to as "Entries".
 
 [Children](#children-block) can be placed after the name and the optional
-Arguments and Properties, possibly separated by either whitespace or a
+Entries, possibly separated by either whitespace or a
 slash-escaped line continuation.
 
-Arguments are ordered relative to each other (but not relative to Properties)
-and that order must be preserved in order to maintain the semantics.
+Arguments are ordered relative to each other and that order must be preserved in
+order to maintain the semantics. Properties between Arguments do not affect
+Argument ordering.
 
-By contrast, Property order _SHOULD NOT_ matter to implementations.
-[Children](#children-block) should be used if an order-sensitive key/value
-data structure must be represented in KDL.
+By contrast, Properties _SHOULD NOT_ be assumed to be presented in a given
+order. [Children](#children-block) should be used if an order-sensitive
+key/value data structure must be represented in KDL. Cf. JSON objects
+preserving key order.
 
 Nodes _MAY_ be prefixed with [Slashdash](#slashdash-comments) to "comment out"
 the entire node, including its properties, arguments, and children, and make
 it act as plain whitespace, even if it spreads across multiple lines.
 
-Finally, a node is terminated by either a [Newline](#newline), a semicolon (`;`)
-or the end of the file/stream (an `EOF`).
+Finally, a node is terminated by either a [Newline](#newline), a semicolon
+(`;`), the end of a child block (`}`) or the end of the file/stream (an `EOF`).
 
 #### Example
 
 ```kdl
+// `foo` will have an Argument value list like `[1, 3]`.
 foo 1 key=val 3 {
     bar
     (role)baz 1 2
@@ -178,7 +182,7 @@ Values _MUST_ be either [Arguments](#argument) or values of
 [Properties](#property). Only [String](#string) values may be used as
 [Node](#node) names or [Property](#property) keys.
 
-Values (both as arguments and as properties) _MAY_ be prefixed by a single
+Values (both as arguments and in properties) _MAY_ be prefixed by a single
 [Type Annotation](#type-annotation).
 
 ### Type Annotation
@@ -719,7 +723,7 @@ annotations, if present:
   slashdashed or not, may follow a slashdashed children block.
   
 A slashdash may be be followed by any amount of whitespace, including newlines and
-comments, before the element that it comments out.
+comments (other than other slashdashes), before the element that it comments out.
 
 ### Newline
 
@@ -728,20 +732,21 @@ lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 
 | Acronym | Name            | Code Pt |
 |---------|-----------------|---------|
+| CRLF    | Carriage Return and Line Feed | `U+000D` + `U+000A` |
 | CR      | Carriage Return | `U+000D`  |
 | LF      | Line Feed       | `U+000A`  |
-| CRLF    | Carriage Return and Line Feed | `U+000D` + `U+000A` |
 | NEL     | Next Line       | `U+0085`  |
 | FF      | Form Feed       | `U+000C`  |
 | LS      | Line Separator  | `U+2028`  |
 | PS      | Paragraph Separator | `U+2029` |
 
-Note that for the purpose of new lines, CRLF is considered _a single newline_.
+Note that for the purpose of new lines, the specific sequence `CRLF` is
+considered _a single newline_.
 
 ### Disallowed Literal Code Points
 
 The following code points may not appear literally anywhere in the document.
-They may be represented in Strings (but not Raw Strings) using `\u{}`.
+They may be represented in Strings (but not Raw Strings) using [Unicode Escapes](#escapes) (`\u{...}`).
 
 * The codepoints `U+0000-0008` or the codepoints `U+000E-001F`  (various
   control characters).
@@ -870,4 +875,4 @@ Specifically:
   For example, `^foo` means "must not match `foo`".
 * A single definition may be split over multiple lines. Newlines are treated as
   spaces.
-* `//` at the beginning of a line is used for comments.
+* `//` followed by text on its own line is used as comment syntax.
