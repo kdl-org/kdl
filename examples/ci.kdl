@@ -42,11 +42,11 @@ jobs {
       }
       step Clippy { run cargo clippy --all -- -D warnings }
       step "Run tests" { run cargo test --all --verbose }
-      step "Other Stuff" run="
+      step "Other Stuff" run="""
         echo foo
         echo bar
         echo baz
-        "
+        """
     }
   }
 }
