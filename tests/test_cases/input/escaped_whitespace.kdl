@@ -1,10 +1,10 @@
 // All of these strings are the same
 node \
 	"Hello\n\tWorld" \
-	"
+	"""
 	Hello
 		World
-	" \
+	""" \
 	"Hello\n\      \tWorld" \
 	"Hello\n\
     \tWorld" \

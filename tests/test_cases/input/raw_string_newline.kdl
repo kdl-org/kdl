@@ -1,4 +1,4 @@
-node #"
+node #"""
 hello
 world
-"#
+"""#
