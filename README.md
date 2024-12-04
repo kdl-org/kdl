@@ -25,11 +25,15 @@ package {
 
   scripts {
     // "Raw" and dedented multi-line strings are supported.
-    build #"
+    message """
+      hello
+      world
+      """
+    build #"""
       echo "foo"
       node -c "console.log('hello, world!');"
       echo "foo" > some-file.txt
-      "#
+      """#
   }
 
   // `\` breaks up a single node across multiple lines.
