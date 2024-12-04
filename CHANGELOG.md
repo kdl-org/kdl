@@ -1,5 +1,12 @@
 # KDL Changelog
 
+## 2.0.0-draft.6 (2024-12-04)
+
+* Multiline strings, both Raw and Quoted, must now use `"""` instead of a single `"`. Using `"""` for a single-line string is a syntax error.
+* Fixed an issue with the `unicode_silly` test case.
+* Some rewordings and clarification in the spec prose.
+* Slight grammar tweak where the pre-terminator `node-space*` for `node` and `final-node` have been moved into `base-node`.
+
 ## 2.0.0-draft.5 (2024-11-28)
 
 * Equals signs other than `=` are no longer supported in properties.
@@ -67,10 +74,9 @@
   * Around `=` for props (`x = 1`)
 * The BOM is now only allowed as the first character in a document. It was
   previously treated as generic whitespace.
+* Multi-line strings must now use `"""` as delimeters. The opening delimiter must be immediately followed by a newline, and the closing delimiter must be on its own line, prefixed by optional whitespace.
 * Multi-line strings are now automatically dedented, according to the common
-  whitespace matching the whitespace prefix of the closing line. Multiline
-  strings and raw strings now must have a newline immediately following their
-  opening `"`, and a final newline plus whitespace preceding the closing `"`.
+  whitespace matching the whitespace prefix of the closing line.
 * `.1`, `+.1` etc are no longer valid identifiers, to prevent confusion and
   conflicts with numbers.
 * Multi-line strings' literal Newline sequences are now normalized to single
