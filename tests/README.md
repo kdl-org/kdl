@@ -2,9 +2,11 @@
 
 The `input` folder contains test cases for KDL parsers. The `expected_kdl`
 folder contains files with the same name as those in `input` with the expected
-output after being run through the parser and printed out again. If there's no
-file in `expected_kdl` with a name corresponding to one in `input` it
-indicates that parsing for that case should fail.
+output after being run through the parser and printed out again.
+
+If a testcase is intended to fail parsing,
+the `input` file _MUST_ have a `_fail` suffix,
+and there must be no corresponding file in `expected_kdl`.
 
 ## Translation Rules
 
