@@ -276,24 +276,27 @@ node prop=(regex).*
 ### String
 
 Strings in KDL represent textual UTF-8 [Values](#value). A String is either an
-[Identifier String](#identifier-string) (like `foo`), a [Quoted
-String](#quoted-string) (like `"foo"`) or a [Raw String](#raw-string) (like
-`#"foo"#`):
+[Identifier String](#identifier-string) (like `foo`), a
+[Quoted String](#quoted-string) (like `"foo"`)
+or a [Multi-Line String](#multi-line-string).
+Both Quoted and Multiline strings come in normal
+and [Raw String](#raw-string) variants (like `#"foo"#`):
 
 * Identifier Strings let you write short, "single-word" strings with a
   minimum of syntax
-* Quoted Strings let you write strings with whitespace
-  (including newlines!) or escapes
-* Raw Strings let you write strings with whitespace *but without escapes*,
+* Quoted Strings let you write strings "like normal", with whitespace and escapes.
+* Multi-Line Strings let you write strings across multiple lines
+    and with indentation that's not part of the string value.
+* Raw Strings don't allow any escapes,
   allowing you to not worry about the string's content containing anything that
   might look like an escape.
 
 Strings _MUST_ be represented as UTF-8 values.
 
-Strings _MUST NOT_ include the code points for [disallowed literal code
-points](#disallowed-literal-code-points) directly. Quoted Strings may include
-these code points as _values_ by representing them with their corresponding
-`\u{...}` escape.
+Strings _MUST NOT_ include the code points for
+[disallowed literal code points](#disallowed-literal-code-points) directly.
+Quoted and Multi-Line Strings may include these code points as _values_
+by representing them with their corresponding `\u{...}` escape.
 
 ### Identifier String
 
@@ -344,17 +347,22 @@ The following characters cannot be used anywhere in a [Identifier String](#ident
 ### Quoted String
 
 A Quoted String is delimited by `"` on either side of any number of literal
-string characters except unescaped `"` and `\`. This includes literal
-[Newline](#newline) characters, which means a single String Value can span
-multiple lines, following specific [Multi-line String](#multi-line-strings)
-rules.
+string characters except unescaped `"` and `\`.
+
+Literal [Newline](#newline) characters can only be included
+if they are [Escaped Whitespace](#escaped-whitespace),
+which discards them from the string value.
+Actually including a newline in the value requires using a newline escape sequence,
+like `\n`,
+or using a [Multi-Line String](#multi-line-string)
+which is actually designed for strings stretching across multiple lines.
 
 Like Identifier Strings, Quoted Strings _MUST NOT_ include any of the
 [disallowed literal code-points](#disallowed-literal-code-points) as code
 points in their body.
 
-Quoted Strings also follow the Multi-line rules specified in [Multi-line
-String](#multi-line-strings).
+Quoted Strings have a [Raw String](#raw-string) variant,
+which disallows escapes.
 
 #### Escapes
 
@@ -394,10 +402,10 @@ such) are retained. For example, these strings are all semantically identical:
 
 "Hello\nWorld"
 
-"
+"""
   Hello
   World
-  "
+  """
 ```
 
 ##### Invalid escapes
@@ -405,54 +413,26 @@ such) are retained. For example, these strings are all semantically identical:
 Except as described in the escapes table, above, `\` *MUST NOT* precede any
 other characters in a string.
 
-### Raw String
 
-Raw Strings in KDL are much like [Quoted Strings](#quoted-string), except they
-do not support `\`-escapes. They otherwise share the same properties as far as
-literal [Newline](#newline) characters go, multi-line rules, and the requirement
-of UTF-8 representation.
+### Multi-line String
 
-Raw String literals are represented with one or more `#` characters, followed
-by `"`, followed by any number of UTF-8 literals. The string is then closed by
-a `"` followed by a _matching_ number of `#` characters. This means that the
-string sequence `"` or `"#` and such must not match the closing `"` with the
-same or more `#` characters as the opening `#`, in the body of the string.
-
-Like other Strings, Raw Strings _MUST NOT_ include any of the [disallowed
-literal code-points](#disallowed-literal-code-points) as code points in their
-body. Unlike with Quoted Strings, these cannot simply be escaped, and are thus
-unrepresentable when using Raw Strings.
-
-#### Example
-
-```kdl
-just-escapes #"\n will be literal"#
-```
-
-The string contains the literal characters `\n will be literal`.
-
-```kdl
-quotes-and-escapes ##"hello\n\r\asd"#world"##
-```
-
-The string contains the literal characters `hello\n\r\asd"#world`
-
-
-### Multi-line Strings
-
-Quoted and Raw Strings support multiple lines with literal, non-escaped
+Multi-Line Strings support multiple lines with literal, non-escaped
 Newlines. They must use a special multi-line syntax, and they automatically
 "dedent" the string, allowing its value to be indented to a visually matching
 level as desired.
 
-A Multi-line string _MUST_ start with a [Newline](#newline) immediately
-following its opening `"""` (whether Quoted or Raw). Its final line _MUST_ contain only whitespace,
-followed by a closing `"""`. All in-between lines that contain
-non-newline characters _MUST_ start with _at least_ the exact same whitespace
-as the final line (precisely matching codepoints, not merely counting characters).
-They may contain additional whitespace following this prefix.
+A Multi-Line String is opened and closed by *three* double-quote characters,
+like `"""`.
+Its first line _MUST_ immediately start with a [Newline](#newline)
+after its opening `"""`.
+Its final line _MUST_ contain only whitespace
+before the closing `"""`.
+All in-between lines that contain non-newline characters
+_MUST_ start with _at least_ the exact same whitespace as the final line
+(precisely matching codepoints, not merely counting characters or "size");
+they may contain additional whitesapce following this prefix.
 
-The value of the Multi-line String omits the first and last Newline, the
+The value of the Multi-Line String omits the first and last Newline, the
 Whitespace of the last line, and the matching Whitespace prefix on all
 intermediate lines. The first and last Newline can be the same character (that
 is, empty multi-line strings are legal).
@@ -464,9 +444,6 @@ Multi-line Strings that do not immediately start with a Newline and whose final
 `"""` is not preceeded by optional whitespace and a Newline are illegal. This
 also means that `"""` may not be used for a single-line String (e.g.
 `"""foo"""`).
-
-It is a syntax error for any body lines of the multi-line string to not match
-the whitespace prefix of the last line with the final quote.
 
 #### Newline Normalization
 
@@ -487,11 +464,11 @@ multi-line """
 becomes:
 
 ```kdl
-"\r\n\nfoo"
+single-line "\r\n\nfoo"
 ```
 
-For clarity: this normalization is for individual sequences. That is, the
-literal sequence `CRLF CRLF` becomes `LF LF`, not `LF`.
+For clarity: this normalization applies to each individual Newline sequence.
+That is, the literal sequence `CRLF CRLF` becomes `LF LF`, not `LF`.
 
 #### Example
 
@@ -588,8 +565,9 @@ multi-line """[\n]
 
 #### Interaction with Whitespace Escapes
 
-Multi-line strings support the same mechanism for escaping whitespace. When
-processing a Multi-line String, implementations MUST dedent the string _after_
+Multi-line strings support the same mechanism for escaping whitespace
+as Quoted Strings.
+When processing a Multi-line String, implementations MUST dedent the string _after_
 resolving all whitespace escapes, but _before_ resolving other backslash escapes.
 Furthermore, a whitespace escape that attempts to escape the final line's newline
 and/or whitespace prefix is invalid since the multi-line string has to still be
@@ -619,6 +597,63 @@ bar
   baz
   """
 ```
+
+### Raw String
+
+Both [Quoted](#quoted-string) and [Multi-Line Strings](#multi-line-string)
+have Raw String variants,
+which are identical in syntax except they do not support `\`-escapes.
+They otherwise share the same properties as far as
+literal [Newline](#newline) characters go, multi-line rules, and the requirement
+of UTF-8 representation.
+
+The Raw String variants are indicated by preceding the strings's opening quotes
+with one or more `#` characters.
+The string is then closed by its normal closing quotes,
+followed by a _matching_ number of `#` characters.
+This means that the string may contain a lone `"` or `"""`,
+or `"#`/etc with a _different_ number of `#` characters
+than what is used to open the string;
+only an exact match actually closes the string.
+
+Like other Strings, Raw Strings _MUST NOT_ include any of the [disallowed
+literal code-points](#disallowed-literal-code-points) as code points in their
+body. Unlike with Quoted Strings, these cannot simply be escaped, and are thus
+unrepresentable when using Raw Strings.
+
+#### Example
+
+```kdl
+just-escapes #"\n will be literal"#
+```
+
+The string contains the literal characters `\n will be literal`.
+
+```kdl
+quotes-and-escapes ##"hello\n\r\asd"#world"##
+```
+
+The string contains the literal characters `hello\n\r\asd"#world`
+
+```kdl
+raw-multi-line #"""
+    You can show examples of """
+        multi-line strings
+        """
+    without worrying about escapes.
+    """#
+```
+
+The string contains the value
+
+```
+You can show examples of """
+    multi-line strings
+    """
+without worrying about escapes.
+```
+
+or equivalently, `#"You can show examples of """\n    multi-line strings\n    """\nwithout worrying about escapes."#` as a Quoted String.
 
 ### Number
 
