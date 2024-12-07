@@ -1,0 +1,5 @@
+node ##"""
+"""triple-quote"""
+##"too few quotes"##
+#"""too few #"""#
+"""##
