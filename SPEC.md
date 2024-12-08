@@ -430,7 +430,9 @@ before the closing `"""`.
 All in-between lines that contain non-newline characters
 _MUST_ start with _at least_ the exact same whitespace as the final line
 (precisely matching codepoints, not merely counting characters or "size");
-they may contain additional whitesapce following this prefix.
+they may contain additional whitesapce following this prefix. The lines in
+between may contain unescaped `"` (but no unescaped `"""` as this would close
+the string).
 
 The value of the Multi-Line String omits the first and last Newline, the
 Whitespace of the last line, and the matching Whitespace prefix on all
@@ -611,10 +613,9 @@ The Raw String variants are indicated by preceding the strings's opening quotes
 with one or more `#` characters.
 The string is then closed by its normal closing quotes,
 followed by a _matching_ number of `#` characters.
-This means that the string may contain a lone `"` or `"""`,
-or `"#`/etc with a _different_ number of `#` characters
-than what is used to open the string;
-only an exact match actually closes the string.
+This means that the string may contain any combination of `"` and `#` characters
+other than its closing delimiter (e.g., if a raw string starts with `##"`, it can
+contain `"` or `"#`, but not `"##` or `"###`).
 
 Like other Strings, Raw Strings _MUST NOT_ include any of the [disallowed
 literal code-points](#disallowed-literal-code-points) as code points in their
@@ -653,7 +654,7 @@ You can show examples of """
 without worrying about escapes.
 ```
 
-or equivalently, `#"You can show examples of """\n    multi-line strings\n    """\nwithout worrying about escapes."#` as a Quoted String.
+or equivalently, `"You can show examples of \"\"\"\n    multi-line strings\n    \"\"\"\nwithout worrying about escapes."` as a Quoted String.
 
 ### Number
 
@@ -856,7 +857,7 @@ disallowed-keyword-identifiers := 'true' - 'false' - 'null' - 'inf' - '-inf' - '
 
 quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline unicode-space*) '"""'
 single-line-string-body := (string-character - newline)*
-multi-line-string-body := string-character*
+multi-line-string-body := (('"' | '""')? string-character)*
 string-character := '\' escape | [^\\"] - disallowed-literal-code-points
 escape := ["\\bfnrts] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
