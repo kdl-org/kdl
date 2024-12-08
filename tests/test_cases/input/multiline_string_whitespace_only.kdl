@@ -1,0 +1,12 @@
+// This file deliberately contains unusual whitespace
+// the first two strings are empty
+node """
+  	""" """
+ 	 \
+             
+ 	 """ \
+    \ // The next string contains only whitespace
+    """
+       
+
+    """
