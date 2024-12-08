@@ -654,7 +654,7 @@ You can show examples of """
 without worrying about escapes.
 ```
 
-or equivalently, `"You can show examples of """\n    multi-line strings\n    """\nwithout worrying about escapes."` as a Quoted String.
+or equivalently, `"You can show examples of \"\"\"\n    multi-line strings\n    \"\"\"\nwithout worrying about escapes."` as a Quoted String.
 
 ### Number
 
