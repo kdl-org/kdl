@@ -6,6 +6,15 @@ model and the grammar.
 This document describes KDL version `2.0.0-draft.6`. It was released on
 2024-12-04.
 
+## Compatibility
+
+KDL v2 is designed such that for any given KDL document written as [KDL
+1.0](./SPEC_v1.md) or KDL 2.0, the parse will either fail completely, or, if the
+parse succeeds, the data represented by a v1 or v2 parser will be identical.
+This means that it's safe to use a fallback parsing strategy in order to support
+both v1 and v2 simultaneously. For example, `node "foo"` is a valid node in both
+versions, and should be represented identically by parsers.
+
 ## Introduction
 
 KDL is a node-oriented document language. Its niche and purpose overlaps with
