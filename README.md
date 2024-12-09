@@ -73,6 +73,22 @@ should happen over on the [discussions
 page](https://github.com/kdl-org/kdl/discussions). Feel free to jump in and give
 us your 2 cents!
 
+## Used By
+
+A lot of folks have started picking up KDL for both personal projects, and
+larger open source, and even proprietary projects! This section includes a list
+of some examples of KDL in the wild (either v1, v2, or both):
+
+* [Zellij](https://zellij.dev) - Terminal workspace/multiplexer
+* [Niri](https://github.com/YaLTeR/niri) - Scrollable-tiling window manager for Wayland
+* [Bikeshed](https://github.com/speced/bikeshed) ([here](https://github.com/speced/bikeshed-boilerplate/blob/main/boilerplate/doctypes.kdl) and [here](https://github.com/speced/bikeshed-data/blob/main/data/manifest.txt)) - Specification pre-processor used by CSS, C++, WHATWG, various W3C working groups, and others.
+* [orogene](https://orogene.dev) - Lightning-fast JavaScript package manager
+* [Pop!_OS/System76 Scheduler](https://github.com/pop-os/system76-scheduler) - Scheduling service which optimizes Linux's CPU scheduler and makes it go faster.
+* [ImStyle](https://patitotective.github.io/ImStyle/) - ImGui application styling with Nim and KDL
+* [fmod-rs](https://github.com/CAD97/fmod-rs) - Rust bindings to FMOD Core and FMOD Studio
+* [mise](https://mise.jdx.dev/) - dev tools, env vars, task runner 
+* You?
+
 ## Implementations
 
 * Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs), [knuffel](https://crates.io/crates/knuffel/) (latter includes derive macro), and [kaydle](https://github.com/Lucretiel/kaydle) (serde-based)
