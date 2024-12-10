@@ -86,7 +86,8 @@ of some examples of KDL in the wild (either v1, v2, or both):
 * [Pop!_OS/System76 Scheduler](https://github.com/pop-os/system76-scheduler) - Scheduling service which optimizes Linux's CPU scheduler and makes it go faster.
 * [ImStyle](https://patitotective.github.io/ImStyle/) - ImGui application styling with Nim and KDL
 * [fmod-rs](https://github.com/CAD97/fmod-rs) - Rust bindings to FMOD Core and FMOD Studio
-* [mise](https://mise.jdx.dev/) - dev tools, env vars, task runner 
+* [mise](https://mise.jdx.dev/) - dev tools, env vars, task runner
+* [Camping](https://github.com/camping/camping) - Ruby web microframework
 * You?
 
 ## Implementations
