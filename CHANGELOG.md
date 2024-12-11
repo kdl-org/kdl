@@ -1,11 +1,29 @@
 # KDL Changelog
 
+## 2.0.0-draft.7 (2024-12-10)
+
+* `node-space` is now allowed as whitespace after a `slashdash`, meaning line
+  continuations will work now.
+* One or two consecutive double-quotes are now allowed in the bodies of
+  multi-line quoted strings, without needing to be escaped.
+* Grammar has been fixed to disallow raw strings like `#"""#`, which are now
+  properly treated as invalid multi-line raw strings (instead of the equivalent of
+  `"\""`).
+* Test suite has been updated to include a `_fail` suffix in all test cases
+  which are expected to fail.
+* A slew of additional slashdash and multi-line string compliance tests have
+  been added. Have fun. :)
+* The organization of string types in the spec prose has been updated to a
+  hopefully more helpful structure.
+
+
 ## 2.0.0-draft.6 (2024-12-04)
 
 * Multiline strings, both Raw and Quoted, must now use `"""` instead of a single `"`. Using `"""` for a single-line string is a syntax error.
 * Fixed an issue with the `unicode_silly` test case.
 * Some rewordings and clarification in the spec prose.
 * Slight grammar tweak where the pre-terminator `node-space*` for `node` and `final-node` have been moved into `base-node`.
+
 
 ## 2.0.0-draft.5 (2024-11-28)
 
@@ -18,6 +36,7 @@
   clear and intuitive. This includes some changes relating to whitespace,
   including comments and newlines, which are breaking changes.
 * Various updates to test suite to reflect changes.
+
 
 ## 2.0.0 (Unreleased)
 
@@ -87,7 +106,12 @@
 * Correspondingly, the identifiers `inf`, `-inf`, and `nan` are now syntax
   errors.
 * `u128` and `i128` have been added as well-known number type annotations.
-* Slashdash (`/-`) -compatible locations adjusted to be more clear and intuitive.
+* Slashdash (`/-`) -compatible locations adjusted to be more clear and
+  intuitive. They can now be used in exactly three different places: before nodes,
+  before entire entries, or before entire child blocks.
+* Furthermore, The ordering of slashdashed elements has been restricted such
+  that a slashdashed child block cannot go before an entry (including slashdashed
+  entries).
 
 ### KQL
 
