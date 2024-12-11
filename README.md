@@ -199,27 +199,28 @@ You don't have to quote strings unless any the following apply:
 In essence, if it can get confused for other KDL or KQL syntax, it needs
 quotes.
 
-Both types of quoted string can be multiline as-is, without a different
-syntax. Additionally, common indentation shared with the line containing the
-closing quote will be stripped/dedented:
+Both types of quoted string can be written across multiple lines by using triple
+quotes (`"""`) followed immediately by a newline. Additionally, common
+indentation shared with the line containing the closing quotes will be
+stripped/dedented:
 
 ```kdl
-string "
+string """
   my
     multiline
   value
-  "
+  """
 ```
 
 Raw strings, which do not support `\` escapes and can be used when you want
 certain kinds of strings to look nicer without having to escape a lot:
 
 ```kdl
-exec #"
+exec #"""
   echo "foo"
   echo "bar"
   cd C:\path\to\dir
-  "#
+  """#
 
 regex #"\d{3} "[^/"]+""#
 ```
@@ -280,7 +281,7 @@ hello
 ```
 
 On top of that, KDL supports `/-` "slashdash" comments, which can be used to
-comment out individual nodes, arguments, or child blocks:
+comment out individual nodes, entries, or child blocks:
 
 ```kdl
 // This entire node and its children are all commented out.
@@ -325,12 +326,12 @@ smile 😁
 
 // Node names and property keys are just strings, so you can write them like
 // quoted or raw strings, too!
-"illegal{}[]/\\=#;identifier" #"1.2.3"# "#false"=#true
+"illegal(){}[]/\\=#;identifier" #"1.2.3"# "#false"=#true
 
 // Identifiers are very flexible. The following is a legal bare identifier:
-<@foo123~!$%^&*.:'|?+>
+-<123~!$@%^&*,.:'`|?+>
 
-// And you can also use unicode!
+// And you can also use non-ASCII unicode!
 ノード　お名前=ฅ^•ﻌ•^ฅ
 
 // kdl specifically allows properties and values to be
@@ -340,9 +341,9 @@ foo bar=#true baz quux=#false 1 2 3
 
 ## Design Principles
 
-1. Maintainability
+1. Human Maintainability
 1. Flexibility
-1. Cognitive simplicity and Learnability
+1. Cognitive Simplicity and Learnability
 1. Ease of de/serialization
 1. Ease of implementation
 
@@ -375,26 +376,35 @@ things removed that only really made sense for SDLang's current use-cases, inclu
 some restrictions about data representation. KDL is very similar in many ways, except:
 
 * The grammar and expected semantics are [well-defined and specified](SPEC.md).
+  This was the original impetus for working on KDL, followed by details that
+  seemed like they could be improved.
 * There is only one "number" type. KDL does not prescribe representations, but
   does have keywords for NaN, infinity, and negative infinity if decimal numbers
   are intended to be represtented as IEEE754 floats.
 * Slashdash (`/-`) comments are great and useful!
-* Quoteless "identifier" strings are supported. (e.g. `node foo=bar`, vs `node foo="bar"`)
+* Quoteless "identifier" strings (e.g. `node foo=bar`, vs `node foo="bar"`).
 * KDL does not have first-class date or binary data types. Instead, it
   supports arbitrary type annotations for any custom data type you might need:
   `(date)"2021-02-03"`, `(binary)"deadbeefbadc0ffee"`.
 * Values and properties can be interspersed with each other, rather than one
-  having to follow the other.
-* All strings in KDL are multi-line, and multi-line strings are automatically dedented to match their closing quote's indentation level.
-* Raw strings are written with `#` (`#"foo\bar"#`), instead of backticks.
-* KDL identifiers can use UTF-8 and are more lax about symbols than SDLang.
-* KDL does not support "anonymous" nodes.
+  having to follow the other. It was not clear whether this was actually allowed in SDLang.
+* Multi-line strings are supported using `"""<newline>` and their lines are automatically
+  "dedented" to match their closing quotes' indentation level.
+* Raw strings are written with `#` (`#"foo\bar"#`), instead of backticks. This,
+  while more verbose, allows embedding of languages, especially scripting
+  languages, that use this syntax on a regular basis, without additional escaping
+  (e.g. bash and JavaScript).
+* KDL identifiers can use a wide range of UTF-8 and are much more lax about
+  valid characters than SDLang.
+* KDL does not support "anonymous" nodes. Instead, any string can be used as a
+  node name. For lists of arbitrary values, there is a convention of naming the nodes
+  simply `-`.
 * Namespaces are not supported, but `:` is a legal identifier character, and applications
   can choose to implement namespaces as they see fit.
 * KDL supports arbitrary identifiers for node names and attribute
   names, meaning you can use arbitrary strings for those: `"123" "value"=1` is
   a valid node, for example. This makes it easier to use KDL for
-  representing arbitrary key/value pairs.
+  representing arbitrary key/value pairs using child nodes.
 
 #### Have you seen that one XKCD comic about standards?
 
