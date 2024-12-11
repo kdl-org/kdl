@@ -873,7 +873,8 @@ hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
 raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline unicode-space*) '"""'
-single-line-raw-string-body := (unicode - newline - disallowed-literal-code-points)*
+single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char* | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*
+single-line-raw-string-char := unicode - newline - disallowed-literal-code-points
 multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
 
 // Numbers
