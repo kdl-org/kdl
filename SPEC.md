@@ -905,7 +905,7 @@ unicode-space := See Table (All White_Space unicode characters which are not `ne
 single-line-comment := '//' ^newline* (newline | eof)
 multi-line-comment := '/*' commented-block
 commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
-slashdash := '/-' line-space*
+slashdash := '/-' (node-space | line-space)*
 
 // Whitespace
 ws := unicode-space | multi-line-comment
