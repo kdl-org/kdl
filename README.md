@@ -126,7 +126,7 @@ entirety, but in the future, may be required to in order to be included here.
 * [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)
 * [Sublime Text](https://packagecontrol.io/packages/KDL)
 * [vim](https://github.com/imsnif/kdl.vim)
-* [neovim](https://github.com/nvim-treesitter/nvim-treesitter)
+* [neovim](https://github.com/tree-sitter-grammars/tree-sitter-kdl)
 * [Intellij IDEA](https://plugins.jetbrains.com/plugin/20136-kdl-document-language)
 
 ## Overview
