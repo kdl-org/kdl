@@ -872,7 +872,7 @@ escape := ["\\bfnrts] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
-raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline unicode-space*) '"""'
+raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline unicode-space* '"""'
 single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char* | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*
 single-line-raw-string-char := unicode - newline - disallowed-literal-code-points
 multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
