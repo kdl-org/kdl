@@ -855,7 +855,7 @@ value := type? node-space* (string | number | keyword)
 type := '(' node-space* string node-space* ')'
 
 // Strings
-string := identifier-string | quoted-string | raw-string
+string := identifier-string | quoted-string | raw-string ¶
 
 identifier-string := unambiguous-ident | signed-ident | dotted-ident
 unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - disallowed-keyword-strings
@@ -872,10 +872,10 @@ escape := ["\\bfnrts] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
-raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline unicode-space* '"""'
-single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char* | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*
+raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body '"""'
+single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char*? | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*?
 single-line-raw-string-char := unicode - newline - disallowed-literal-code-points
-multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
+multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*?
 
 // Numbers
 number := keyword-number | hex | octal | binary | decimal
@@ -927,9 +927,20 @@ Specifically:
   characters using hex values (`\u{FEFF}`), and for escaping `\` itself
   (`\\`).
 * `*` is used for "zero or more", `+` is used for "one or more", and `?` is
-  used for "zero or one".
+  used for "zero or one". Per standard regex semantics, `*` and `+` are *greedy*;
+  they match as many instances as possible without failing the match.
+* `*?` (used only in raw strings) indicates a *non-greedy* match;
+  it matches as *few* instances as possible without failing the match.
+* `¶` is a *cut point*. It always matches and consumes no characters,
+  but once matched, the parser is not allowed to backtrack past that point in the source.
+  If a parser would rewind past the cut point, it must instead fail the overall parse,
+  as if it had run out of options.
+  (This is only used with the `raw-string` production,
+  to ensure the first instance of the appropriate closing quote sequence
+  is guaranteed to be the end of the raw string,
+  rather than allowing it to potentially consume more of the document unexpectedly.)
 * `()` can be used to group matches that must be matched together.
-* `a | b` means `a or b`, whichever matches first. If multipe items are before
+* `a | b` means `a or b`, whichever matches first. If multiple items are before
   a `|`, they are a single group. `a b c | d` is equivalent to `(a b c) | d`.
 * `[]` are used for regex-style character matches, where any character between
   the brackets will be a single match. `\` is used to escape `\`, `[`, and
