@@ -436,10 +436,10 @@ Its first line _MUST_ immediately start with a [Newline](#newline)
 after its opening `"""`.
 Its final line _MUST_ contain only whitespace
 before the closing `"""`.
-All in-between lines that contain non-newline characters
+All in-between lines that contain non-newline, non-whitespace characters
 _MUST_ start with _at least_ the exact same whitespace as the final line
 (precisely matching codepoints, not merely counting characters or "size");
-they may contain additional whitesapce following this prefix. The lines in
+they may contain additional whitespace following this prefix. The lines in
 between may contain unescaped `"` (but no unescaped `"""` as this would close
 the string).
 
@@ -864,7 +864,7 @@ dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points - equals-sign
 disallowed-keyword-identifiers := 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
 
-quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline unicode-space*) '"""'
+quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline unicode-space* '"""'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
 string-character := '\' escape | [^\\"] - disallowed-literal-code-points
