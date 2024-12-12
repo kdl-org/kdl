@@ -872,10 +872,10 @@ escape := ["\\bfnrts] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
-raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline unicode-space* '"""'
-single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char* | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*
+raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body '"""'
+single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char*? | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*?
 single-line-raw-string-char := unicode - newline - disallowed-literal-code-points
-multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*
+multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*?
 
 // Numbers
 number := keyword-number | hex | octal | binary | decimal
@@ -928,6 +928,11 @@ Specifically:
   (`\\`).
 * `*` is used for "zero or more", `+` is used for "one or more", and `?` is
   used for "zero or one".
+* `*?` (used only in raw strings) indicates a *non-greedy* match.
+    It also indicates *infallibility*, with a scope of the `string` production:
+    once it successfully matches enough characters to satisfy that production
+    the first time, it is not allowed to backtrack and continue matching further,
+    even if that results in a parse failure.
 * `()` can be used to group matches that must be matched together.
 * `a | b` means `a or b`, whichever matches first. If multipe items are before
   a `|`, they are a single group. `a b c | d` is equivalent to `(a b c) | d`.
