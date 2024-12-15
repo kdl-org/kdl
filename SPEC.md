@@ -863,12 +863,12 @@ unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) -
 signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points
-disallowed-keyword-identifiers := 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
+disallowed-keyword-identifiers := 'true' | 'false' | 'null' | 'inf' | '-inf' | 'nan'
 
 quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline (unicode-space | ws-escape)* '"""'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
-string-character := ('\' ["\\bfnrts] | 'u{' hex-digit{1, 6} '}') | ws-escape | [^\\"] - disallowed-literal-code-points
+string-character := '\' (["\\bfnrts] | 'u{' hex-digit{1, 6} '}') | ws-escape | [^\\"] - disallowed-literal-code-points
 ws-escape := '\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
