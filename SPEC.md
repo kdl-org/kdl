@@ -861,7 +861,7 @@ identifier-string := unambiguous-ident | signed-ident | dotted-ident
 unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - disallowed-keyword-strings
 signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
-identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points - equals-sign
+identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points
 disallowed-keyword-identifiers := 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
 
 quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline unicode-space* '"""'
