@@ -1,5 +1,13 @@
 # KDL Changelog
 
+## 2.0.0-draft.8 (2024-12-14)
+
+* Some details have been clarified around the treatment of whitespace in
+  multiline strings.
+* `raw-string` productions have been updated to be explicitly non-greedy and
+  "fallible".
+* Some tests have been added, others adjusted, some removed, after a cleanup pass.
+
 ## 2.0.0-draft.7 (2024-12-10)
 
 * `node-space` is now allowed as whitespace after a `slashdash`, meaning line
