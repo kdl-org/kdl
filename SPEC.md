@@ -1,14 +1,15 @@
 # KDL Spec
 
-This is the semi-formal specification for KDL, including the intended data
-model and the grammar.
+This is the formal specification for KDL, including the intended data model and
+the grammar.
 
-This document describes KDL version `2.0.0-draft.8`. It was released on
-2024-12-14.
+This document describes KDL version `2.0.0`. It was released on 2024-12-16. It
+is the latest stable version of the language, and will only be edited for minor
+copyedits or major errata.
 
 ## Compatibility
 
-KDL v2 is designed such that for any given KDL document written as [KDL
+KDL 2.0 is designed such that for any given KDL document written as [KDL
 1.0](./SPEC_v1.md) or KDL 2.0, the parse will either fail completely, or, if the
 parse succeeds, the data represented by a v1 or v2 parser will be identical.
 This means that it's safe to use a fallback parsing strategy in order to support
