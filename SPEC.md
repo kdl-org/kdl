@@ -577,13 +577,14 @@ multi-line """[\n]
 
 #### Interaction with Whitespace Escapes
 
-Multi-line strings support the same mechanism for escaping whitespace
-as Quoted Strings.
-When processing a Multi-line String, implementations MUST dedent the string _after_
-resolving all whitespace escapes, but _before_ resolving other backslash escapes.
-Furthermore, a whitespace escape that attempts to escape the final line's newline
-and/or whitespace prefix is invalid since the multi-line string has to still be
-valid with the escaped whitespace removed.
+Multi-line strings support the same mechanism for escaping whitespace as Quoted
+Strings.
+
+When processing a Multi-line String, implementations MUST dedent the string
+_after_ resolving all whitespace escapes, but _before_ resolving other backslash
+escapes. Furthermore, a whitespace escape that attempts to escape the final
+line's newline and/or whitespace prefix is invalid since the multi-line string
+has to still be valid with the escaped whitespace removed.
 
 For example, the following example is illegal:
 
@@ -612,20 +613,19 @@ bar
 
 ### Raw String
 
-Both [Quoted](#quoted-string) and [Multi-Line Strings](#multi-line-string)
-have Raw String variants,
-which are identical in syntax except they do not support `\`-escapes.
-They otherwise share the same properties as far as
-literal [Newline](#newline) characters go, multi-line rules, and the requirement
-of UTF-8 representation.
+Both [Quoted](#quoted-string) and [Multi-Line Strings](#multi-line-string) have
+Raw String variants, which are identical in syntax except they do not support
+`\`-escapes. This includes line-continuation escapes (`\` + `ws` collapsing to
+nothing). They otherwise share the same properties as far as literal
+[Newline](#newline) characters go, multi-line rules, and the requirement of
+UTF-8 representation.
 
 The Raw String variants are indicated by preceding the strings's opening quotes
-with one or more `#` characters.
-The string is then closed by its normal closing quotes,
-followed by a _matching_ number of `#` characters.
-This means that the string may contain any combination of `"` and `#` characters
-other than its closing delimiter (e.g., if a raw string starts with `##"`, it can
-contain `"` or `"#`, but not `"##` or `"###`).
+with one or more `#` characters. The string is then closed by its normal closing
+quotes, followed by a _matching_ number of `#` characters. This means that the
+string may contain any combination of `"` and `#` characters other than its
+closing delimiter (e.g., if a raw string starts with `##"`, it can contain `"`
+or `"#`, but not `"##` or `"###`).
 
 Like other Strings, Raw Strings _MUST NOT_ include any of the [disallowed
 literal code-points](#disallowed-literal-code-points) as code points in their
@@ -865,15 +865,15 @@ dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points - equals-sign
 disallowed-keyword-identifiers := 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
 
-quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline unicode-space* '"""'
+quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline (unicode-space | ws-escape)* '"""'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
-string-character := '\' escape | [^\\"] - disallowed-literal-code-points
-escape := ["\\bfnrts] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
+string-character := ('\' ["\\bfnrts] | 'u{' hex-digit{1, 6} '}') | ws-escape | [^\\"] - disallowed-literal-code-points
+ws-escape := '\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
-raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body '"""'
+raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline '"""'
 single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char*? | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*?
 single-line-raw-string-char := unicode - newline - disallowed-literal-code-points
 multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*?
