@@ -1,19 +1,18 @@
 // This file deliberately contains unusual whitespace
-// The first three strings are empty, because whitespace-only lines collapse to
-// just `\n`.
+// The first two strings are empty
 node """
   	""" """
  	 \
-             
+             
  	 """ """
-                             
+                            
  """\
     \ // The next two strings contains only whitespace
     """
        
-           
+       
       \s 
     """ #"""
-      
+    
 
   """#
