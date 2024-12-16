@@ -423,7 +423,6 @@ such) are retained. For example, these strings are all semantically identical:
 Except as described in the escapes table, above, `\` *MUST NOT* precede any
 other characters in a string.
 
-
 ### Multi-line String
 
 Multi-Line Strings support multiple lines with literal, non-escaped
@@ -582,18 +581,23 @@ Strings.
 
 When processing a Multi-line String, implementations MUST dedent the string
 _after_ resolving all whitespace escapes, but _before_ resolving other backslash
-escapes. Furthermore, a whitespace escape that attempts to escape the final
-line's newline and/or whitespace prefix is invalid since the multi-line string
-has to still be valid with the escaped whitespace removed.
+escapes. This means a whitespace escape that attempts to escape the final line's
+newline and/or whitespace prefix can be invalid: if removing escaped whitespace
+places the closing `"""` on a line with non-whitespace characters, this escape
+is invalid.
 
 For example, the following example is illegal:
 
 ```kdl
-  // Equivalent to trying to write a string containing `foo\nbar\`.
   """
   foo
   bar\
   """
+
+  // equivalent to
+  """
+  foo
+  bar"""
 ```
 
 while the following example is allowed
