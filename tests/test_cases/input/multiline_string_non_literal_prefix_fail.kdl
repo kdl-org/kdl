@@ -1,0 +1,4 @@
+node """
+\s escaped prefix
+  literal prefix
+  """

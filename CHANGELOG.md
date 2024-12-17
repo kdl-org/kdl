@@ -1,52 +1,6 @@
 # KDL Changelog
 
-## 2.0.0-draft.8 (2024-12-14)
-
-* Some details have been clarified around the treatment of whitespace in
-  multiline strings.
-* `raw-string` productions have been updated to be explicitly non-greedy and
-  "fallible".
-* Some tests have been added, others adjusted, some removed, after a cleanup pass.
-
-## 2.0.0-draft.7 (2024-12-10)
-
-* `node-space` is now allowed as whitespace after a `slashdash`, meaning line
-  continuations will work now.
-* One or two consecutive double-quotes are now allowed in the bodies of
-  multi-line quoted strings, without needing to be escaped.
-* Grammar has been fixed to disallow raw strings like `#"""#`, which are now
-  properly treated as invalid multi-line raw strings (instead of the equivalent of
-  `"\""`).
-* Test suite has been updated to include a `_fail` suffix in all test cases
-  which are expected to fail.
-* A slew of additional slashdash and multi-line string compliance tests have
-  been added. Have fun. :)
-* The organization of string types in the spec prose has been updated to a
-  hopefully more helpful structure.
-
-
-## 2.0.0-draft.6 (2024-12-04)
-
-* Multiline strings, both Raw and Quoted, must now use `"""` instead of a single `"`. Using `"""` for a single-line string is a syntax error.
-* Fixed an issue with the `unicode_silly` test case.
-* Some rewordings and clarification in the spec prose.
-* Slight grammar tweak where the pre-terminator `node-space*` for `node` and `final-node` have been moved into `base-node`.
-
-
-## 2.0.0-draft.5 (2024-11-28)
-
-* Equals signs other than `=` are no longer supported in properties.
-* 128-bit integer type annotations have been added to the list of "well-known"
-  type annotations.
-* Multiline string escape rules have been tweaked significantly.
-* `\s` is now a valid escape within a string, representing a space character.
-* Slashdash (`/-`)-compatible locations and related grammar adjusted to be more
-  clear and intuitive. This includes some changes relating to whitespace,
-  including comments and newlines, which are breaking changes.
-* Various updates to test suite to reflect changes.
-
-
-## 2.0.0 (Unreleased)
+## 2.0.0 (2024-12-16)
 
 ### Grammar
 
@@ -71,6 +25,7 @@
   improvement.
 * Raw strings no longer require an `r` prefix: they are now specified by using
   `#""#`.
+* Raw string productions are now explicitly non-greedy (and "fallible").
 * Line continuations can be followed by an EOF now, instead of requiring a
   newline (or comment). `node \<EOF>` is now a legal KDL document.
 * `#` is no longer a legal identifier character.
@@ -91,7 +46,7 @@
   should be valid UTF-8 now, as was intended.
 * The last node in a child block no longer needs to be terminated with `;`,
   even if the closing `}` is on the same line, so this is now a legal node:
-  `node {foo;bar;baz}`
+  `node{foo;bar;baz}`
 * More places allow whitespace (node-spaces, specifically) now. With great
   power comes great responsibility:
   * Inside `(foo)` annotations (so, `( foo )` would be legal (`( f oo )` would
@@ -123,6 +78,10 @@
 
 ### KQL
 
+> [!INFO] Note: these are provided for convenience, but as of the 2.0.0 KDL spec release,
+> KQL itself is not finalized and should be considered a separate specification,
+> alongside the Schema spec and others.
+
 * There's now a _required_ descendant selector (`>>`), instead of using plain
   spaces for that purpose.
 * The "any sibling" selector is now `++` instead of `~`, for consistency with
@@ -131,3 +90,54 @@
 * Multi- and single-line comments are now supported, as well as line
   continuations with `\`.
 * Map operators have been removed entirely.
+
+---
+
+## 2.0.0 Draft Changelogs
+
+### 2.0.0-draft.8 (2024-12-14)
+
+* Some details have been clarified around the treatment of whitespace in
+  multiline strings.
+* `raw-string` productions have been updated to be explicitly non-greedy and
+  "fallible".
+* Some tests have been added, others adjusted, some removed, after a cleanup pass.
+
+
+### 2.0.0-draft.7 (2024-12-10)
+
+* `node-space` is now allowed as whitespace after a `slashdash`, meaning line
+  continuations will work now.
+* One or two consecutive double-quotes are now allowed in the bodies of
+  multi-line quoted strings, without needing to be escaped.
+* Grammar has been fixed to disallow raw strings like `#"""#`, which are now
+  properly treated as invalid multi-line raw strings (instead of the equivalent of
+  `"\""`).
+* Test suite has been updated to include a `_fail` suffix in all test cases
+  which are expected to fail.
+* A slew of additional slashdash and multi-line string compliance tests have
+  been added. Have fun. :)
+* The organization of string types in the spec prose has been updated to a
+  hopefully more helpful structure.
+
+
+### 2.0.0-draft.6 (2024-12-04)
+
+* Multiline strings, both Raw and Quoted, must now use `"""` instead of a single `"`. Using `"""` for a single-line string is a syntax error.
+* Fixed an issue with the `unicode_silly` test case.
+* Some rewordings and clarification in the spec prose.
+* Slight grammar tweak where the pre-terminator `node-space*` for `node` and `final-node` have been moved into `base-node`.
+
+
+### 2.0.0-draft.5 (2024-11-28)
+
+* Equals signs other than `=` are no longer supported in properties.
+* 128-bit integer type annotations have been added to the list of "well-known"
+  type annotations.
+* Multiline string escape rules have been tweaked significantly.
+* `\s` is now a valid escape within a string, representing a space character.
+* Slashdash (`/-`)-compatible locations and related grammar adjusted to be more
+  clear and intuitive. This includes some changes relating to whitespace,
+  including comments and newlines, which are breaking changes.
+* Various updates to test suite to reflect changes.
+
