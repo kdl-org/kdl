@@ -910,14 +910,14 @@ unicode-space := See Table (All White_Space unicode characters which are not `ne
 single-line-comment := '//' ^newline* (newline | eof)
 multi-line-comment := '/*' commented-block
 commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
-slashdash := '/-' (node-space | line-space)*
+slashdash := '/-' line-space*
 
 // Whitespace
 ws := unicode-space | multi-line-comment
 escline := '\\' ws* (single-line-comment | newline | eof)
 newline := See Table (All Newline White_Space)
 // Whitespace where newlines are allowed.
-line-space := newline | ws | single-line-comment
+line-space := node-space | newline | single-line-comment
 // Whitespace within nodes, where newline-ish things must be esclined.
 node-space := ws* escline ws* | ws+
 ```
