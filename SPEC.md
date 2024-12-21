@@ -926,7 +926,7 @@ line-space := node-space | newline | single-line-comment
 node-space := ws* escline ws* | ws+
 
 // Version marker
-version := '/-' unicode-space*? 'kdl-version' unicode-space*? ('1' | '2') line-space*
+version := '/-' unicode-space* 'kdl-version' unicode-space* ('1' | '2')
 ```
 
 ### Grammar language
