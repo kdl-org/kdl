@@ -828,6 +828,10 @@ They may be represented in Strings (but not Raw Strings) using [Unicode Escapes]
 * `U+FEFF`, aka Zero-width Non-breaking Space (ZWNBSP)/Byte Order Mark (BOM),
   except as the first code point in a document.
 
+### Version marker
+
+A version marker `/- kdl-version 2` (or `1`) _MAY_  be added to the beginning of a KDL document, optionally preceded by the BOM, and parsers _MAY_ use that as a hint as to which version to parse the document as.
+
 ## Full Grammar
 
 This is the full official grammar for KDL and should be considered
@@ -835,7 +839,7 @@ authoritative if something seems to disagree with the text above. The [grammar
 language syntax](#grammar-language) is defined below.
 
 ```
-document := bom? nodes
+document := bom? version? nodes
 
 // Nodes
 nodes := (line-space* node)* line-space*
@@ -920,6 +924,9 @@ newline := See Table (All Newline White_Space)
 line-space := node-space | newline | single-line-comment
 // Whitespace within nodes, where newline-ish things must be esclined.
 node-space := ws* escline ws* | ws+
+
+// Version marker
+version := '/-' unicode-space*? 'kdl-version' unicode-space*? ('1' | '2') line-space*
 ```
 
 ### Grammar language
