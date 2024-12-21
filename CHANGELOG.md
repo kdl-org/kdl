@@ -73,6 +73,8 @@
   intuitive. They can now be used in exactly three different places: before nodes,
   before entire entries, or before entire child blocks.
 * Furthermore, The ordering of slashdashed elements has been restricted such
+  that a slashdashed child block cannot go before an entry (including slashdashed
+  entries).
 * Optional version marker `/- kdl-version 2` (or `1`) as the first line in a document, optionally preceded by the BOM.
 
 ### KQL
