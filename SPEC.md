@@ -872,8 +872,8 @@ disallowed-keyword-identifiers := 'true' | 'false' | 'null' | 'inf' | '-inf' | '
 quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline (unicode-space | ws-escape)* '"""'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
-string-character := '\' (["\\bfnrts] | 'u{' hex-digit{1, 6} '}') | ws-escape | [^\\"] - disallowed-literal-code-points
-ws-escape := '\' (unicode-space | newline)+
+string-character := '\\' (["\\bfnrts] | 'u{' hex-digit{1, 6} '}') | ws-escape | [^\\"] - disallowed-literal-code-points
+ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
