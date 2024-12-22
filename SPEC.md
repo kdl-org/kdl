@@ -1,19 +1,24 @@
 # KDL Spec
 
-This is the semi-formal specification for KDL, including the intended data
-model and the grammar.
+This is the formal specification for KDL, including the intended data model and
+the grammar.
 
-This document describes KDL version `2.0.0-draft.8`. It was released on
-2024-12-14.
+This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
+is the latest stable version of the language, and will only be edited for minor
+copyedits or major errata.
 
 ## Compatibility
 
-KDL v2 is designed such that for any given KDL document written as [KDL
+KDL 2.0 is designed such that for any given KDL document written as [KDL
 1.0](./SPEC_v1.md) or KDL 2.0, the parse will either fail completely, or, if the
 parse succeeds, the data represented by a v1 or v2 parser will be identical.
 This means that it's safe to use a fallback parsing strategy in order to support
 both v1 and v2 simultaneously. For example, `node "foo"` is a valid node in both
 versions, and should be represented identically by parsers.
+
+A version marker `/- kdl-version 2` (or `1`) _MAY_ be added to the beginning of
+a KDL document, optionally preceded by the BOM, and parsers _MAY_ use that as a
+hint as to which version to parse the document as.
 
 ## Introduction
 
@@ -422,7 +427,6 @@ such) are retained. For example, these strings are all semantically identical:
 Except as described in the escapes table, above, `\` *MUST NOT* precede any
 other characters in a string.
 
-
 ### Multi-line String
 
 Multi-Line Strings support multiple lines with literal, non-escaped
@@ -576,22 +580,28 @@ multi-line """[\n]
 
 #### Interaction with Whitespace Escapes
 
-Multi-line strings support the same mechanism for escaping whitespace
-as Quoted Strings.
-When processing a Multi-line String, implementations MUST dedent the string _after_
-resolving all whitespace escapes, but _before_ resolving other backslash escapes.
-Furthermore, a whitespace escape that attempts to escape the final line's newline
-and/or whitespace prefix is invalid since the multi-line string has to still be
-valid with the escaped whitespace removed.
+Multi-line strings support the same mechanism for escaping whitespace as Quoted
+Strings.
+
+When processing a Multi-line String, implementations MUST dedent the string
+_after_ resolving all whitespace escapes, but _before_ resolving other backslash
+escapes. This means a whitespace escape that attempts to escape the final line's
+newline and/or whitespace prefix can be invalid: if removing escaped whitespace
+places the closing `"""` on a line with non-whitespace characters, this escape
+is invalid.
 
 For example, the following example is illegal:
 
 ```kdl
-  // Equivalent to trying to write a string containing `foo\nbar\`.
   """
   foo
   bar\
   """
+
+  // equivalent to
+  """
+  foo
+  bar"""
 ```
 
 while the following example is allowed
@@ -611,20 +621,19 @@ bar
 
 ### Raw String
 
-Both [Quoted](#quoted-string) and [Multi-Line Strings](#multi-line-string)
-have Raw String variants,
-which are identical in syntax except they do not support `\`-escapes.
-They otherwise share the same properties as far as
-literal [Newline](#newline) characters go, multi-line rules, and the requirement
-of UTF-8 representation.
+Both [Quoted](#quoted-string) and [Multi-Line Strings](#multi-line-string) have
+Raw String variants, which are identical in syntax except they do not support
+`\`-escapes. This includes line-continuation escapes (`\` + `ws` collapsing to
+nothing). They otherwise share the same properties as far as literal
+[Newline](#newline) characters go, multi-line rules, and the requirement of
+UTF-8 representation.
 
 The Raw String variants are indicated by preceding the strings's opening quotes
-with one or more `#` characters.
-The string is then closed by its normal closing quotes,
-followed by a _matching_ number of `#` characters.
-This means that the string may contain any combination of `"` and `#` characters
-other than its closing delimiter (e.g., if a raw string starts with `##"`, it can
-contain `"` or `"#`, but not `"##` or `"###`).
+with one or more `#` characters. The string is then closed by its normal closing
+quotes, followed by a _matching_ number of `#` characters. This means that the
+string may contain any combination of `"` and `#` characters other than its
+closing delimiter (e.g., if a raw string starts with `##"`, it can contain `"`
+or `"#`, but not `"##` or `"###`).
 
 Like other Strings, Raw Strings _MUST NOT_ include any of the [disallowed
 literal code-points](#disallowed-literal-code-points) as code points in their
@@ -737,7 +746,6 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Name                 | Code Pt |
 |----------------------|---------|
 | Character Tabulation | `U+0009`  |
-| Line Tabulation      | `U+000B`  |
 | Space                | `U+0020`  |
 | No-Break Space       | `U+00A0`  |
 | Ogham Space Mark     | `U+1680`  |
@@ -800,6 +808,7 @@ lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 | CR      | Carriage Return | `U+000D`  |
 | LF      | Line Feed       | `U+000A`  |
 | NEL     | Next Line       | `U+0085`  |
+| VT      | Vertical tab    | `U+000B`  |
 | FF      | Form Feed       | `U+000C`  |
 | LS      | Line Separator  | `U+2028`  |
 | PS      | Paragraph Separator | `U+2029` |
@@ -830,7 +839,7 @@ authoritative if something seems to disagree with the text above. The [grammar
 language syntax](#grammar-language) is defined below.
 
 ```
-document := bom? nodes
+document := bom? version? nodes
 
 // Nodes
 nodes := (line-space* node)* line-space*
@@ -861,18 +870,18 @@ identifier-string := unambiguous-ident | signed-ident | dotted-ident
 unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - disallowed-keyword-strings
 signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
-identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points - equals-sign
-disallowed-keyword-identifiers := 'true' - 'false' - 'null' - 'inf' - '-inf' - 'nan'
+identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points
+disallowed-keyword-identifiers := 'true' | 'false' | 'null' | 'inf' | '-inf' | 'nan'
 
-quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline unicode-space* '"""'
+quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline (unicode-space | ws-escape)* '"""'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
-string-character := '\' escape | [^\\"] - disallowed-literal-code-points
-escape := ["\\bfnrts] | 'u{' hex-digit{1, 6} '}' | (unicode-space | newline)+
+string-character := '\\' (["\\bfnrts] | 'u{' hex-digit{1, 6} '}') | ws-escape | [^\\"] - disallowed-literal-code-points
+ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
-raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body '"""'
+raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline unicode-space* '"""'
 single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char*? | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*?
 single-line-raw-string-char := unicode - newline - disallowed-literal-code-points
 multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*?
@@ -905,16 +914,19 @@ unicode-space := See Table (All White_Space unicode characters which are not `ne
 single-line-comment := '//' ^newline* (newline | eof)
 multi-line-comment := '/*' commented-block
 commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
-slashdash := '/-' (node-space | line-space)*
+slashdash := '/-' line-space*
 
 // Whitespace
 ws := unicode-space | multi-line-comment
 escline := '\\' ws* (single-line-comment | newline | eof)
 newline := See Table (All Newline White_Space)
 // Whitespace where newlines are allowed.
-line-space := newline | ws | single-line-comment
+line-space := node-space | newline | single-line-comment
 // Whitespace within nodes, where newline-ish things must be esclined.
 node-space := ws* escline ws* | ws+
+
+// Version marker
+version := '/-' unicode-space* 'kdl-version' unicode-space+ ('1' | '2') unicode-space* newline
 ```
 
 ### Grammar language

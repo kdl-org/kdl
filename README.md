@@ -1,16 +1,9 @@
 # The KDL Document Language
 
-> [!WARNING]  
-> The main branch of this repository shows the latest v2.0.0 draft, which is a
-> work in progress and not considered the "mainline" KDL yet. Most KDL
-> implementations in the wild are based on the [v1.0.0
-> spec](https://github.com/kdl-org/kdl/tree/1.0.0) instead, so you may want to
-> refer to that if you're using KDL today.
-
 KDL is a small, pleasant document language with XML-like node semantics that
 looks like you're invoking a bunch of CLI commands! It's meant to be used both
-as a serialization format and a configuration language, much like JSON, YAML,
-or XML. It looks like this:
+as a serialization format and a configuration language, much like JSON, YAML, or
+XML. It looks like this:
 
 ```kdl
 package {
@@ -51,27 +44,37 @@ package {
 }
 ```
 
+For more details, see the [overview below](#overview).
+
 There's a living [specification](SPEC.md), as well as various
 [implementations](#implementations). You can also check out the [FAQ](#faq) to
 answer all your burning questions!
 
-The current version of the KDL spec is `2.0.0-draft.8`.
+The current version of the KDL spec is
+[KDL 2.0.0](https://github.com/kdl-org/kdl/blob/2.0.0/SPEC.md). For legacy KDL,
+please refer to the [KDL 1.0.0
+spec](https://github.com/kdl-org/kdl/blob/2.0.0/SPEC_v1.md). All users are
+encouraged to migrate. [Migration is forward-and-backward-compatible and
+safe](https://github.com/kdl-org/kdl/blob/2.0.0/SPEC.md#compatibility), and can
+be automated.
 
-In addition to a spec for KDL itself, there are also standard specs for [a KDL
-Query Language](QUERY-SPEC.md) based on CSS selectors, and [a KDL Schema
+In addition to a spec for KDL itself, there are specifications for [a KDL Query
+Language](QUERY-SPEC.md) based on CSS selectors, and [a KDL Schema
 Language](SCHEMA-SPEC.md) loosely based on JSON Schema.
 
 The language is based on [SDLang](https://sdlang.org), with a [number of
 modifications and clarifications on its syntax and behavior](#why-not-sdlang).
+We are grateful for their work as an inspiration to ours.
 
-[Play with it in your browser!](https://kdl-play.danini.dev/)
+[Play with it in your browser (currently v1 only)!](https://kdl-play.danini.dev/)
 
 ## Design and Discussion
 
-KDL 2.0 design is still in progress. Discussions and questions about the format
-should happen over on the [discussions
-page](https://github.com/kdl-org/kdl/discussions). Feel free to jump in and give
-us your 2 cents!
+KDL 2.0.0 has been finalized, and no further changes are expected. For questions
+about KDL and discussions, please see the [discussions
+page](https://github.com/kdl-org/kdl/discussions). For minor editorial fixes or
+critical spec errata, please feel free to [file an
+issue](https://github.com/kdl-org/kdl/issues).
 
 ## Used By
 
@@ -92,26 +95,38 @@ of some examples of KDL in the wild (either v1, v2, or both):
 
 ## Implementations
 
-* Rust: [kdl-rs](https://github.com/kdl-org/kdl-rs), [knuffel](https://crates.io/crates/knuffel/) (latter includes derive macro), and [kaydle](https://github.com/Lucretiel/kaydle) (serde-based)
-* JavaScript: [kdljs](https://github.com/kdl-org/kdljs), [@virtualstate/kdl](https://github.com/virtualstate/kdl) (query only, JSX based)
-* Ruby: [kdl-rb](https://github.com/danini-the-panini/kdl-rb)
-* Dart: [kdl-dart](https://github.com/danini-the-panini/kdl-dart)
-* Java: [kdl4j](https://github.com/hkolbeck/kdl4j)
-* PHP: [kdl-php](https://github.com/kdl-org/kdl-php)
-* Python: [kdl-py](https://github.com/tabatkins/kdlpy), [cuddle](https://github.com/djmattyg007/python-cuddle), [ckdl](https://github.com/tjol/ckdl)
-* Elixir: [kuddle](https://github.com/IceDragon200/kuddle)
-* XSLT: [xml2kdl](https://github.com/Devasta/XML2KDL)
-* Haskell: [Hustle](https://github.com/fuzzypixelz/Hustle)
-* .NET: [Kadlet](https://github.com/oledfish/Kadlet)
-* C: [ckdl](https://github.com/tjol/ckdl)
-* C++: [kdlpp](https://github.com/tjol/ckdl) (part of ckdl, requires C++20)
-* OCaml: [ocaml-kdl](https://github.com/Bannerets/ocaml-kdl)
-* Nim: [kdl-nim](https://github.com/Patitotective/kdl-nim)
-* Common Lisp: [kdlcl](https://github.com/chee/kdlcl)
-* Go: [gokdl](https://github.com/lunjon/gokdl), [kdl-go](https://github.com/sblinch/kdl-go)
-* Swift: [kdl-swift](https://github.com/danini-the-panini/kdl-swift)
-* Crystal: [kdl-cr](https://github.com/danini-the-panini/kdl-cr)
-* Lua: [kdlua](https://github.com/danini-the-panini/kdlua)
+> [!INFO] There are two major versions of KDL. Different libraries may support one or the
+> other, or even provide a "hybrid" mode where both versions are attempted, since
+> there's no data ambiguity between v1 and v2 documents.
+
+| Language | Implementation | v1 | v2 | Notes |
+|---|---|---|---|---|
+| C | [ckdl](https://github.com/tjol/ckdl) | ✅ | ✅ | |
+| C#/.NET | [Kadlet](https://github.com/oledfish/Kadlet) | ✅ | ✖️ | |
+| C++ | [kdlpp](https://github.com/tjol/ckdl) | ✅ | ✅ | part of ckdl, requires C++20 |
+| Common Lisp | [kdlcl](https://github.com/chee/kdlcl) | ✅ | ✖️ | |
+| Crystal | [kdl-cr](https://github.com/danini-the-panini/kdl-cr) | ✅ | ✖️ | |
+| Dart | [kdl-dart](https://github.com/danini-the-panini/kdl-dart) | ✅ | ✖️ | |
+| Elixir | [kuddle](https://github.com/IceDragon200/kuddle) | ✅ | ✅ | |
+| Go | [gokdl](https://github.com/lunjon/gokdl) | ✅ | ✖️ | |
+| Go | [kdl-go](https://github.com/sblinch/kdl-go) | ✅ | ✖️ | |
+| Haskell | [Hustle](https://github.com/fuzzypixelz/Hustle) | ✅ | ✖️ | |
+| Java | [kdl4j](https://github.com/hkolbeck/kdl4j) | ✅ | ✖️ | |
+| JavaScript | [@bgotink/kdl](https://github.com/bgotink/kdl) | ✅ | ✅ | Format/comment-preserving parser |
+| JavaScript | [@virtualstate/kdl](https://github.com/virtualstate/kdl) | ✅ | ✖️ | query only, JSX based |
+| JavaScript | [kdljs](https://github.com/kdl-org/kdljs) | ✅ | ✖️ | |
+| Lua | [kdlua](https://github.com/danini-the-panini/kdlua) | ✅ | ✖️ | |
+| Nim | [kdl-nim](https://github.com/Patitotective/kdl-nim) | ✅ | ✖️ | |
+| OCaml | [ocaml-kdl](https://github.com/Bannerets/ocaml-kdl) | ✅ | ✖️ | |
+| PHP | [kdl-php](https://github.com/kdl-org/kdl-php) | ✅ | ✖️ | |
+| Python | [ckdl](https://github.com/tjol/ckdl) | ✅ | ✅ | |
+| Python | [cuddle](https://github.com/djmattyg007/python-cuddle) | ✅ | ✖️ | |
+| Python | [kdl-py](https://github.com/tabatkins/kdlpy) | ✅ | ✅ | |
+| Ruby | [kdl-rb](https://github.com/danini-the-panini/kdl-rb) | ✅ | ✖️ | |
+| Rust | [kdl-rs](https://github.com/kdl-org/kdl-rs) | ✅ | ✅ | Format/comment-preserving parser |
+| Rust | [knus](https://crates.io/crates/knus/) | ✅ | ✖️ | Serde-_style_ derive macros (not actual Serde) | 
+| Swift | [kdl-swift](https://github.com/danini-the-panini/kdl-swift) | ✅ | ✖️ | |
+| XSLT | [xml2kdl](https://github.com/Devasta/XML2KDL) | ✅ | ✖️ | |
 
 ## Compatibility Test Suite
 
@@ -123,11 +138,13 @@ entirety, but in the future, may be required to in order to be included here.
 
 ## Editor Support
 
-* [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)
-* [Sublime Text](https://packagecontrol.io/packages/KDL)
-* [vim](https://github.com/imsnif/kdl.vim)
-* [neovim](https://github.com/tree-sitter-grammars/tree-sitter-kdl)
 * [Intellij IDEA](https://plugins.jetbrains.com/plugin/20136-kdl-document-language)
+* [Sublime Text](https://packagecontrol.io/packages/KDL)
+* [TreeSitter](https://github.com/tree-sitter-grammars/tree-sitter-kdl) (neovim, among others)
+* [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)\* 
+* [vim](https://github.com/imsnif/kdl.vim)
+
+\* Supports KDL 2.0.0
 
 ## Overview
 
@@ -167,7 +184,7 @@ Nodes without children are terminated by a newline, a semicolon, or the end of
 a file stream:
 
 ```kdl
-node1; node2; node3;
+node1; node2; node3
 ```
 
 ### Values
@@ -175,13 +192,13 @@ node1; node2; node3;
 KDL supports 4 data types:
 
 * Strings: `unquoted`, `"hello world"`, or `#"hello world"#`
-* Numbers: `123.45`
+* Numbers: `123.45`, `0xdeadbeef`, `#inf`, `#-inf`, `#nan`
 * Booleans: `#true` and `#false`
 * Null: `#null`
 
 #### Strings
 
-It supports three different formats for string input: identifiers, quoted, and raw.
+It supports three different formats for string input: unquoted, quoted, and raw.
 
 ```kdl
 node1 this-is-a-string
@@ -234,10 +251,10 @@ other-raw ##"hello#"world"##
 
 #### Numbers
 
-There are 4 ways to represent numbers in KDL. KDL does not prescribe any
-representation for these numbers, and it's entirely up to individual
-implementations whether to represent all numbers with a single type, or to
-have different representations for different forms.
+There are 4 ways to represent numbers in KDL, plus 3 float keywords. KDL does
+not prescribe any representation for these numbers, and it's entirely up to
+individual implementations whether to represent all numbers with a single type,
+or to have different representations for different forms.
 
 KDL has regular decimal-radix numbers, with optional decimal part, as well as
 an optional exponent.
@@ -253,6 +270,13 @@ binary literals:
 my-hex 0xdeadbeef
 my-octal 0o755
 my-binary 0b10101101
+```
+
+If you're intending to represent IEEE 754 floats, there are three special
+keywords you can use:
+
+```kdl
+special-floats #inf #-inf #nan
 ```
 
 Finally, all numbers can have underscores to help readability:
