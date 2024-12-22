@@ -124,7 +124,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 | Python | [kdl-py](https://github.com/tabatkins/kdlpy) | ✅ | ✅ | |
 | Ruby | [kdl-rb](https://github.com/danini-the-panini/kdl-rb) | ✅ | ✖️ | |
 | Rust | [kdl-rs](https://github.com/kdl-org/kdl-rs) | ✅ | ✅ | Format/comment-preserving parser |
-| Rust | [knus](https://crates.io/crates/knus/) | ✅ | ✖️ | Serde-_style_ derive macros (not actual Serde) | 
+| Rust | [knus](https://crates.io/crates/knus/) | ✅ | ✖️ | Serde-_style_ derive macros (not actual Serde) |
 | Swift | [kdl-swift](https://github.com/danini-the-panini/kdl-swift) | ✅ | ✖️ | |
 | XSLT | [xml2kdl](https://github.com/Devasta/XML2KDL) | ✅ | ✖️ | |
 
@@ -141,7 +141,7 @@ entirety, but in the future, may be required to in order to be included here.
 * [Intellij IDEA](https://plugins.jetbrains.com/plugin/20136-kdl-document-language)
 * [Sublime Text](https://packagecontrol.io/packages/KDL)
 * [TreeSitter](https://github.com/tree-sitter-grammars/tree-sitter-kdl) (neovim, among others)
-* [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)\* 
+* [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)\*
 * [vim](https://github.com/imsnif/kdl.vim)
 
 \* Supports KDL 2.0.0
@@ -466,7 +466,10 @@ microsyntax for losslessly encoding JSON](JSON-IN-KDL.md).
 
 #### What about TOML?
 
-It nests very poorly. It doesn't fare well with large files.
+It nests very poorly. It doesn't fare well with large files. Also, I felt some
+discomfort [continuing to use and promote something by its
+creator](https://en.wikipedia.org/wiki/Tom_Preston-Werner#Resignation_from_GitHub).
+
 
 #### What about XML?
 
