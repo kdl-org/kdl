@@ -742,7 +742,6 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Name                 | Code Pt |
 |----------------------|---------|
 | Character Tabulation | `U+0009`  |
-| Line Tabulation      | `U+000B`  |
 | Space                | `U+0020`  |
 | No-Break Space       | `U+00A0`  |
 | Ogham Space Mark     | `U+1680`  |
@@ -805,6 +804,7 @@ lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
 | CR      | Carriage Return | `U+000D`  |
 | LF      | Line Feed       | `U+000A`  |
 | NEL     | Next Line       | `U+0085`  |
+| VT      | Vertical tab    | `U+000B`  |
 | FF      | Form Feed       | `U+000C`  |
 | LS      | Line Separator  | `U+2028`  |
 | PS      | Paragraph Separator | `U+2029` |
