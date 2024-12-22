@@ -468,19 +468,19 @@ can be nested.
 ### Newline
 
 The following characters [should be treated as new
-lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
+lines](https://www.unicode.org/versions/Unicode16.0.0/core-spec/chapter-5/#G41643):
 
 | Acronym | Name            | Code Pt |
 |---------|-----------------|---------|
+| CRLF    | Carriage Return and Line Feed | `U+000D` + `U+000A` |
 | CR      | Carriage Return | `U+000D`  |
 | LF      | Line Feed       | `U+000A`  |
-| CRLF    | Carriage Return and Line Feed | `U+000D` + `U+000A` |
 | NEL     | Next Line       | `U+0085`  |
 | FF      | Form Feed       | `U+000C`  |
 | LS      | Line Separator  | `U+2028`  |
 | PS      | Paragraph Separator | `U+2029` |
 
-Note that for the purpose of new lines, CRLF is considered _a single newline_.
+Note that for the purpose of new lines, CRLF is considered _a single newline_. `VT` `Vertical tab` `U+000B` was mistakenly excluded, but the v1 spec if frozen, so it's left unchanged.
 
 ## Full Grammar
 

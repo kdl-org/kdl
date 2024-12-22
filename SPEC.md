@@ -800,7 +800,7 @@ comments (other than other slashdashes), before the element that it comments out
 ### Newline
 
 The following character sequences [should be treated as new
-lines](https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf):
+lines](https://www.unicode.org/versions/Unicode16.0.0/core-spec/chapter-5/#G41643):
 
 | Acronym | Name            | Code Pt |
 |---------|-----------------|---------|
