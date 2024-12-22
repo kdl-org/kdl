@@ -50,10 +50,13 @@ There's a living [specification](SPEC.md), as well as various
 [implementations](#implementations). You can also check out the [FAQ](#faq) to
 answer all your burning questions!
 
-The current version of the KDL spec is `2.0.0`. For legacy KDL, please refer to
-the [KDL 1.0 spec](./SPEC_v1.md). All users are encouraged to migrate.
-[Migration is forward-and-backward-compatible and
-safe](./SPEC.md#compatibility), and can be automated.
+The current version of the KDL spec is
+[KDL 2.0.0](https://github.com/kdl-org/kdl/blob/2.0.0/SPEC.md). For legacy KDL,
+please refer to the [KDL 1.0.0
+spec](https://github.com/kdl-org/kdl/blob/2.0.0/SPEC_v1.md). All users are
+encouraged to migrate. [Migration is forward-and-backward-compatible and
+safe](https://github.com/kdl-org/kdl/blob/2.0.0/SPEC.md#compatibility), and can
+be automated.
 
 In addition to a spec for KDL itself, there are specifications for [a KDL Query
 Language](QUERY-SPEC.md) based on CSS selectors, and [a KDL Schema
@@ -109,7 +112,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 | Go | [kdl-go](https://github.com/sblinch/kdl-go) | ✅ | ✖️ | |
 | Haskell | [Hustle](https://github.com/fuzzypixelz/Hustle) | ✅ | ✖️ | |
 | Java | [kdl4j](https://github.com/hkolbeck/kdl4j) | ✅ | ✖️ | |
-| JavaScript | [@bgotink/kdl](https://github.com/bgotink/kdl) | ✅* | ✅ | Format/comment-preserving parser |
+| JavaScript | [@bgotink/kdl](https://github.com/bgotink/kdl) | ✅ | ✅ | Format/comment-preserving parser |
 | JavaScript | [@virtualstate/kdl](https://github.com/virtualstate/kdl) | ✅ | ✖️ | query only, JSX based |
 | JavaScript | [kdljs](https://github.com/kdl-org/kdljs) | ✅ | ✖️ | |
 | Lua | [kdlua](https://github.com/danini-the-panini/kdlua) | ✅ | ✖️ | |
@@ -120,12 +123,10 @@ of some examples of KDL in the wild (either v1, v2, or both):
 | Python | [cuddle](https://github.com/djmattyg007/python-cuddle) | ✅ | ✖️ | |
 | Python | [kdl-py](https://github.com/tabatkins/kdlpy) | ✅ | ✅ | |
 | Ruby | [kdl-rb](https://github.com/danini-the-panini/kdl-rb) | ✅ | ✖️ | |
-| Rust | [kdl-rs](https://github.com/kdl-org/kdl-rs) | ✅* | ✅ | Format/comment-preserving parser |
-| Rust | [knuffel](https://crates.io/crates/knuffel/) | ✅ | ✖️ | Serde-_style_ derive macros (not actual Serde) | 
+| Rust | [kdl-rs](https://github.com/kdl-org/kdl-rs) | ✅ | ✅ | Format/comment-preserving parser |
+| Rust | [knus](https://crates.io/crates/knus/) | ✅ | ✖️ | Serde-_style_ derive macros (not actual Serde) | 
 | Swift | [kdl-swift](https://github.com/danini-the-panini/kdl-swift) | ✅ | ✖️ | |
 | XSLT | [xml2kdl](https://github.com/Devasta/XML2KDL) | ✅ | ✖️ | |
-
-\* Supported by earlier library version
 
 ## Compatibility Test Suite
 
@@ -140,8 +141,10 @@ entirety, but in the future, may be required to in order to be included here.
 * [Intellij IDEA](https://plugins.jetbrains.com/plugin/20136-kdl-document-language)
 * [Sublime Text](https://packagecontrol.io/packages/KDL)
 * [TreeSitter](https://github.com/tree-sitter-grammars/tree-sitter-kdl) (neovim, among others)
-* [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)
+* [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)\* 
 * [vim](https://github.com/imsnif/kdl.vim)
+
+\* Supports KDL 2.0.0
 
 ## Overview
 
@@ -181,7 +184,7 @@ Nodes without children are terminated by a newline, a semicolon, or the end of
 a file stream:
 
 ```kdl
-node1; node2; node3;
+node1; node2; node3
 ```
 
 ### Values
@@ -189,13 +192,13 @@ node1; node2; node3;
 KDL supports 4 data types:
 
 * Strings: `unquoted`, `"hello world"`, or `#"hello world"#`
-* Numbers: `123.45`
+* Numbers: `123.45`, `0xdeadbeef`, `#inf`, `#-inf`, `#nan`
 * Booleans: `#true` and `#false`
 * Null: `#null`
 
 #### Strings
 
-It supports three different formats for string input: identifiers, quoted, and raw.
+It supports three different formats for string input: unquoted, quoted, and raw.
 
 ```kdl
 node1 this-is-a-string
@@ -248,10 +251,10 @@ other-raw ##"hello#"world"##
 
 #### Numbers
 
-There are 4 ways to represent numbers in KDL. KDL does not prescribe any
-representation for these numbers, and it's entirely up to individual
-implementations whether to represent all numbers with a single type, or to
-have different representations for different forms.
+There are 4 ways to represent numbers in KDL, plus 3 float keywords. KDL does
+not prescribe any representation for these numbers, and it's entirely up to
+individual implementations whether to represent all numbers with a single type,
+or to have different representations for different forms.
 
 KDL has regular decimal-radix numbers, with optional decimal part, as well as
 an optional exponent.
@@ -267,6 +270,13 @@ binary literals:
 my-hex 0xdeadbeef
 my-octal 0o755
 my-binary 0b10101101
+```
+
+If you're intending to represent IEEE 754 floats, there are three special
+keywords you can use:
+
+```kdl
+special-floats #inf #-inf #nan
 ```
 
 Finally, all numbers can have underscores to help readability:

@@ -3,7 +3,7 @@
 This is the formal specification for KDL, including the intended data model and
 the grammar.
 
-This document describes KDL version `2.0.0`. It was released on 2024-12-16. It
+This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
 is the latest stable version of the language, and will only be edited for minor
 copyedits or major errata.
 
@@ -15,6 +15,10 @@ parse succeeds, the data represented by a v1 or v2 parser will be identical.
 This means that it's safe to use a fallback parsing strategy in order to support
 both v1 and v2 simultaneously. For example, `node "foo"` is a valid node in both
 versions, and should be represented identically by parsers.
+
+A version marker `/- kdl-version 2` (or `1`) _MAY_ be added to the beginning of
+a KDL document, optionally preceded by the BOM, and parsers _MAY_ use that as a
+hint as to which version to parse the document as.
 
 ## Introduction
 
@@ -827,10 +831,6 @@ They may be represented in Strings (but not Raw Strings) using [Unicode Escapes]
   characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
 * `U+FEFF`, aka Zero-width Non-breaking Space (ZWNBSP)/Byte Order Mark (BOM),
   except as the first code point in a document.
-
-### Version marker
-
-A version marker `/- kdl-version 2` (or `1`) _MAY_  be added to the beginning of a KDL document, optionally preceded by the BOM, and parsers _MAY_ use that as a hint as to which version to parse the document as.
 
 ## Full Grammar
 

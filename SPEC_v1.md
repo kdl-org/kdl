@@ -28,6 +28,10 @@ This means that it's safe to use a fallback parsing strategy in order to support
 both v1 and v2 simultaneously. For example, `node "foo"` is a valid node in both
 versions, and should be represented identically by parsers.
 
+A version marker `/- kdl-version 1` (or `2`) _MAY_ be added to the beginning of
+a KDL document, optionally preceded by the BOM, and parsers _MAY_ use that as a
+hint as to which version to parse the document as.
+
 ## Introduction
 
 KDL is a node-oriented document language. Its niche and purpose overlaps with
