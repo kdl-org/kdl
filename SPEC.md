@@ -819,7 +819,8 @@ considered _a single newline_.
 ### Disallowed Literal Code Points
 
 The following code points may not appear literally anywhere in the document.
-They may be represented in Strings (but not Raw Strings) using [Unicode Escapes](#escapes) (`\u{...}`).
+They may be represented in Strings (but not Raw Strings) using [Unicode Escapes](#escapes) (`\u{...}`,
+except for non Unicode Scalar Value, which can't be represented even as escapes).
 
 * The codepoints `U+0000-0008` or the codepoints `U+000E-001F`  (various
   control characters).
@@ -876,9 +877,13 @@ disallowed-keyword-identifiers := 'true' | 'false' | 'null' | 'inf' | '-inf' | '
 quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline (unicode-space | ws-escape)* '"""'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
-string-character := '\\' (["\\bfnrts] | 'u{' hex-digit{1, 6} '}') | ws-escape | [^\\"] - disallowed-literal-code-points
+string-character := '\\' (["\\bfnrts] | 'u{' hex-unicode '}') | ws-escape | [^\\"] - disallowed-literal-code-points
 ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
+hex-unicode := hex-digit{1, 6} - surrogates
+surrogates := [dD][8-9a-fA-F]hex-digit{2}
+// U+D800-DFFF: D  8         00
+//              D  F         FF
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
 raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline unicode-space* '"""'
