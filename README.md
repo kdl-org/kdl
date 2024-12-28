@@ -117,7 +117,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 | JavaScript | [kdljs](https://github.com/kdl-org/kdljs) | ✅ | ✖️ | |
 | Lua | [kdlua](https://github.com/danini-the-panini/kdlua) | ✅ | ✖️ | |
 | Nim | [kdl-nim](https://github.com/Patitotective/kdl-nim) | ✅ | ✖️ | |
-| OCaml | [ocaml-kdl](https://github.com/Bannerets/ocaml-kdl) | ✅ | ✖️ | |
+| OCaml | [ocaml-kdl](https://github.com/eilvelia/ocaml-kdl) | ✅ | ✅ | |
 | PHP | [kdl-php](https://github.com/kdl-org/kdl-php) | ✅ | ✖️ | |
 | Python | [ckdl](https://github.com/tjol/ckdl) | ✅ | ✅ | |
 | Python | [cuddle](https://github.com/djmattyg007/python-cuddle) | ✅ | ✖️ | |
