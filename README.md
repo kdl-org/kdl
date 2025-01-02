@@ -106,7 +106,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 | C++ | [kdlpp](https://github.com/tjol/ckdl) | ✅ | ✅ | part of ckdl, requires C++20 |
 | Common Lisp | [kdlcl](https://github.com/chee/kdlcl) | ✅ | ✖️ | |
 | Crystal | [kdl-cr](https://github.com/danini-the-panini/kdl-cr) | ✅ | ✖️ | |
-| Dart | [kdl-dart](https://github.com/danini-the-panini/kdl-dart) | ✅ | ✖️ | |
+| Dart | [kdl-dart](https://github.com/danini-the-panini/kdl-dart) | ✅ | ✅ | |
 | Elixir | [kuddle](https://github.com/IceDragon200/kuddle) | ✅ | ✅ | |
 | Go | [gokdl](https://github.com/lunjon/gokdl) | ✅ | ✖️ | |
 | Go | [kdl-go](https://github.com/sblinch/kdl-go) | ✅ | ✖️ | |
