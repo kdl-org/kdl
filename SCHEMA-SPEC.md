@@ -313,10 +313,12 @@ and property names when the `node-names` or `prop-names` options are activated.
     * `i16`: 16-bit signed integer
     * `i32`: 32-bit signed integer
     * `i64`: 64-bit signed integer
+    * `i128`: 128-bit signed integer
     * `u8`: 8-bit unsigned integer
     * `u16`: 16-bit unsigned integer
     * `u32`: 32-bit unsigned integer
     * `u64`: 64-bit unsigned integer
+    * `u128`: 128-bit unsigned integer
     * `isize`: Platform-dependent signed integer
     * `usize`: Platform-dependent unsigned integer
     * `f32`: IEEE 754 single (32-bit) precision floating point number
