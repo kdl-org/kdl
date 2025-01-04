@@ -1,3 +1,35 @@
+---
+title: "KDL 2.0.0"
+abbrev: "KDL2"
+docname: draft-marchan-kdl2-latest
+category: info
+
+ipr: trust200902
+area: General
+#workgroup: TODO Working Group
+keyword: Internet-Draft
+
+stand_alone: yes
+smart_quotes: no
+pi: [toc, sortrefs, symrefs]
+
+author:
+ -
+    ins: H. Tschofenig
+    name: Kat Marchán
+    organization: Microsoft
+
+normative:
+
+informative:
+
+
+--- abstract
+
+TODO Abstract
+
+
+--- middle
 # KDL Spec
 
 This is the formal specification for KDL, including the intended data model and
@@ -611,7 +643,7 @@ while the following example is allowed
 bar
   baz
   \   """
-  
+
   // equivalent to
   """
   foo bar
@@ -793,7 +825,7 @@ annotations, if present:
 * A [Children Block](#children-block): the entire block, including all
   children within, is treated as Whitespace. Only other children blocks, whether
   slashdashed or not, may follow a slashdashed children block.
-  
+
 A slashdash may be be followed by any amount of whitespace, including newlines and
 comments (other than other slashdashes), before the element that it comments out.
 
