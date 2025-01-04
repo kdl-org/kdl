@@ -1,13 +1,19 @@
 ---
-title: "KDL 2.0.0"
-abbrev: "KDL2"
+title: "The KDL Document Language"
+abbrev: "KDL"
 docname: draft-marchan-kdl2-latest
-category: info
+submissionType: independent
+category: exp
 
 ipr: trust200902
 area: General
-#workgroup: TODO Working Group
-keyword: Internet-Draft
+venue:
+  github: kdl-org/kdl
+  home: https://kdl.dev/
+workgroup: KDL Community
+keyword:
+  - Document-Language
+  - Configuration
 
 stand_alone: yes
 smart_quotes: no
@@ -15,7 +21,6 @@ pi: [toc, sortrefs, symrefs]
 
 author:
  -
-    ins: H. Tschofenig
     name: Kat Marchán
     organization: Microsoft
 
@@ -26,12 +31,6 @@ informative:
 
 --- abstract
 
-TODO Abstract
-
-
---- middle
-# KDL Spec
-
 This is the formal specification for KDL, including the intended data model and
 the grammar.
 
@@ -39,7 +38,10 @@ This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
 is the latest stable version of the language, and will only be edited for minor
 copyedits or major errata.
 
-## Compatibility
+
+--- middle
+
+# Compatibility
 
 KDL 2.0 is designed such that for any given KDL document written as [KDL
 1.0](./SPEC_v1.md) or KDL 2.0, the parse will either fail completely, or, if the
@@ -52,7 +54,7 @@ A version marker `/- kdl-version 2` (or `1`) _MAY_ be added to the beginning of
 a KDL document, optionally preceded by the BOM, and parsers _MAY_ use that as a
 hint as to which version to parse the document as.
 
-## Introduction
+# Introduction
 
 KDL is a node-oriented document language. Its niche and purpose overlaps with
 XML, and as do many of its semantics. You can use KDL both as a configuration
@@ -71,9 +73,9 @@ the directions if the data stream were only ASCII text. They do not refer
 to the writing direction of text, which can flow in either direction,
 depending on the characters used.
 
-## Components
+# Components
 
-### Document
+## Document
 
 The toplevel concept of KDL is a Document. A Document is composed of zero or
 more [Nodes](#node), separated by newlines and whitespace, and eventually
@@ -82,18 +84,18 @@ terminated by an EOF.
 All KDL documents should be UTF-8 encoded and conform to the specifications in
 this document.
 
-#### Example
+### Example
 
 The following is a document composed of two toplevel nodes:
 
-```kdl
+~~~kdl
 foo {
     bar
 }
 baz
-```
+~~~
 
-### Node
+## Node
 
 Being a node-oriented language means that the real core component of any KDL
 document is the "node". Every node must have a name, which must be a
@@ -131,17 +133,17 @@ it act as plain whitespace, even if it spreads across multiple lines.
 Finally, a node is terminated by either a [Newline](#newline), a semicolon
 (`;`), the end of a child block (`}`) or the end of the file/stream (an `EOF`).
 
-#### Example
+### Example
 
-```kdl
+~~~kdl
 // `foo` will have an Argument value list like `[1, 3]`.
 foo 1 key=val 3 {
     bar
     (role)baz 1 2
 }
-```
+~~~
 
-### Line Continuation
+## Line Continuation
 
 Line continuations allow [Nodes](#node) to be spread across multiple lines.
 
@@ -152,14 +154,14 @@ part of single-line comments).
 
 Following a line continuation, processing of a Node can continue as usual.
 
-#### Example
+### Example
 
-```kdl
+~~~kdl
 my-node 1 2 \  // comments are ok after \
         3 4    // This is the actual end of the Node.
-```
+~~~
 
-### Property
+## Property
 
 A Property is a key/value pair attached to a [Node](#node). A Property is
 composed of a [String](#string), followed immediately by an equals sign (`=`, `U+003D`),
@@ -168,9 +170,9 @@ and then a [Value](#value).
 Properties should be interpreted left-to-right, with rightmost properties with
 identical names overriding earlier properties. That is:
 
-```kdl
+~~~kdl
 node a=1 a=2
-```
+~~~
 
 In this example, the node's `a` value must be `2`, not `1`.
 
@@ -181,10 +183,10 @@ still be spec-compliant.
 Properties _MAY_ be prefixed with `/-` to "comment out" the entire token and
 make it act as plain whitespace, even if it spreads across multiple lines.
 
-### Argument
+## Argument
 
 An Argument is a bare [Value](#value) attached to a [Node](#node), with no
-associated key. It shares the same space as [Properties](#properties), and may be interleaved with them.
+associated key. It shares the same space as [Properties](#property), and may be interleaved with them.
 
 A Node may have any number of Arguments, which should be evaluated left to
 right. KDL implementations _MUST_ preserve the order of Arguments relative to
@@ -193,13 +195,13 @@ each other (not counting Properties).
 Arguments _MAY_ be prefixed with `/-` to "comment out" the entire token and
 make it act as plain whitespace, even if it spreads across multiple lines.
 
-#### Example
+### Example
 
-```kdl
+~~~kdl
 my-node 1 2 3 a b c
-```
+~~~
 
-### Children Block
+## Children Block
 
 A children block is a block of [Nodes](#node), surrounded by `{` and `}`. They
 are an optional part of nodes, and create a hierarchy of KDL nodes.
@@ -208,18 +210,18 @@ Regular node termination rules apply, which means multiple nodes can be
 included in a single-line children block, as long as they're all terminated by
 `;`.
 
-#### Example
+### Example
 
-```kdl
+~~~kdl
 parent {
     child1
     child2
 }
 
 parent { child1; child2; }
-```
+~~~
 
-### Value
+## Value
 
 A value is either: a [String](#string), a [Number](#number), a
 [Boolean](#boolean), or [Null](#null).
@@ -231,7 +233,7 @@ Values _MUST_ be either [Arguments](#argument) or values of
 Values (both as arguments and in properties) _MAY_ be prefixed by a single
 [Type Annotation](#type-annotation).
 
-### Type Annotation
+## Type Annotation
 
 A type annotation is a prefix to any [Node Name](#node) or [Value](#value) that
 includes a _suggestion_ of what type the value is _intended_ to be treated as,
@@ -249,7 +251,7 @@ about how to interpret a value.
 Additionally, the following type annotations MAY be recognized by KDL parsers
 and, if used, SHOULD interpret these types as follows:
 
-#### Reserved Type Annotations for Numbers Without Decimals:
+### Reserved Type Annotations for Numbers Without Decimals:
 
 Signed integers of various sizes (the number is the bit size):
 
@@ -272,7 +274,7 @@ Platform-dependent integer types, both signed and unsigned:
 * `isize`
 * `usize`
 
-#### Reserved Type Annotations for Numbers With Decimals:
+### Reserved Type Annotations for Numbers With Decimals:
 
 IEEE 754 floating point numbers, both single (32) and double (64) precision:
 
@@ -284,7 +286,7 @@ IEEE 754-2008 decimal floating point numbers
 * `decimal64`
 * `decimal128`
 
-#### Reserved Type Annotations for Strings:
+### Reserved Type Annotations for Strings:
 
 * `date-time`: ISO8601 date/time format.
 * `time`: "Time" section of ISO8601.
@@ -311,16 +313,16 @@ IEEE 754-2008 decimal floating point numbers
 * `regex`: Regular expression. Specific patterns may be implementation-dependent.
 * `base64`: A Base64-encoded string, denoting arbitrary binary data.
 
-#### Examples
+### Examples
 
-```kdl
+~~~kdl
 node (u8)123
 node prop=(regex).*
 (published)date "1970-01-01"
 (contributor)person name="Foo McBar"
-```
+~~~
 
-### String
+## String
 
 Strings in KDL represent textual UTF-8 [Values](#value). A String is either an
 [Identifier String](#identifier-string) (like `foo`), a
@@ -345,7 +347,7 @@ Strings _MUST NOT_ include the code points for
 Quoted and Multi-Line Strings may include these code points as _values_
 by representing them with their corresponding `\u{...}` escape.
 
-### Identifier String
+## Identifier String
 
 An Identifier String (sometimes referred to as just an "identifier") is
 composed of any [Unicode Scalar
@@ -366,7 +368,7 @@ Identifiers that match these patterns _MUST_ be treated as a syntax error; such
 values can only be written as quoted or raw strings. The precise details of the
 identifier syntax is specified in the [Full Grammar](#full-grammar) below.
 
-#### Non-initial characters
+### Non-initial characters
 
 The following characters cannot be the first character in an
 [Identifier String](#identifier-string):
@@ -386,7 +388,7 @@ characters:
 This allows identifiers to look like `--this` or `.md`, and removes the
 ambiguity of having an identifier look like a number.
 
-#### Non-identifier characters
+### Non-identifier characters
 
 The following characters cannot be used anywhere in a [Identifier String](#identifier-string):
 
@@ -395,7 +397,7 @@ The following characters cannot be used anywhere in a [Identifier String](#ident
 * Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
   documents.
 
-### Quoted String
+## Quoted String
 
 A Quoted String is delimited by `"` on either side of any number of literal
 string characters except unescaped `"` and `\`.
@@ -415,7 +417,7 @@ points in their body.
 Quoted Strings have a [Raw String](#raw-string) variant,
 which disallows escapes.
 
-#### Escapes
+### Escapes
 
 In addition to literal code points, a number of "escapes" are supported in Quoted Strings.
 "Escapes" are the character `\` followed by another character, and are
@@ -434,7 +436,7 @@ interpreted as described in the following table:
 | Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, as long as it represents a [Unicode Scalar Value](https://unicode.org/glossary/#unicode_scalar_value) |
 | Whitespace Escape             | See below | N/A   |
 
-##### Escaped Whitespace
+#### Escaped Whitespace
 
 In addition to escaping individual characters, `\` can also escape whitespace.
 When a `\` is followed by one or more literal whitespace characters, the `\`
@@ -445,7 +447,7 @@ and [newlines](#newline) for how whitespace is defined.
 Note that only literal whitespace is escaped; whitespace escapes (`\n` and
 such) are retained. For example, these strings are all semantically identical:
 
-```kdl
+~~~kdl
 "Hello\       \nWorld"
 
     "Hello\n\
@@ -457,14 +459,14 @@ such) are retained. For example, these strings are all semantically identical:
   Hello
   World
   """
-```
+~~~
 
-##### Invalid escapes
+#### Invalid escapes
 
 Except as described in the escapes table, above, `\` *MUST NOT* precede any
 other characters in a string.
 
-### Multi-line String
+## Multi-line String
 
 Multi-Line Strings support multiple lines with literal, non-escaped
 Newlines. They must use a special multi-line syntax, and they automatically
@@ -497,7 +499,7 @@ Multi-line Strings that do not immediately start with a Newline and whose final
 also means that `"""` may not be used for a single-line String (e.g.
 `"""foo"""`).
 
-#### Newline Normalization
+### Newline Normalization
 
 Literal Newline sequences in Multi-line Strings must be normalized to a single
 `U+000A` (`LF`) during deserialization. This means, for example, that `CR LF`
@@ -506,39 +508,39 @@ becomes a single `LF` during parsing.
 This normalization does not apply to non-literal Newlines entered using escape
 sequences. That is:
 
-```kdl
+~~~kdl
 multi-line """
     \r\n[CRLF]
     foo[CRLF]
     """
-```
+~~~
 
 becomes:
 
-```kdl
+~~~kdl
 single-line "\r\n\nfoo"
-```
+~~~
 
 For clarity: this normalization applies to each individual Newline sequence.
 That is, the literal sequence `CRLF CRLF` becomes `LF LF`, not `LF`.
 
-#### Example
+### Example
 
-```kdl
+~~~kdl
 multi-line """
         foo
     This is the base indentation
             bar
     """
-```
+~~~
 
 This example's string value will be:
 
-```
+~~~
     foo
 This is the base indentation
         bar
-```
+~~~
 
 which is equivalent to `"    foo\nThis is the base indentation\n        bar"`
 when written as a single-line string.
@@ -548,21 +550,21 @@ when written as a single-line string.
 If the last line wasn't indented as far,
 it won't dedent the rest of the lines as much:
 
-```kdl
+~~~kdl
 multi-line """
         foo
     This is no longer on the left edge
             bar
   """
-```
+~~~
 
 This example's string value will be:
 
-```
+~~~
       foo
   This is no longer on the left edge
           bar
-```
+~~~
 
 Equivalent to `"      foo\n  This is no longer on the left edge\n          bar"`.
 
@@ -570,21 +572,21 @@ Equivalent to `"      foo\n  This is no longer on the left edge\n          bar"`
 
 Empty lines can contain any whitespace, or none at all, and will be reflected as empty in the value:
 
-```kdl
+~~~kdl
 multi-line """
     Indented a bit
 
     A second indented paragraph.
     """
-```
+~~~
 
 This example's string value will be:
 
-```
+~~~
 Indented a bit.
 
 A second indented paragraph.
-```
+~~~
 
 Equivalent to `"Indented a bit.\n\nA second indented paragraph."`
 
@@ -592,30 +594,30 @@ Equivalent to `"Indented a bit.\n\nA second indented paragraph."`
 
 The following yield **syntax errors**:
 
-```kdl
+~~~kdl
 multi-line """can't be single line"""
-```
+~~~
 
-```kdl
+~~~kdl
 multi-line """
   closing quote with non-whitespace prefix"""
-```
+~~~
 
-```kdl
+~~~kdl
 multi-line """stuff
   """
-```
+~~~
 
-```kdl
+~~~kdl
 // Every line must share the exact same prefix as the closing line.
 multi-line """[\n]
 [tab]a[\n]
 [space][space]b[\n]
 [space][tab][\n]
 [tab]"""
-```
+~~~
 
-#### Interaction with Whitespace Escapes
+### Interaction with Whitespace Escapes
 
 Multi-line strings support the same mechanism for escaping whitespace as Quoted
 Strings.
@@ -629,7 +631,7 @@ is invalid.
 
 For example, the following example is illegal:
 
-```kdl
+~~~kdl
   """
   foo
   bar\
@@ -639,10 +641,10 @@ For example, the following example is illegal:
   """
   foo
   bar"""
-```
+~~~
 
 while the following example is allowed
-```kdl
+~~~kdl
   """
   foo \
 bar
@@ -654,9 +656,9 @@ bar
   foo bar
   baz
   """
-```
+~~~
 
-### Raw String
+## Raw String
 
 Both [Quoted](#quoted-string) and [Multi-Line Strings](#multi-line-string) have
 Raw String variants, which are identical in syntax except they do not support
@@ -677,28 +679,28 @@ literal code-points](#disallowed-literal-code-points) as code points in their
 body. Unlike with Quoted Strings, these cannot simply be escaped, and are thus
 unrepresentable when using Raw Strings.
 
-#### Example
+### Example
 
-```kdl
+~~~kdl
 just-escapes #"\n will be literal"#
-```
+~~~
 
 The string contains the literal characters `\n will be literal`.
 
-```kdl
+~~~kdl
 quotes-and-escapes ##"hello\n\r\asd"#world"##
-```
+~~~
 
 The string contains the literal characters `hello\n\r\asd"#world`
 
-```kdl
+~~~kdl
 raw-multi-line #"""
     Here's a """
         multiline string
         """
     without escapes.
     """#
-```
+~~~
 
 The string contains the value
 
@@ -711,7 +713,7 @@ without escapes.
 
 or equivalently, `"Here's a \"\"\"\n    multiline string\n    \"\"\"\nwithout escapes."` as a Quoted String.
 
-### Number
+## Number
 
 Numbers in KDL represent numerical [Values](#value). There is no logical distinction in KDL
 between real numbers, integers, and floating point numbers. It's up to
@@ -734,7 +736,7 @@ numbers without an integer digit (such as `.1`) are illegal.
 They must be written with at least one integer digit, like `0.1`.
 (These patterns are also disallowed from [Identifier Strings](#identifier-string), to avoid confusion.)
 
-#### Keyword Numbers
+### Keyword Numbers
 
 There are three special "keyword" numbers included in KDL to accomodate the
 widespread use of [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floats:
@@ -751,31 +753,31 @@ The existence of these keywords does not imply that any numbers be represented
 as IEEE 754 floats. These are simply for clarity and convenience for any
 implementation that chooses to represent their numbers in this way.
 
-### Boolean
+## Boolean
 
 A boolean [Value](#value) is either the symbol `#true` or `#false`. These
 _SHOULD_ be represented by implementation as boolean logical values, or some
 approximation thereof.
 
-#### Example
+### Example
 
-```kdl
+~~~kdl
 my-node #true value=#false
-```
+~~~
 
-### Null
+## Null
 
 The symbol `#null` represents a null [Value](#value). It's up to the
 implementation to decide how to represent this, but it generally signals the
 "absence" of a value.
 
-#### Example
+### Example
 
-```kdl
+~~~kdl
 my-node #null key=#null
-```
+~~~
 
-### Whitespace
+## Whitespace
 
 The following characters should be treated as non-[Newline](#newline) [white
 space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
@@ -801,19 +803,19 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 | Medium Mathematical Space | `U+205F`  |
 | Ideographic Space    | `U+3000`  |
 
-#### Single-line comments
+### Single-line comments
 
 Any text after `//`, until the next literal [Newline](#newline) is "commented
 out", and is considered to be [Whitespace](#whitespace).
 
-#### Multi-line comments
+### Multi-line comments
 
 In addition to single-line comments using `//`, comments can also be started
 with `/*` and ended with `*/`. These comments can span multiple lines. They
 are allowed in all positions where [Whitespace](#whitespace) is allowed and
 can be nested.
 
-#### Slashdash comments
+### Slashdash comments
 
 Finally, a special kind of comment called a "slashdash", denoted by `/-`, can
 be used to comment out entire _components_ of a KDL document logically, and
@@ -834,7 +836,7 @@ annotations, if present:
 A slashdash may be be followed by any amount of whitespace, including newlines and
 comments (other than other slashdashes), before the element that it comments out.
 
-### Newline
+## Newline
 
 The following character sequences [should be treated as new
 lines](https://www.unicode.org/versions/Unicode16.0.0/core-spec/chapter-5/#G41643):
@@ -853,7 +855,7 @@ lines](https://www.unicode.org/versions/Unicode16.0.0/core-spec/chapter-5/#G4164
 Note that for the purpose of new lines, the specific sequence `CRLF` is
 considered _a single newline_.
 
-### Disallowed Literal Code Points
+## Disallowed Literal Code Points
 
 The following code points may not appear literally anywhere in the document.
 They may be represented in Strings (but not Raw Strings) using [Unicode Escapes](#escapes) (`\u{...}`,
@@ -870,13 +872,13 @@ except for non Unicode Scalar Value, which can't be represented even as escapes)
 * `U+FEFF`, aka Zero-width Non-breaking Space (ZWNBSP)/Byte Order Mark (BOM),
   except as the first code point in a document.
 
-## Full Grammar
+# Full Grammar
 
 This is the full official grammar for KDL and should be considered
 authoritative if something seems to disagree with the text above. The [grammar
 language syntax](#grammar-language) is defined below.
 
-```
+~~~abnf
 document := bom? version? nodes
 
 // Nodes
@@ -1003,7 +1005,7 @@ version :=
     unicode-space* newline
 ~~~
 
-### Grammar language
+## Grammar language
 
 The grammar language syntax is a combination of ABNF with some regex spice thrown in.
 Specifically:
