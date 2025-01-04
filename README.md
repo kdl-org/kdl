@@ -46,16 +46,16 @@ package {
 
 For more details, see the [overview below](#overview).
 
-There's a living [specification](SPEC.md), as well as various
+There's a living [specification](https://kdl-org.github.io/kdl/#go.draft-marchan-kdl2.html), as well as various
 [implementations](#implementations). You can also check out the [FAQ](#faq) to
 answer all your burning questions!
 
 The current version of the KDL spec is
-[KDL 2.0.0](https://github.com/kdl-org/kdl/blob/2.0.0/SPEC.md). For legacy KDL,
+[KDL 2.0.0](https://kdl-org.github.io/kdl/#go.draft-marchan-kdl2.html). For legacy KDL,
 please refer to the [KDL 1.0.0
 spec](https://github.com/kdl-org/kdl/blob/2.0.0/SPEC_v1.md). All users are
 encouraged to migrate. [Migration is forward-and-backward-compatible and
-safe](https://github.com/kdl-org/kdl/blob/2.0.0/SPEC.md#compatibility), and can
+safe](https://kdl-org.github.io/kdl/#go.draft-marchan-kdl2.html#compatibility), and can
 be automated.
 
 In addition to a spec for KDL itself, there are specifications for [a KDL Query
@@ -400,7 +400,7 @@ SDLang is an excellent base, but I wanted some details ironed out, and some
 things removed that only really made sense for SDLang's current use-cases, including
 some restrictions about data representation. KDL is very similar in many ways, except:
 
-* The grammar and expected semantics are [well-defined and specified](SPEC.md).
+* The grammar and expected semantics are [well-defined and specified](https://kdl-org.github.io/kdl/#go.draft-marchan-kdl2.html).
   This was the original impetus for working on KDL, followed by details that
   seemed like they could be improved.
 * There is only one "number" type. KDL does not prescribe representations, but
