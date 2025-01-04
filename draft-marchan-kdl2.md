@@ -1,3 +1,35 @@
+---
+title: "KDL 2.0.0"
+abbrev: "KDL2"
+docname: draft-marchan-kdl2-latest
+category: info
+
+ipr: trust200902
+area: General
+#workgroup: TODO Working Group
+keyword: Internet-Draft
+
+stand_alone: yes
+smart_quotes: no
+pi: [toc, sortrefs, symrefs]
+
+author:
+ -
+    ins: H. Tschofenig
+    name: Kat Marchán
+    organization: Microsoft
+
+normative:
+
+informative:
+
+
+--- abstract
+
+TODO Abstract
+
+
+--- middle
 # KDL Spec
 
 This is the formal specification for KDL, including the intended data model and
