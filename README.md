@@ -66,7 +66,7 @@ The language is based on [SDLang](https://sdlang.org), with a [number of
 modifications and clarifications on its syntax and behavior](#why-not-sdlang).
 We are grateful for their work as an inspiration to ours.
 
-[Play with it in your browser (currently v1 only)!](https://kdl-play.danini.dev/)
+[Play with it in your browser!](https://kdl.dev/play/)
 
 ## Design and Discussion
 
