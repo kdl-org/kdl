@@ -1,3 +1,5 @@
+/target
+Cargo.lock
 *.html
 *.pdf
 *.redxml
