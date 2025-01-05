@@ -127,5 +127,5 @@ comparison := accessor q-ws* matcher-operator q-ws* ($type | $string | $number |
 accessor := "val(" q-ws* $integer q-ws* ")" | "prop(" q-ws* $string q-ws* ")" | "name(" q-ws* ")" | "tag(" q-ws* ")" | "values(" q-ws* ")" | "props(" q-ws* ")" | $string
 matcher-operator := "=" | "!=" | ">" | "<" | ">=" | "<=" | "^=" | "$=" | "*="
 
-q-ws := $plain-node-space
+q-ws := $node-space
 ```
