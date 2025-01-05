@@ -21,7 +21,8 @@ pi: [toc, sortrefs, symrefs]
 
 author:
  -
-    name: Kat Marchán
+    name: Katerina Zoé Marchán Salvá
+    ins: K. Marchán
     organization: Microsoft
 
 normative:
