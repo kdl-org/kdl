@@ -32,6 +32,10 @@ informative:
 
 --- abstract
 
+KDL is a node-oriented document language. Its niche and purpose overlaps with
+XML, and as do many of its semantics. You can use KDL both as a configuration
+language, and a data exchange or storage format, if you so choose.
+
 This is the formal specification for KDL, including the intended data model and
 the grammar.
 
@@ -62,7 +66,8 @@ XML, and as do many of its semantics. You can use KDL both as a configuration
 language, and a data exchange or storage format, if you so choose.
 
 The bulk of this document is dedicated to a long-form description of all
-[Components](#components) of a KDL document. There is also a much more terse
+Components ({{components}}) of a KDL document.
+There is also a much more terse
 [Grammar](#full-grammar) at the end of the document that covers most of the
 rules, with some semantic exceptions involving the data model.
 
@@ -100,7 +105,7 @@ baz
 
 Being a node-oriented language means that the real core component of any KDL
 document is the "node". Every node must have a name, which must be a
-[String](#string).
+String ({{string}}).
 
 The name may be preceded by a [Type Annotation](#type-annotation) to further
 clarify its type, particularly in relation to its parent node. (For example,
@@ -108,7 +113,7 @@ clarifying that a particular `date` child node is for the _publication_ date,
 rather than the last-modified date, with `(published)date`.)
 
 Following the name are zero or more [Arguments](#argument) or
-[Properties](#property), separated by either [whitespace](#whitespace) or [a
+[Properties](#property), separated by either whitespace ({{whitespace}}) or [a
 slash-escaped line continuation](#line-continuation). Arguments and Properties
 may be interspersed in any order, much like is common with positional arguments
 vs options in command line tools. Collectively, Arguments and Properties may be
@@ -131,7 +136,7 @@ Nodes _MAY_ be prefixed with [Slashdash](#slashdash-comments) to "comment out"
 the entire node, including its properties, arguments, and children, and make
 it act as plain whitespace, even if it spreads across multiple lines.
 
-Finally, a node is terminated by either a [Newline](#newline), a semicolon
+Finally, a node is terminated by either a Newline ({{newline}}), a semicolon
 (`;`), the end of a child block (`}`) or the end of the file/stream (an `EOF`).
 
 ### Example
@@ -150,7 +155,7 @@ Line continuations allow [Nodes](#node) to be spread across multiple lines.
 
 A line continuation is a `\` character followed by zero or more whitespace
 items (including multiline comments) and an optional single-line comment. It
-must be terminated by a [Newline](#newline) (including the Newline that is
+must be terminated by a Newline ({{newline}}) (including the Newline that is
 part of single-line comments).
 
 Following a line continuation, processing of a Node can continue as usual.
@@ -164,9 +169,9 @@ my-node 1 2 \  // comments are ok after \
 
 ## Property
 
-A Property is a key/value pair attached to a [Node](#node). A Property is
-composed of a [String](#string), followed immediately by an equals sign (`=`, `U+003D`),
-and then a [Value](#value).
+A Property is a key/value pair attached to a Node ({{node}}). A Property is
+composed of a String ({{string}}), followed immediately by an equals sign (`=`, `U+003D`),
+and then a Value ({{value}}).
 
 Properties should be interpreted left-to-right, with rightmost properties with
 identical names overriding earlier properties. That is:
@@ -186,7 +191,7 @@ make it act as plain whitespace, even if it spreads across multiple lines.
 
 ## Argument
 
-An Argument is a bare [Value](#value) attached to a [Node](#node), with no
+An Argument is a bare Value ({{value}}) attached to a Node ({{node}}), with no
 associated key. It shares the same space as [Properties](#property), and may be interleaved with them.
 
 A Node may have any number of Arguments, which should be evaluated left to
@@ -224,25 +229,25 @@ parent { child1; child2; }
 
 ## Value
 
-A value is either: a [String](#string), a [Number](#number), a
-[Boolean](#boolean), or [Null](#null).
+A value is either: a String ({{string}}), a Number ({{number}}), a
+Boolean ({{boolean}}), or Null ({{null}}).
 
 Values _MUST_ be either [Arguments](#argument) or values of
-[Properties](#property). Only [String](#string) values may be used as
-[Node](#node) names or [Property](#property) keys.
+[Properties](#property). Only String ({{string}}) values may be used as
+Node ({{node}}) names or Property ({{property}}) keys.
 
 Values (both as arguments and in properties) _MAY_ be prefixed by a single
 [Type Annotation](#type-annotation).
 
 ## Type Annotation
 
-A type annotation is a prefix to any [Node Name](#node) or [Value](#value) that
+A type annotation is a prefix to any [Node Name](#node) or Value ({{value}}) that
 includes a _suggestion_ of what type the value is _intended_ to be treated as,
 or as a _context-specific elaboration_ of the more generic type the node name
 indicates.
 
 Type annotations are written as a set of `(` and `)` with a single
-[String](#string) in it. It may contain Whitespace after the `(` and before
+String ({{string}}) in it. It may contain Whitespace after the `(` and before
 the `)`, and may be separated from its target by Whitespace.
 
 KDL does not specify any restrictions on what implementations might do with
@@ -359,7 +364,7 @@ characters](#non-identifier-characters).
 
 A handful of patterns are disallowed, to avoid confusion with other values:
 
-* idents that appear to start with a [Number](#number) (like `1.0v2` or
+* idents that appear to start with a Number ({{number}}) (like `1.0v2` or
     `-1em`) or the "almost a number" pattern of a decimal point without a
     leading digit (like `.1`).
 * idents that are the language keywords (`inf`, `-inf`, `nan`, `true`,
@@ -394,7 +399,7 @@ ambiguity of having an identifier look like a number.
 The following characters cannot be used anywhere in a [Identifier String](#identifier-string):
 
 * Any of `(){}[]/\"#;=`
-* Any [Whitespace](#whitespace) or [Newline](#newline).
+* Any Whitespace ({{whitespace}}) or Newline ({{newline}}).
 * Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
   documents.
 
@@ -403,7 +408,7 @@ The following characters cannot be used anywhere in a [Identifier String](#ident
 A Quoted String is delimited by `"` on either side of any number of literal
 string characters except unescaped `"` and `\`.
 
-Literal [Newline](#newline) characters can only be included
+Literal Newline ({{newline}}) characters can only be included
 if they are [Escaped Whitespace](#escaped-whitespace),
 which discards them from the string value.
 Actually including a newline in the value requires using a newline escape sequence,
@@ -442,7 +447,7 @@ interpreted as described in the following table:
 In addition to escaping individual characters, `\` can also escape whitespace.
 When a `\` is followed by one or more literal whitespace characters, the `\`
 and all of that whitespace are discarded. For example, `"Hello World"` and
-`"Hello \    World"` are semantically identical. See [whitespace](#whitespace)
+`"Hello \    World"` are semantically identical. See whitespace ({{whitespace}})
 and [newlines](#newline) for how whitespace is defined.
 
 Note that only literal whitespace is escaped; whitespace escapes (`\n` and
@@ -476,7 +481,7 @@ level as desired.
 
 A Multi-Line String is opened and closed by *three* double-quote characters,
 like `"""`.
-Its first line _MUST_ immediately start with a [Newline](#newline)
+Its first line _MUST_ immediately start with a Newline ({{newline}})
 after its opening `"""`.
 Its final line _MUST_ contain only whitespace
 before the closing `"""`.
@@ -665,7 +670,7 @@ Both [Quoted](#quoted-string) and [Multi-Line Strings](#multi-line-string) have
 Raw String variants, which are identical in syntax except they do not support
 `\`-escapes. This includes line-continuation escapes (`\` + `ws` collapsing to
 nothing). They otherwise share the same properties as far as literal
-[Newline](#newline) characters go, multi-line rules, and the requirement of
+Newline ({{newline}}) characters go, multi-line rules, and the requirement of
 UTF-8 representation.
 
 The Raw String variants are indicated by preceding the strings's opening quotes
@@ -756,7 +761,7 @@ implementation that chooses to represent their numbers in this way.
 
 ## Boolean
 
-A boolean [Value](#value) is either the symbol `#true` or `#false`. These
+A boolean Value ({{value}}) is either the symbol `#true` or `#false`. These
 _SHOULD_ be represented by implementation as boolean logical values, or some
 approximation thereof.
 
@@ -768,7 +773,7 @@ my-node #true value=#false
 
 ## Null
 
-The symbol `#null` represents a null [Value](#value). It's up to the
+The symbol `#null` represents a null Value ({{value}}). It's up to the
 implementation to decide how to represent this, but it generally signals the
 "absence" of a value.
 
@@ -780,7 +785,7 @@ my-node #null key=#null
 
 ## Whitespace
 
-The following characters should be treated as non-[Newline](#newline) [white
+The following characters should be treated as [non-Newline](#newline) [white
 space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 
 | Name                 | Code Pt |
@@ -806,14 +811,14 @@ space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 
 ### Single-line comments
 
-Any text after `//`, until the next literal [Newline](#newline) is "commented
-out", and is considered to be [Whitespace](#whitespace).
+Any text after `//`, until the next literal Newline ({{newline}}) is "commented
+out", and is considered to be Whitespace ({{whitespace}}).
 
 ### Multi-line comments
 
 In addition to single-line comments using `//`, comments can also be started
 with `/*` and ended with `*/`. These comments can span multiple lines. They
-are allowed in all positions where [Whitespace](#whitespace) is allowed and
+are allowed in all positions where Whitespace ({{whitespace}}) is allowed and
 can be nested.
 
 ### Slashdash comments
@@ -825,10 +830,10 @@ have those elements not be included as part of the parsed document data.
 Slashdash comments can be used before the following, including before their type
 annotations, if present:
 
-* A [Node](#node): the entire Node is treated as Whitespace, including all
+* A Node ({{node}}): the entire Node is treated as Whitespace, including all
   props, args, and children.
-* An [Argument](#argument): the Argument value is treated as Whitespace.
-* A [Property](#property) key: the entire property, including both key and value,
+* An Argument ({{argument}}): the Argument value is treated as Whitespace.
+* A Property ({{property}}) key: the entire property, including both key and value,
   is treated as Whitespace. A slashdash of just the property value is not allowed.
 * A [Children Block](#children-block): the entire block, including all
   children within, is treated as Whitespace. Only other children blocks, whether
