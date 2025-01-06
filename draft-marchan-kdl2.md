@@ -441,8 +441,19 @@ interpreted as described in the following table:
 
 In addition to escaping individual characters, `\` can also escape whitespace.
 When a `\` is followed by one or more literal whitespace characters, the `\`
-and all of that whitespace are discarded. For example, `"Hello World"` and
-`"Hello \    World"` are semantically identical. See whitespace ({{whitespace}})
+and all of that whitespace are discarded. For example,
+
+~~~kdl
+"Hello World"
+~~~
+
+and
+
+~~~kdl
+"Hello \    World"
+~~~
+
+are semantically identical. See whitespace ({{whitespace}})
 and [newlines](#newline) for how whitespace is defined.
 
 Note that only literal whitespace is escaped; whitespace escapes (`\n` and
@@ -545,7 +556,12 @@ This is the base indentation
         bar
 ~~~
 
-which is equivalent to `"    foo\nThis is the base indentation\n        bar"`
+which is equivalent to
+
+~~~kdl
+"    foo\nThis is the base indentation\n        bar"
+~~~
+
 when written as a single-line string.
 
 #### Shorter last-line indent
@@ -569,7 +585,11 @@ This example's string value will be:
           bar
 ~~~
 
-Equivalent to `"      foo\n  This is no longer on the left edge\n          bar"`.
+Equivalent to
+
+~~~kdl
+"      foo\n  This is no longer on the left edge\n          bar"
+~~~
 
 #### Empty lines
 
@@ -591,7 +611,11 @@ Indented a bit.
 A second indented paragraph.
 ~~~
 
-Equivalent to `"Indented a bit.\n\nA second indented paragraph."`
+Equivalent to
+
+~~~kdl
+"Indented a bit.\n\nA second indented paragraph."
+~~~
 
 #### Syntax errors
 
@@ -714,7 +738,13 @@ You can show examples of """
 without worrying about escapes.
 ~~~
 
-or equivalently, `"You can show examples of \"\"\"\n    multi-line strings\n    \"\"\"\nwithout worrying about escapes."` as a Quoted String.
+or equivalently,
+
+~~~kdl
+"You can show examples of \"\"\"\n    multi-line strings\n    \"\"\"\nwithout worrying about escapes."
+~~~
+
+as a Quoted String.
 
 ## Number
 
