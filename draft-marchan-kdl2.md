@@ -525,7 +525,9 @@ single-line "\r\n\nfoo"
 For clarity: this normalization applies to each individual Newline sequence.
 That is, the literal sequence `CRLF CRLF` becomes `LF LF`, not `LF`.
 
-### Example
+### Examples
+
+#### Indented multi-line string
 
 ~~~kdl
 multi-line """
@@ -546,7 +548,7 @@ This is the base indentation
 which is equivalent to `"    foo\nThis is the base indentation\n        bar"`
 when written as a single-line string.
 
----------
+#### Shorter last-line indent
 
 If the last line wasn't indented as far,
 it won't dedent the rest of the lines as much:
@@ -569,7 +571,7 @@ This example's string value will be:
 
 Equivalent to `"      foo\n  This is no longer on the left edge\n          bar"`.
 
------------
+#### Empty lines
 
 Empty lines can contain any whitespace, or none at all, and will be reflected as empty in the value:
 
@@ -591,7 +593,7 @@ A second indented paragraph.
 
 Equivalent to `"Indented a bit.\n\nA second indented paragraph."`
 
------------
+#### Syntax errors
 
 The following yield **syntax errors**:
 
