@@ -25,11 +25,19 @@ The GitHub interface supports creating pull requests using the Edit (✏) button
 
 ## Building the Specification
 
+The specification is written in
+[kramdown-rfc](https://github.com/cabo/kramdown-rfc/wiki/Syntax2), which
+compiles via [RFCXML](https://authors.ietf.org/rfcxml-vocabulary) to text and
+HTML.
+
 Formatted text and HTML versions of the spec can be built using `make`.
 
 ```sh
 $ make
 ```
+
+To preserve the intermediate RFCXML form for debugging, `touch
+draft-marchan-kdl2.xml` before running `make`.
 
 Command line usage requires that you have the necessary software installed.  See
 [the instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md).
