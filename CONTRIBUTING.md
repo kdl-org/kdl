@@ -30,14 +30,10 @@ The specification is written in
 compiles via [RFCXML](https://authors.ietf.org/rfcxml-vocabulary) to text and
 HTML.
 
-Formatted text and HTML versions of the spec can be built using `make`.
-
-```sh
-$ make
-```
-
-To preserve the intermediate RFCXML form for debugging, `touch
-draft-marchan-kdl2.xml` before running `make`.
+You can build the formatted versions or the intermediate RFCXML file using
+https://author-tools.ietf.org/ or locally by running `make`. To preserve the
+intermediate RFCXML form in a local build, `touch draft-marchan-kdl2.xml` before
+running `make`.
 
 Command line usage requires that you have the necessary software installed.  See
 [the instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md).
