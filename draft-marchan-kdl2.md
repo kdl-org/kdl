@@ -671,6 +671,7 @@ For example, the following example is illegal:
 ~~~
 
 while the following example is allowed
+
 ~~~kdl
   """
   foo \
