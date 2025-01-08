@@ -68,7 +68,7 @@ language, and a data exchange or storage format, if you so choose.
 The bulk of this document is dedicated to a long-form description of all
 Components ({{components}}) of a KDL document.
 There is also a much more terse
-[Grammar](#full-grammar) at the end of the document that covers most of the
+Grammar ({{full-grammar}}) at the end of the document that covers most of the
 rules, with some semantic exceptions involving the data model.
 
 KDL is designed to be easy to read _and_ easy to implement.
@@ -84,7 +84,7 @@ depending on the characters used.
 ## Document
 
 The toplevel concept of KDL is a Document. A Document is composed of zero or
-more [Nodes](#node), separated by newlines and whitespace, and eventually
+more Nodes ({{node}}), separated by newlines and whitespace, and eventually
 terminated by an EOF.
 
 All KDL documents should be UTF-8 encoded and conform to the specifications in
@@ -107,19 +107,19 @@ Being a node-oriented language means that the real core component of any KDL
 document is the "node". Every node must have a name, which must be a
 String ({{string}}).
 
-The name may be preceded by a [Type Annotation](#type-annotation) to further
+The name may be preceded by a Type Annotation ({{type-annotation}}) to further
 clarify its type, particularly in relation to its parent node. (For example,
 clarifying that a particular `date` child node is for the _publication_ date,
 rather than the last-modified date, with `(published)date`.)
 
-Following the name are zero or more [Arguments](#argument) or
-[Properties](#property), separated by either whitespace ({{whitespace}}) or [a
-slash-escaped line continuation](#line-continuation). Arguments and Properties
+Following the name are zero or more Arguments ({{argument}}) or
+Properties ({{property}}), separated by either whitespace ({{whitespace}}) or a
+slash-escaped line continuation ({{line-continuation}}). Arguments and Properties
 may be interspersed in any order, much like is common with positional arguments
 vs options in command line tools. Collectively, Arguments and Properties may be
 referred to as "Entries".
 
-[Children](#children-block) can be placed after the name and the optional
+Children ({{children-block}}) can be placed after the name and the optional
 Entries, possibly separated by either whitespace or a
 slash-escaped line continuation.
 
@@ -128,11 +128,11 @@ order to maintain the semantics. Properties between Arguments do not affect
 Argument ordering.
 
 By contrast, Properties _SHOULD NOT_ be assumed to be presented in a given
-order. [Children](#children-block) should be used if an order-sensitive
+order. Children ({{children-block}}) should be used if an order-sensitive
 key/value data structure must be represented in KDL. Cf. JSON objects
 preserving key order.
 
-Nodes _MAY_ be prefixed with [Slashdash](#slashdash-comments) to "comment out"
+Nodes _MAY_ be prefixed with Slashdash ({{slashdash-comments}}) to "comment out"
 the entire node, including its properties, arguments, and children, and make
 it act as plain whitespace, even if it spreads across multiple lines.
 
@@ -151,7 +151,7 @@ foo 1 key=val 3 {
 
 ## Line Continuation
 
-Line continuations allow [Nodes](#node) to be spread across multiple lines.
+Line continuations allow Nodes ({{node}}) to be spread across multiple lines.
 
 A line continuation is a `\` character followed by zero or more whitespace
 items (including multiline comments) and an optional single-line comment. It
@@ -192,7 +192,7 @@ make it act as plain whitespace, even if it spreads across multiple lines.
 ## Argument
 
 An Argument is a bare Value ({{value}}) attached to a Node ({{node}}), with no
-associated key. It shares the same space as [Properties](#property), and may be interleaved with them.
+associated key. It shares the same space as Properties ({{property}}), and may be interleaved with them.
 
 A Node may have any number of Arguments, which should be evaluated left to
 right. KDL implementations _MUST_ preserve the order of Arguments relative to
@@ -209,7 +209,7 @@ my-node 1 2 3 a b c
 
 ## Children Block
 
-A children block is a block of [Nodes](#node), surrounded by `{` and `}`. They
+A children block is a block of Nodes ({{node}}), surrounded by `{` and `}`. They
 are an optional part of nodes, and create a hierarchy of KDL nodes.
 
 Regular node termination rules apply, which means multiple nodes can be
@@ -232,16 +232,16 @@ parent { child1; child2; }
 A value is either: a String ({{string}}), a Number ({{number}}), a
 Boolean ({{boolean}}), or Null ({{null}}).
 
-Values _MUST_ be either [Arguments](#argument) or values of
-[Properties](#property). Only String ({{string}}) values may be used as
+Values _MUST_ be either Arguments ({{argument}}) or values of
+Properties ({{property}}). Only String ({{string}}) values may be used as
 Node ({{node}}) names or Property ({{property}}) keys.
 
 Values (both as arguments and in properties) _MAY_ be prefixed by a single
-[Type Annotation](#type-annotation).
+Type Annotation ({{type-annotation}}).
 
 ## Type Annotation
 
-A type annotation is a prefix to any [Node Name](#node) or Value ({{value}}) that
+A type annotation is a prefix to any Node Name ({{node}}) or Value ({{value}}) that
 includes a _suggestion_ of what type the value is _intended_ to be treated as,
 or as a _context-specific elaboration_ of the more generic type the node name
 indicates.
@@ -330,12 +330,12 @@ node prop=(regex).*
 
 ## String
 
-Strings in KDL represent textual UTF-8 [Values](#value). A String is either an
-[Identifier String](#identifier-string) (like `foo`), a
-[Quoted String](#quoted-string) (like `"foo"`)
-or a [Multi-Line String](#multi-line-string).
+Strings in KDL represent textual UTF-8 Values ({{value}}). A String is either an
+Identifier String ({{identifier-string}}) (like `foo`), a
+Quoted String ({{quoted-string}}) (like `"foo"`)
+or a Multi-Line String ({{multi-line-string}}).
 Both Quoted and Multiline strings come in normal
-and [Raw String](#raw-string) variants (like `#"foo"#`):
+and Raw String ({{raw-string}}) variants (like `#"foo"#`):
 
 * Identifier Strings let you write short, "single-word" strings with a
   minimum of syntax
@@ -349,7 +349,7 @@ and [Raw String](#raw-string) variants (like `#"foo"#`):
 Strings _MUST_ be represented as UTF-8 values.
 
 Strings _MUST NOT_ include the code points for
-[disallowed literal code points](#disallowed-literal-code-points) directly.
+disallowed literal code points ({{disallowed-literal-code-points}}) directly.
 Quoted and Multi-Line Strings may include these code points as _values_
 by representing them with their corresponding `\u{...}` escape.
 
@@ -358,9 +358,9 @@ by representing them with their corresponding `\u{...}` escape.
 An Identifier String (sometimes referred to as just an "identifier") is
 composed of any [Unicode Scalar
 Value](https://unicode.org/glossary/#unicode_scalar_value) other than
-[non-initial characters](#non-initial-characters), followed by any number of
-Unicode Scalar Values other than [non-identifier
-characters](#non-identifier-characters).
+non-initial characters ({{non-initial-characters}}), followed by any number of
+Unicode Scalar Values other than non-identifier
+characters ({{non-identifier-characters}}).
 
 A handful of patterns are disallowed, to avoid confusion with other values:
 
@@ -372,15 +372,15 @@ A handful of patterns are disallowed, to avoid confusion with other values:
 
 Identifiers that match these patterns _MUST_ be treated as a syntax error; such
 values can only be written as quoted or raw strings. The precise details of the
-identifier syntax is specified in the [Full Grammar](#full-grammar) below.
+identifier syntax is specified in the Full Grammar in {{full-grammar}}.
 
 ### Non-initial characters
 
 The following characters cannot be the first character in an
-[Identifier String](#identifier-string):
+Identifier String ({{identifier-string}}):
 
 * Any decimal digit (0-9)
-* Any [non-identifier characters](#non-identifier-characters)
+* Any non-identifier characters ({{non-identifier-characters}})
 
 Additionally, the following initial characters impose limitations on subsequent
 characters:
@@ -396,11 +396,11 @@ ambiguity of having an identifier look like a number.
 
 ### Non-identifier characters
 
-The following characters cannot be used anywhere in a [Identifier String](#identifier-string):
+The following characters cannot be used anywhere in a Identifier String ({{identifier-string}}):
 
 * Any of `(){}[]/\"#;=`
 * Any Whitespace ({{whitespace}}) or Newline ({{newline}}).
-* Any [disallowed literal code points](#disallowed-literal-code-points) in KDL
+* Any disallowed literal code points ({{disallowed-literal-code-points}}) in KDL
   documents.
 
 ## Quoted String
@@ -409,18 +409,18 @@ A Quoted String is delimited by `"` on either side of any number of literal
 string characters except unescaped `"` and `\`.
 
 Literal Newline ({{newline}}) characters can only be included
-if they are [Escaped Whitespace](#escaped-whitespace),
+if they are Escaped Whitespace ({{escaped-whitespace}}),
 which discards them from the string value.
 Actually including a newline in the value requires using a newline escape sequence,
 like `\n`,
-or using a [Multi-Line String](#multi-line-string)
+or using a Multi-Line String ({{multi-line-string}})
 which is actually designed for strings stretching across multiple lines.
 
 Like Identifier Strings, Quoted Strings _MUST NOT_ include any of the
-[disallowed literal code-points](#disallowed-literal-code-points) as code
+disallowed literal code-points ({{disallowed-literal-code-points}}) as code
 points in their body.
 
-Quoted Strings have a [Raw String](#raw-string) variant,
+Quoted Strings have a Raw String ({{raw-string}}) variant,
 which disallows escapes.
 
 ### Escapes
@@ -459,7 +459,7 @@ and
 ~~~
 
 are semantically identical. See whitespace ({{whitespace}})
-and [newlines](#newline) for how whitespace is defined.
+and newlines ({{newline}}) for how whitespace is defined.
 
 Note that only literal whitespace is escaped; whitespace escapes (`\n` and
 such) are retained. For example, these strings are all semantically identical:
@@ -693,7 +693,7 @@ bar
 
 ## Raw String
 
-Both [Quoted](#quoted-string) and [Multi-Line Strings](#multi-line-string) have
+Both Quoted ({{quoted-string}}) and Multi-Line Strings ({{multi-line-string}}) have
 Raw String variants, which are identical in syntax except they do not support
 `\`-escapes. This includes line-continuation escapes (`\` + `ws` collapsing to
 nothing). They otherwise share the same properties as far as literal
@@ -707,8 +707,8 @@ string may contain any combination of `"` and `#` characters other than its
 closing delimiter (e.g., if a raw string starts with `##"`, it can contain `"`
 or `"#`, but not `"##` or `"###`).
 
-Like other Strings, Raw Strings _MUST NOT_ include any of the [disallowed
-literal code-points](#disallowed-literal-code-points) as code points in their
+Like other Strings, Raw Strings _MUST NOT_ include any of the disallowed
+literal code-points ({{disallowed-literal-code-points}}) as code points in their
 body. Unlike with Quoted Strings, these cannot simply be escaped, and are thus
 unrepresentable when using Raw Strings.
 
@@ -754,13 +754,13 @@ as a Quoted String.
 
 ## Number
 
-Numbers in KDL represent numerical [Values](#value). There is no logical distinction in KDL
+Numbers in KDL represent numerical Values ({{value}}). There is no logical distinction in KDL
 between real numbers, integers, and floating point numbers. It's up to
 individual implementations to determine how to represent KDL numbers.
 
 There are five syntaxes for Numbers: Keywords, Decimal, Hexadecimal, Octal, and Binary.
 
-* All non-[Keyword](#keyword-numbers) numbers may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
+* All non-Keyword ({{keyword-numbers}}) numbers may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
 * Binary numbers start with `0b` and only allow `0` and `1` as digits, which may be separated by `_`. They represent numbers in radix 2.
 * Octal numbers start with `0o` and only allow digits between `0` and `7`, which may be separated by `_`. They represent numbers in radix 8.
 * Hexadecimal numbers start with `0x` and allow digits between `0` and `9`, as well as letters `A` through `F`, in either lower or upper case, which may be separated by `_`. They represent numbers in radix 16.
@@ -773,7 +773,7 @@ There are five syntaxes for Numbers: Keywords, Decimal, Hexadecimal, Octal, and 
 Note that, similar to JSON and some other languages,
 numbers without an integer digit (such as `.1`) are illegal.
 They must be written with at least one integer digit, like `0.1`.
-(These patterns are also disallowed from [Identifier Strings](#identifier-string), to avoid confusion.)
+(These patterns are also disallowed from Identifier Strings ({{identifier-string}}), to avoid confusion.)
 
 ### Keyword Numbers
 
@@ -784,8 +784,8 @@ widespread use of [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floats:
 * `#-inf` - floating point negative infinity.
 * `#nan` - floating point NaN/Not a Number.
 
-To go along with this and prevent foot guns, the bare [Identifier
-Strings](#identifier-string) `inf`, `-inf`, and `nan` are considered illegal
+To go along with this and prevent foot guns, the bare Identifier
+Strings ({{identifier-string}}) `inf`, `-inf`, and `nan` are considered illegal
 identifiers and should yield a syntax error.
 
 The existence of these keywords does not imply that any numbers be represented
@@ -818,7 +818,7 @@ my-node #null key=#null
 
 ## Whitespace
 
-The following characters should be treated as [non-Newline](#newline) [white
+The following characters should be treated as non-Newline ({{newline}}) [white
 space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 
 | Name                 | Code Pt |
@@ -868,7 +868,7 @@ annotations, if present:
 * An Argument ({{argument}}): the Argument value is treated as Whitespace.
 * A Property ({{property}}) key: the entire property, including both key and value,
   is treated as Whitespace. A slashdash of just the property value is not allowed.
-* A [Children Block](#children-block): the entire block, including all
+* A Children Block ({{children-block}}): the entire block, including all
   children within, is treated as Whitespace. Only other children blocks, whether
   slashdashed or not, may follow a slashdashed children block.
 
@@ -897,7 +897,7 @@ considered _a single newline_.
 ## Disallowed Literal Code Points
 
 The following code points may not appear literally anywhere in the document.
-They may be represented in Strings (but not Raw Strings) using [Unicode Escapes](#escapes) (`\u{...}`,
+They may be represented in Strings (but not Raw Strings) using Unicode Escapes ({{escapes}}) (`\u{...}`,
 except for non Unicode Scalar Value, which can't be represented even as escapes).
 
 * The codepoints `U+0000-0008` or the codepoints `U+000E-001F`  (various
@@ -914,8 +914,8 @@ except for non Unicode Scalar Value, which can't be represented even as escapes)
 # Full Grammar
 
 This is the full official grammar for KDL and should be considered
-authoritative if something seems to disagree with the text above. The [grammar
-language syntax](#grammar-language) is defined below.
+authoritative if something seems to disagree with the text above. The grammar
+language syntax is defined in {{grammar-language}}.
 
 ~~~abnf
 document := bom? version? nodes
