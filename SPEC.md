@@ -880,10 +880,13 @@ multi-line-string-body := (('"' | '""')? string-character)*
 string-character := '\\' (["\\bfnrts] | 'u{' hex-unicode '}') | ws-escape | [^\\"] - disallowed-literal-code-points
 ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
-hex-unicode := hex-digit{1, 6} - surrogates
-surrogates := [dD][8-9a-fA-F]hex-digit{2}
-// U+D800-DFFF: D  8         00
-//              D  F         FF
+hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar  // Unicode Scalar Value in hex₁₆, leading 0s allowed within length ≤ 6
+surrogate := [0]{0, 2} [dD] [8-9a-fA-F] hex-digit{2}
+//  U+D800-DFFF:         D   8          00
+//                       D   F          FF
+above-max-scalar = [2-9a-fA-F] hex-digit{5} | [1] [1-9a-fA-F] hex-digit{4}
+// >U+10FFFF:      >1          _____           1  >0          ____
+
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
 raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline unicode-space* '"""'
@@ -943,8 +946,9 @@ Specifically:
   string is used for escaping other single-quotes, for initiating unicode
   characters using hex values (`\u{FEFF}`), and for escaping `\` itself
   (`\\`).
-* `*` is used for "zero or more", `+` is used for "one or more", and `?` is
-  used for "zero or one". Per standard regex semantics, `*` and `+` are *greedy*;
+* `*` is used for "zero or more", `+` is used for "one or more", `?` is used for "zero or one",
+  `{3}` is used for "exactly 3", and `{0, 4}` is used for "from 1 to 4" (inclusive range).
+  Per standard regex semantics, `*` and `+` are *greedy*;
   they match as many instances as possible without failing the match.
 * `*?` (used only in raw strings) indicates a *non-greedy* match;
   it matches as *few* instances as possible without failing the match.
