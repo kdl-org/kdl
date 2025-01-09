@@ -333,8 +333,8 @@ Identifiers that match these patterns _MUST_ be treated as a syntax error; such
 values can only be written as quoted or raw strings. The precise details of the
 identifier syntax is specified in the [Full Grammar](#full-grammar) below.
 
-Identifier Strings are terminated by [Whitespace](#whitespace) or
-[Newlines](#newline).
+Identifier Strings are terminated by [Whitespace](#whitespace), 
+[Newlines](#newline), or the end of the file/stream (an `EOF`).
 
 #### Non-initial characters
 
