@@ -32,8 +32,8 @@ HTML.
 
 You can build the formatted versions or the intermediate RFCXML file using
 https://author-tools.ietf.org/ or locally by running `make`. To preserve the
-intermediate RFCXML form in a local build, `touch draft-marchan-kdl2.xml` before
-running `make`.
+intermediate RFCXML form in a local build, run `make draft-marchan-kdl2.xml`
+once.
 
 Command line usage requires that you have the necessary software installed.  See
 [the instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md).
