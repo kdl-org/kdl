@@ -5,7 +5,7 @@ docname: draft-marchan-kdl2-latest
 submissionType: independent
 category: exp
 
-ipr: trust200902
+ipr: none
 area: General
 venue:
   github: kdl-org/kdl
@@ -24,6 +24,9 @@ author:
     name: Katerina Zoé Marchán Salvá
     ins: K. Marchán
     organization: Microsoft
+ -
+    name: The KDL Contributors
+    ins: KDL Contributors
 
 normative:
 
@@ -42,6 +45,13 @@ the grammar.
 This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
 is the latest stable version of the language, and will only be edited for minor
 copyedits or major errata.
+
+
+--- note_License
+
+This work is licensed under Creative Commons Attribution-ShareAlike 4.0
+International. To view a copy of this license, visit
+https://creativecommons.org/licenses/by-sa/4.0/
 
 
 --- middle
