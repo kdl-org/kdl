@@ -110,7 +110,7 @@ Then the following queries are valid:
 ## Full Grammar
 
 Rules that are not defined in this grammar are prefixed with `$`, see [the KDL
-grammar](https://github.com/kdl-org/kdl/blob/main/SPEC.md#full-grammar) for
+grammar](https://kdl-org.github.io/kdl/#go.draft-marchan-kdl2.html#full-grammar) for
 what they expand to.
 
 ```
