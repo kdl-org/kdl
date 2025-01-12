@@ -1,0 +1,118 @@
+/-kdl-version 2
+§ "KDL Grammar" spec=(🔗)"github.com/kdl-org/kdl/blob/main/SPEC.md" !="See symbol defs at the bottom"\
+document       	= bom? version? nodes                          	\
+  version      	=≝ /- u␠* "kdl-version" u␠+ ⦅ "1" | "2" ⦆ u␠* ␤	\
+  nodes        	=  ⦅l_␠* node⦆* l_␠*                           	\
+    node       	=  node_base node_end                          	\
+    node_chlast	=  node_base node_end?                         	\
+      node_base	=≝ /-? 🄣? n␠* string                           	\
+        ⦅n␠+ /-? node_prop∨arg  ⦆*                               \
+        ⦅n␠+ /-  node_children  ⦆*   !="Slashdashed node_children must be after props and args" \
+        ⦅n␠+     node_children  ⦆?   !="Only children may follow a slashdashed child"           \
+        ⦅n␠+ /-  node_children  ⦆*                                                              \
+        n␠*
+
+§ "Entries"  	\
+node_prop∨arg	=  prop | argument                  	\
+  prop       	=  string n␠* "=" n␠* 🄣? n␠* value  	\
+  argument   	=                     🄣? n␠* value  	\
+    🄣        	=  "(" n␠* string n␠* ")"           	\
+    value    	=  string | number | boolean | #null	\
+node_children	=  "{" nodes node_chlast? "}"       	\
+node_end     	=  comment_line | ␤ | ； | eof
+
+§ "Strings"               	                                                     	    \
+string                    	 =  str🆔 | string'' | string_raw  ¶                  	  \
+  str🆔                    	 =  clean🆔 | signed🆔 | dotted🆔                       	\
+    clean🆔                	 =       ⦅⦅char🆔 − 〔0–9〕 − ± − .⦆ char🆔*⦆ − keyword🆔🛑	  \
+    signed🆔               	 =  ±    ⦅⦅char🆔 − 〔0–9〕     − .⦆ char🆔*⦆?           	    \
+    dotted🆔               	 =  ±? . ⦅⦅char🆔 − 〔0–9〕        ⦆ char🆔*⦆?           	    \
+      char🆔               	 =  uchar − u␠ − ␤ − char🆔¬ − char🛑                  	  \
+      char🆔¬              	 =  #"(;){"}[#]/=\"#                                 	    \
+    keyword🆔🛑             	=  true⠀|⠀false⠀|⠀null⠀|⠀inf⠀|⠀-inf⠀|⠀nan            	  \
+  string''                	 = “                              ⦅     char_str − ␤⦆* ”   \
+                          	|= “““                                                    \
+                          	  ⦅␤ de␠e≡ ⦅“?“? char_str − ␤ - u␠⦆ ⦅“?“? char_str − ␤⦆* ⦆*	\
+                          	  ⦅␤       ⦅                    u␠⦆*                    ⦆* 	\
+                          	   ␤ de␠e* ”””   !="de␠e≡ must exactly match de␠e; only required before non-whitespace" \
+    char_str              	 =  char⎋ | uni⎋ | w␠⎋ | 〔¬⧵“〕 − char🛑	\
+      char⎋               	 =  ⧵ 〔“⧵bfnrts〕                      	    \
+      uni⎋                	 =  ⧵ "u{" uchar₁₆ "}"                	  \
+        uchar₁₆           	 =  〔0–10FFFF〕 − (surrogate)〔D800–DFFF〕 !="ranges in \u{F} format, but represented as hex₁₆, not actual symbols, so \u{B0} is 'B0', not '°', can be 0-padded up to max len of 6"\
+      w␠⎋                 	 =  ⧵ ⦅u␠|␤⦆+	    \
+    de␠e                  	 =  u␠ | w␠⎋ 	  \
+  string_raw              	 = ＃*ℕ   string_raw_quoted                 ＃*ℕ≡  !="ℕ=1–∞  ℕ≡ must match ℕ" \
+    string_raw_quoted     	 =  “     string_raw_body_line         ”                       	  \
+                          	|=  “““ ␤ string_raw_body☰line ␤ de␠u* ”””                     	  \
+      string_raw_body_line	 = ""                                                          	  \
+                          	|=      ⦅char_raw − ”⦆ char_raw*?                              	  \
+                          	|= “    ⦅char_raw − ”⦆ char_raw*?                              	  \
+        char_raw          	 =         uchar − ␤ − char🛑                                   	\
+      string_raw_body☰line	 =  de␠u≡ ⦅uchar     − char🛑⦆*? !="←de␠u must exactly match ≡↑"	  \
+    de␠u                  	 =  u␠
+
+§ "Numbers (space in 〔〕 is ignored)" \
+number     	  =  float_keyword | hex | octal | binary | decimal	  \
+  hex      	  =      ±?⠀0x 🔢₁₆ ⦅_ | 🔢₁₆⦆*                      	\
+  octal    	  =      ±?⠀0o 〔0–7〕     〔0–7_〕*                   	  \
+  binary   	  =      ±?⠀0b 〔0⠀1〕     〔0⠀1_〕*                   	  \
+  decimal  	  =      ±? integer ⦅. integer⦆? ℯ?                	  \
+    integer	  =            〔0–9〕     〔0–9_〕*                   	  \
+    ℯ      	  = 〔eE〕 ±? integer                                	  \
+           	                                                   	  \
+  ±        	  =     〔+-〕                                       	  \
+  🔢₁₆      	=            〔0–9a–fA–F〕
+
+§ "Keywords and booleans" \
+keyword      	= boolean | #null       	\
+float_keyword	= #inf    | #-inf | #nan	\
+boolean      	= #true   | #false
+
+§ "Specific code points" !="\u{0} unicode format is implied: 〔u0〕=〔\u{0}〕 〔A–F〕=〔\u{A}–\u{F}〕 (range)" \
+bom   	=  "\u{FEFF}" \
+char🛑 	=  (¬1st)"bom" (c0a)〔u0–u8〕 (c0b)〔E–1F〕 (cdel)〔7F〕 (c_dir)〔200E–200F⠀202A–202E⠀2066–2069〕 usv¬ (🔗spec)"disallowed-literal-code-points" \
+  usv¬	=(surrogate)≝ (high)〔D800–DBFF〕 (low)〔DC00–DFFF〕  !="valid c0: 〔u9–uD〕 9␉\t A␊\n B␋\\v C␌\f D␍\r" \
+uchar 	=            〔0–D7FF⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀E000–10FFFF〕 !="Any Unicode Scalar Value (no surrogates)" \
+u␠    	=  〔9⠀20⠀A0⠀1680⠀2000⠀2001⠀2002⠀2003⠀2004⠀2005⠀2006⠀2007⠀2008⠀2009⠀200A⠀202F⠀205F⠀3000〕  !="Non line-breaking unicode White_Space" (🔗spec)"whitespace"\
+      	  "	                                                                                   　  "\
+u␤    	=  〔A⠀B⠀C⠀D⠀85⠀2028⠀2029〕  !="(85NEL LS PS) Line-breaking unicode White_Space" (🔗spec)"newline" \
+“="\"" ”="\"" ⧵="\\" ；=";" ⁄="/" *="∗" ＃="#"
+
+§ "Comments (// /* */ after = serve as definition symbols)" \
+/-               	  ≝  /- l_␠*                            \
+comment_block    	 =≝  /* commented_block
+  commented_block	 =   */                               	\
+                 	|= ⦅comment_block | * | ⁄ | 〔¬*⁄〕+⦆  🗘	  \
+comment_line     	 =≝  // ¬␤* ⦅␤ | eof⦆
+
+§ "Whitespace" !="\u{F} unicode format is implied in 〔F〕 and ommited for brevity" \
+l_␠        	=  n␠ | ␤ | comment_line     !="Whitespace               where newlines are allowed" \
+  n␠       	=  cu␠* escline cu␠* | cu␠+  !="Whitespace within nodes, where newline-ish things must be esclined" \
+    cu␠    	=  u␠  |    comment_block           	\
+    escline	= ⧵ cu␠*    ⦅comment_line | ␤ | eof⦆	\
+  ␤        	=  〔D〕〔A〕 | u␤  !="〔D〕〔A〕 \r\n ␍␊ is a sequence, but counts as 1 newline" (🔗spec)"newline"
+
+§ "Grammar language help: ABNF-like with some regex in a " rule="definition" "format" {
+  • #"\⧵ "“ "” ;； /⁄ *∗ #＃"#="literals represented with unicode alts to avoid quotes"
+  • #"\  "    ; = "#="regular KDL syntax, not grammar"\
+    #"  "x" "#="double quotes for literals" ##"  #"x"# "##="raw+double quotes for literals"\
+    ∅=(empty)"" #"\"#=(text)"escape \" \\ or add ‘uchar’ in hex \u{FEFF}"\
+    keys=(and_types)"extra group info" ≝="filler to allow /-comments in prop values"
+  • |="logical OR"  !="tip/comment"  §="section marker"  🗘="refers to self (rule name left of =)"
+  •⠀Regex⠀matches                                                                                     	\
+    ?⠀="0|1 zero or one"                                                                              	\
+    +⠀="1+  one  or more (    greedy)"                                                                	\
+    *⠀="0+  zero or more (    greedy, match as many instances as possible)"                           	\
+    *?="0+  zero or more (non-greedy, match as few  instances as possible; used only in raw strings)" 	\
+    *1–6="    inclusive range: at least 1 at most 6"                                                  	\
+    "0–9"="char range (inclusive)"  –="en-dash used to not blend with hyphen-minus in search"         	\
+    ¬="not this (^ in regex)" ¬foo="must not match 'foo'"  〔¬⧵“〕=#"[^\"] any char except for \ or " "#	\
+    〔set⠀〕="[a b]" #"set"#="[ab]" ≝="regex Char set matches like [], where any char will be a single match"\
+    "↑ ignore ↑ contained spaces (for visual separation or groups and alignment)"
+    ⦅group⦆ "items must be matched together"\
+    a|b="'a or b', whichever matches 1st. Multiple items before | are a single group" "a b c | d"="⦅a b c⦆ | d"\
+    ≡="defined to be identical to another similarly named match"
+  • −="minus sign; 'except for' whatever follows it" "uchar⠀−⠀␤"="match ‘uchar’ rule, but not ‘␤’ rule"
+  • ¶="cut point: always matches and consumes no chars, but once matched, bans backtracking past that point in the source. If a parser would rewind past ¶, it must instead fail the overall parse, as if it had run out of options (only for ‘string_raw’ to ensure the 1st instance of the appropriate closing quote sequence ends it)"
+  • "A single definition may be split over multiple lines. Newlines are treated as spaces"
+}
