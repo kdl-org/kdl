@@ -837,7 +837,8 @@ except for non Unicode Scalar Value, which can't be represented even as escapes)
 
 This is the full official grammar for KDL and should be considered
 authoritative if something seems to disagree with the text above. The [grammar
-language syntax](#grammar-language) is defined below.
+language syntax](#grammar-language) is defined below. For a version converted to KDL,
+see [examples/kdl-grammar2.kdl](./examples/kdl-grammar2.kdl).
 
 ```
 document := bom? version? nodes
