@@ -874,7 +874,7 @@ dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
 identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points
 disallowed-keyword-identifiers := 'true' | 'false' | 'null' | 'inf' | '-inf' | 'nan'
 
-quoted-string := '"' single-line-string-body '"' | '"""' newline multi-line-string-body newline (unicode-space | ws-escape)* '"""'
+quoted-string := '"' single-line-string-body '"' | '"""' (newline multi-line-string-body)? newline (unicode-space | ws-escape)* '"""'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
 string-character := '\\' (["\\bfnrts] | 'u{' hex-unicode '}') | ws-escape | [^\\"] - disallowed-literal-code-points
@@ -886,7 +886,7 @@ surrogates := [dD][8-9a-fA-F]hex-digit{2}
 //              D  F         FF
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
-raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' newline multi-line-raw-string-body newline unicode-space* '"""'
+raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' (newline multi-line-raw-string-body)? newline unicode-space* '"""'
 single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char*? | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*?
 single-line-raw-string-char := unicode - newline - disallowed-literal-code-points
 multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*?
