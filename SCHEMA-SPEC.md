@@ -1,347 +1,365 @@
-# KDL Schema Specification
+# KDL Schema Language Specification
 
-The KDL Schema specification describes a schema language for use with KDL,
-written in KDL itself. A schema language allows users to describe and
-constrain the allowed semantics of a KDL document. This can be used for many
-purposes: documentation for users, automated verification, or even automated
-generation of bindings!
+The KDL Schema Language specification describes a schema language for use with
+KDL. A schema language allows users to describe and constrain the allowed
+semantics of a document. This can be used for many purposes: documentation for
+users, automated verification, or even automated generation of bindings!
 
-This document describes KDL Schema version `1.0.0`. It was released on September 11, 2021.
+This document describes KDL Schema version `2.0.0`. It is unreleased.
 
-## The Formal Schema
+# The Formal Schema
 
-For the full KDL Schema schema itself, see
-[examples/kdl-schema.kdl](./examples/kdl-schema.kdl).
+For the full KDL Schema Language schema itself, see
+[schema/kdl-schema.kdl](./schema/kdl-schema.kdl).
 
-## Definition
+## Referencing schemas
 
-### `document` node
+Schemas may be referenced directly in a KDL document by placing an inert `/- kdl-schema` node at the top of the file, before any other non-whitespace, non-comment content. Uncommented `kdl-schema` nodes, or nodes that are commented with `//` or `/* */` MUST be ignored, as they may be intended to be part of the document's actual data.
 
-This is the toplevel node in a KDL Schema. It is required, and there must be
-exactly one, at the very toplevel of a document.
+Multiple instances of this node can be present, and they will reference/name schemas that will be applied to the document. They MUST be properly-formatted URLs. Implementations MAY attempt to visit them, but MUST NOT assume they are valid.
 
-#### Values
+If multiple `/- kdl-schema` nodes are present, ALL schemas MUST successfully validate in order for the document to validate, except for those for which `warn-only` is `#true`.
 
-None.
+If validations pass except for `warn-only` ones, implementations SHOULD report which schema failed to pass—they SHOULD include more details about what the specific failure was, but MAY simply indicate that certain schema(s) failed to validate.
 
-#### Properties
+- **repeatable**
+- **prop `warn-only`:** Validation failures should ONLY be warnings
+  - **type:** `boolean`
+  - **default:** `#false`
+- **arg:** URL/IRL for this schema
+  - **type:** `string`
+  - **format:** `url`, `url-reference`, `irl`, `irl-reference`
 
-None.
+# Definitions
 
-#### Children
+There are four "toplevel" nodes in the KDL Schema Language. Each is defined below, along with the children they may have:
 
-* [`info`](#info-node) - one info node for that describes the schema itself.
-* [`node`](#node-node) - zero or more toplevel nodes for the KDL document this schema describes.
-* [`definitions`](#definitions-node) (optional): Definitions of nodes, values, props, and children block to reference in the toplevel nodes.
-* `node-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of child nodes.
-* `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `#false`.
-* [`tag`](#tag-node) - zero or more toplevel tags for nodes in the KDL document that this schema describes.
-* `tag-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of tags of child nodes.
-* `other-tags-allowed` (optional): Whether to allow node tags other than the ones explicitly listed here. Defaults to `#false`.
+- [`metadata`](#metadata): General metadata about the schema itself
+- [`example`](#example): An example document that's considered to be valid according to this schema
+- [`definitions`](#definitions): An inert set of [shared node definitions](#shared-definitions) that may be references/mixed-in into the "true" definitions in the `document` node
+- [`document`](#document): The main schema definition itself
 
-### `info` node
+## `metadata`
 
-The `info` node describes the schema itself.
+**Schema metadata**
 
-#### Values
+Contains metadata about the schema itself.
 
-None.
+- **required**
 
-#### Properties
+### Children
 
-None.
+#### `id`
 
-#### Children
+**Schema identifier**
 
-* [`title`](#title-node) (optional): zero or more titles
-* [`description`](#description-node) (optional): zero or more descriptions
-* [`author`](#author-and-contributor-nodes) (optional): zero or more authors
-* [`contributor`](#author-and-contributor-nodes) (optional): zero or more contributors
-* [`link`](#link-node) (optional): zero or more URLs
-* [`license`](#license-node) (optional): zero or more licenses
-* [`published`](#published-and-modified-nodes) (optional): a publication date
-* [`modified`](#published-and-modified-nodes) (optional): a modification date
-* [`version`](#version-node) (optional): a [SemVer](https://semver.org/) version number
+The unique identifier for this schema. MUST be a valid URL/IRL. When parsing a schema, implementations SHOULD NOT attempt to visit the URL itself, as it is not necessary for it to be valid. Parsers verifying against a schema MAY look at the given URL for a document if they don't already have a valid copy.
 
-### `title` node
+- **arg:** URL/IRL identifier.
+  - **type:** `string`
+  - **format:** `url`, `irl`
+
+#### `title`
+
+**Schema title**
 
 The title of the schema or the format it describes.
 
-#### Values
+Multiple `description` nodes may be present, distinguished by a `lang` prop that can be used to specify the language or local of the text, using a two-letter ISO 639-1 language codes plus an optional hyphen (`-`) followed by an ISO 3166-1 country code, case insensitive.
 
-* Title
+- **arg:** The title text.
+  - **type:** `string`
+- **prop `lang`:** Locale/language code
+  - **type:** `string`
+  - **pattern:** `^[a-zA-Z]{2}(?:-[a-zA-Z]{2})?$`
 
-#### Properties
+#### `description`
 
-* `lang` (optional): An IETF BCP 47 language tag
+**Schema description**
 
-### `description` node
+A description of the schema or the format it validates, which may include its purposes, its usage, and even examples.
 
-A description of the schema or the format it describes.
+Multiple `description` nodes may be present, distinguished by a `lang` prop that can be used to specify the language or local of the text, using a two-letter ISO 639-1 language codes plus an optional hyphen (`-`) followed by an ISO 3166-1 country code, case insensitive.
 
-#### Values
+- **arg:** Description text.
+  - **type:** `string`
+- **prop `lang`:** Locale/language code
+  - **type:** `string`
+  - **pattern:** `^[a-zA-Z]{2}(?:-[a-zA-Z]{2})?$`
 
-* Description
+#### `author`
 
-#### Properties
+**Schema author**
 
-* `lang` (optional): An IETF BCP 47 language tag
+An author for the schema.
 
-### `author` and `contributor` nodes
+- **repeatable**
+- **ref:** [Person](#person-mixin)
 
-Author(s) of the schema.
+#### `contributor`
 
-#### Values
+**Schema author**
 
-* Author name
+A contributor to the schema, who might not be considered an author, per-se.
 
-#### Properties
+- **repeatable**
+- **ref:** [Person](#person-mixin)
 
-* `orcid` (optional): The [ORCID](https://orcid.org/) of the author.
+#### `link`
 
-#### Children
+**Schema link**
 
-* [`link`](#link-node) (optional): zero or more URLs
+A link related to this schema.
 
-### `link` node
+- **repeatable**
+- **ref:** [Link](#link-mixin)
 
-Links to the schema itself, and to sources about the schema.
+#### `license`
 
-#### Values
+**Schema license**
 
-* URI/IRI - A URI/IRI that the link points to
+The license(s) that the schema is licensed under. At least one of `spdx`, `path`, or `url` props must be provided.
 
-#### Properties
+- **repeatable**
+- **prop `spdx`:** An [SPDX](https://spdx.dev/) license identifier
+  - **type:** `string`
+- **prop `path`:** Path to a local license file. Relative paths MAY be interpreted in any way the program chooses, or MAY be ignored
+  - **type:** `string`
+- **prop `link`:** URL/IRL to an externally-stored license
+  - **type:** `string`
+  - **format:** `url`, `url-reference`, `irl`, `irl-reference`
 
-* `rel`: what the link is for (`self` or `documentation`)
-* `lang` (optional): An IETF BCP 47 language tag
+#### `published`
 
-### `license` node
+**Schema publication date**
 
-The license(s) that the schema is licensed under.
+Date or datetime when the schema was published.
 
-#### Values
+- **arg:** Publication date
+  - **required**
+  - **type:** `string`
+  - **format:** `date`, `date-time`
 
-* License name - Name of the used license
+#### `modified`
 
-#### Properties
+**Schema modification date**
 
-* `spdx` (optional): an [SPDX license identifier](https://spdx.dev/ids/)
+When the schema was modified. If used multiple times, the most recent date will be considered 'latest'.
 
-#### Children
+- **repeatable**
+- **arg:** Modification date
+  - **type:** `string`
+  - **format:** `date`, `date-time`
 
-* [`link`](#link-node): one or more URLs
+#### `version`
 
-### `published` and `modified` nodes
+**Schema semver version**
 
-When the schema was published or last modified respectively.
+The version number of this version of the schema, in semver format. The pattern is validated against [the standard semver regular expression](https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string).
 
-#### Values
+- **arg:** Semver version number
+  - **type:** `string`
+  - **pattern:** `^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
 
-* Publication or modification date - As a ISO8601 date
+<hr />
 
-#### Properties
+## `example`
 
-* `time` (optional): an ISO8601 Time to accompany the date
+**Example document per this schema**
 
-### `version` nodes
+The `example` node is completely inert. It SHOULD contain an illustrative example of a document that would be valid if checked against this schema.
 
-The version number of this version of the schema.
+The [`about`](#about-mixin) prop or children can be used to describe what the example is about.
 
-#### Values
+- **repeatable**
+- **ref:** [About](#about-mixin)
 
-* Version - Semver version specification
+<hr />
 
-### `node` node
+## `definitions`
 
-The `node` node describes node instances in a document. These may either be at
-the toplevel of the document, or they may be nested inside a children block in
-another node.
+**Inert validation definitions**
 
-#### Values
+An optional set of definitions that may be referenced elsewhere in the schema. They will be inert (that is, not directly apply to the document) unless referenced by another node inside [`document`](#document) using the [`ref`](#ref) node.
 
-* Node name (optional) - A string name for the node. If present, the node's rules/validations will apply only to children with this node name. Otherwise, the rules will apply to _all_ child nodes, regardless of whether they're named or not.
+<hr />
 
-#### Properties
+## `document`
 
-* `description` (optional): An informational description of the purpose of this node.
-* `id` (optional): A globally unique identifier for this node.
-* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all properties, values, and children defined in the target node will be copied to this node, replacing any conflicts.
+**Validations for document contents**
 
-#### Children
+This node is responsible for specifying active validations that will be applied to a document to check its conformance to a given schema. That is, this is the bulk of the definition of the schema.
 
-* `min` (optional): Minimum number of this kind of node (or any node, if the name is missing) allowed in the parent's children block.
-* `max` (optional): Maximum number of this kind of node (or any node, if the name is missing) allowed in the parent's children block.
-* `prop-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of properties.
-* `other-props-allowed` (optional): Whether to allow props other than the ones explicitly listed here. Defaults to `false`.
-* `tag`: [Validations](#validation-nodes) to apply to the tag of the node.
-* [`prop`](#prop-node) - zero or more properties for this node.
-* [`value`](#value-node) - zero or more values for this node.
-* [`children`](#children-node) - zero or more children for this node.
+### Children
 
-### `tag` node
+#### `children`
 
-The `tag` describes the tags allowed in a children block or toplevel document.
+**Node children**
 
-#### Values
+Validations and definitions used for all nodes in this scope. Children are only allowed on nodes (or the toplevel document) if at least one `children` node is present in their definitions.
 
-* Tag name (optional) - A tag for the node. If present, the node's rules/validations will apply only to children with this tag. Otherwise, the rules will apply to _all_ child nodes with tags.
+##### Children
 
-#### Properties
+###### `min`
 
-* `description` (optional): An informational description of the purpose of this node.
-* `id` (optional): A globally unique identifier for this node.
-* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all properties, values, and children defined in the target node will be copied to this node, replacing any conflicts.
+**Minimum number of children**
 
-#### Children
+- **arg:** Minimum number of children
+  - **type:** `integer`
+  - **default:** `0`
 
-* [`node`](#node-node) - zero or more toplevel nodes that this tag is allowed to be on.
-* `node-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of nodes with this tag.
-* `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `false`.
+###### `max`
 
-### `prop` node
+**Maximum number of children**
 
-Represents a property of a node, which is a key/value pair in KDL.
+- **arg:** Maximum number of children
+  - **type:** `integer`
 
-#### Values
+###### `names`
 
-* `key` (optional) - String key for the property. If this value is missing, the `prop` node's attributes will apply to all properties of its parent.
+**Child node name validations**
 
-#### Properties
+String validations to apply to all node names in this scope.
 
-* `description` (optional): An informational description of the purpose of this property.
-* `id` (optional): A globally unique identifier for this property.
-* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all properties defined in the target property will be copied to this property, replacing any conflicts.
+- **repeatable**
+- **ref:** [String validations](#string-validations-mixin)
 
-#### Children
+<hr />
 
-* `required` (optional): A boolean value indicating whether this property is required.
-* Any [validation node](#validation-nodes).
+# Shared definitions
 
-### `value` node
+<a name="person-mixin"></a>
 
-Used to describe one or more values for a KDL node.
+## Person
 
-#### Values
+Shared definition for what makes a "person".
 
-None.
+- **arg:** Person name
+  - **type:** `string`
+- **prop `orcid`:** The ORCID of the person
+  - **type:** `string`
+- **ref:** [About](#about-mixin)
 
-#### Properties
+### Children
 
-* `description` (optional): An informational description of the purpose of this value.
-* `id` (optional): A globally unique identifier for this value.
-* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all values defined in the target value will be copied to this value, replacing any conflicts.
+#### `link`
 
-#### Children
+Link connected to this resource. Use `mailto:` for emails.
 
-* `min` (optional): Minimum number of values allowed.
-* `max` (optional): Maximum number of values allowed.
-* Any [validation node](#validation-nodes).
+- **repeatable**
+- **ref:** [Link](#link-mixin)
 
-### `children` node
+<a name="link-mixin"></a>
 
-Denotes KDL node children.
+## Link
 
-#### Values
+**External link**
 
-None.
+Link to an external resource of some sort, such as the schema itself (`rel=self`) or documentation (`rel=documentation`). Implementations MAY visit the URL, but MUST NOT assume it is valid.
 
-#### Properties
+- **arg:** Link connected to this resource. Use `mailto:` for emails.
+  - **type:** `string`
+  - **format:** `url`, `irl`
+- **prop `rel`:** The relationship between the current entity and the URL/IRL.
+  - **type:** `string`
+  - **default:** `self`
+  - **enum:** (non-exhaustive)
+    - `self`
+    - `documentation`
+    - `contact`
+    - `organization`
+- **ref:** [About](#about-mixin)
 
-* `description` (optional): An informational description of the purpose of this children block.
-* `id` (optional): A globally unique identifier for this children block.
-* `ref` (optional): A [KDL Query](./QUERY-SPEC.md) string relative to the root of the document. If present, all children defined in the target children block will be copied to this children block, replacing any conflicts.
+<a name="about-mixin"></a>
 
-#### Children
+## About
 
-* [`node`](#node-node) - zero or more child nodes.
-* `node-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of child nodes.
-* `other-nodes-allowed` (optional): Whether to allow nodes other than the ones explicitly listed here. Defaults to `false`.
+**Description for this component**
 
-### Validation Nodes
+By convention, the format of this value is intended to be similar to git's commit message system: The first line is treated as a short descriptor/summary, and any lines underneath it are treated as the longer-form documentation. As such, the first line SHOULD be up to 50 characters in length.
 
-The following nodes are shared validations between props and values, and can
-be used as children to either definition. They are also used to verify node
-and property names when the `node-names` or `prop-names` options are activated.
+Tooling SHOULD only display some or all of the first line in user interfaces that call for terseness, and they SHOULD display both the short descriptor and the longer explanation when expanding it.
 
-#### Generic validations
+`about` can be provided either as a prop or a child.
 
-* `tag`: [Validations](#validation-nodes) to apply to the tag of the value.
-* `type`: A string denoting the type of the property value.
-* `enum`: A specific list of allowed values for this property. May be heterogenous as long as it agrees with the `type`, if specified.
+Multiple `about` child nodes may also be used, and their `lang` properties can be used to specify the language or locale of the about text, using a two-letter ISO 639-1 language codes plus an optional hyphen (`-`) followed by an ISO 3166-1 country code, case insensitive.
 
-#### String validations
+- **prop `about`:** Description for this component
+  **type:** `string`
 
-* `pattern`: Regex pattern or patterns to test prop values against. Specific regex syntax may be implementation-dependent.
-* `min-length`: Minimum length, if a string.
-* `max-length`: Maximum length, if a string.
-* `format`: Intended data format, if the value is a string. Reserved values are:
-    * `date-time`: ISO8601 date/time format.
-    * `time`: "Time" section of ISO8601.
-    * `date`: "Date" section of ISO8601.
-    * `duration`: ISO8601 duration format.
-    * `decimal`: IEEE 754-2008 decimal string format.
-    * `currency`: ISO 4217 currency code.
-    * `country-2`: ISO 3166-1 alpha-2 country code.
-    * `country-3`: ISO 3166-1 alpha-3 country code.
-    * `country-subdivision`: ISO 3166-2 country subdivision code.
-    * `email`: RFC5302 email address.
-    * `idn-email`: RFC6531 internationalized email address.
-    * `hostname`: RFC1123 internet hostname.
-    * `idn-hostname`: RFC5890 internationalized internet hostname.
-    * `ipv4`: RFC2673 dotted-quad IPv4 address.
-    * `ipv6`: RFC2373 IPv6 address.
-    * `url`: RFC3986 URI.
-    * `url-reference`: RFC3986 URI Reference.
-    * `irl`: RFC3987 Internationalized Resource Identifier.
-    * `irl-reference`: RFC3987 Internationalized Resource Identifier Reference.
-    * `url-template`: RFC6570 URI Template.
-    * `uuid`: RFC4122 UUID.
-    * `regex`: Regular expression. Specific patterns may be implementation-dependent.
-    * `base64`: A Base64-encoded string, denoting arbitrary binary data.
-    * `kdl-query`: A [KDL Query](./QUERY-SPEC.md) string.
+### Children
 
-#### Number validations
+#### `about`
 
-* `%`: Only used for numeric values. Constrains them to be multiples of the given number(s).
-* `>`: Greater than.
-* `>=`: Greater than or equal to.
-* `<`: Less than.
-* `<=`: Less than or equal to.
-* `format`: Intended data format for numeric values. Reserved values are:
-    * `i8`: 8-bit signed integer
-    * `i16`: 16-bit signed integer
-    * `i32`: 32-bit signed integer
-    * `i64`: 64-bit signed integer
-    * `i128`: 128-bit signed integer
-    * `u8`: 8-bit unsigned integer
-    * `u16`: 16-bit unsigned integer
-    * `u32`: 32-bit unsigned integer
-    * `u64`: 64-bit unsigned integer
-    * `u128`: 128-bit unsigned integer
-    * `isize`: Platform-dependent signed integer
-    * `usize`: Platform-dependent unsigned integer
-    * `f32`: IEEE 754 single (32-bit) precision floating point number
-    * `f64`: IEEE 754 double (64-bit) precision floating point number
-    * `decimal64`: IEEE 754-2008 64-bit decimal floating point number
-    * `decimal128`: IEEE 754-2008 128-bit decimal floating point number
+Description for this component
 
-### `definitions` node
+Multiple `about` child nodes may also be used, and their `lang` properties can be used to specify the language or locale of the about text
 
-Definitions to reference in parts of the top-level `node`s.
+- **repeatable**
+- **ref:** [Lang](#lang-mixin)
+- **arg:** Description for this component
+  - **required**
+  - **type:** `string`
 
-#### Values
+<a name="lang-mixin"></a>
 
-None.
+## Lang
 
-#### Properties
+**Language/locale code**
 
-None.
+An ISO 639-1 language code plus by an optional hyphen (`-`) followed by an ISO 3166-1 country code, case insensitive.
 
-#### Children
+Implementations MAY use the pattern OR use an `enum` to specify all possible codes.
 
-* [`node`](#node-node) - zero or more node definitions.
-* [`tag`](#tag-node) - zero or more toplevel tags for nodes in the KDL document that this schema describes.
-* [`prop`](#prop-node) - zero or more property definitions.
-* [`value`](#value-node) - zero or more value definitions.
-* [`children`](#children-node) - zero or more definitions of children blocks.
+- **type:** `string`
+- **pattern:** `^[a-zA-Z]{2}(?:-[a-zA-Z]{2})?$`
+
+<a name="shared-validations-mixin"></a>
+
+## Shared validations
+
+**Validations used by other validations**
+
+### Children
+
+#### `type`
+
+**The type for this value**
+
+Multiple arguments signify a sum type.
+
+- **args:**
+  - **min:** 1
+  - **type:** `string`
+  - **enum:** `string` `boolean` `number` `integer` `null`
+  - **distinct**
+
+#### `enum`
+
+**Enumeration of values**
+
+An enumeration of possible values.
+
+The `allow-others` prop may be used to allow other choices to be present, as long as they pass other validations in the node.
+
+While apparently redundant, this option may be useful in cases where there's a set of suggested values, but others are acceptable. This information can then be used by tooling to e.g. suggest completion items.
+
+- **repeatable**
+- **prop `allow-others`:** Allow other choices
+  - **type:** `boolean`
+  - **default:** `#false`
+- **args:**
+  - **min:** 1
+
+##### Children
+
+###### `-`
+
+**Enumeration choice**
+
+Dash children may be used when many enum values are present, or when there's value in including [about](#about-mixin) information about a value.
+
+Dash children and node arguments are merged, in no particular order, with dash children being picked when duplicates are found.
+
+- **arg:** Enum value
+- **ref:** [About](#about-mixin)
