@@ -1,0 +1,95 @@
+// schema for a hypothetical package.kdl based on NPM's package.json.
+// It takes some liberties to make the format feel more "cuddly", rather than
+// trying to map the package.json structure 1:1.
+// Derived from https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/package.json
+
+@ksl:schema "https://github.com/kdl-org/kdl/blob/main/examples/ksl-schema.kdl"
+
+example "package.kdl" {
+    name "@bgotink/kdl"
+    version "0.3.1"
+    author "Bram Gotink" url="https://github.com/bgotink"
+    license MIT
+    repository "https://github.com/bgotink/kdl" type=git
+    homepage "https://github.bram.dev/kdl/"
+    description "Modification-friendly KDL parser and serializer."
+    keywords kdl parser serializer
+    type module
+    private
+    no-side-effects
+    package-manager yarn@4.0.2
+    exports {
+        "." "./src/index.js"
+        "./json" "./src/json.js"
+        "./v1-compat" "./src/v1-compat.js"
+        "./dessert" "./src/dessert.js"
+        "./package.json" "/package.json"
+    }
+    imports { "#v1" "@bgotink/kdl-v1" }
+    scripts {
+        postinstall "is-ci || husky"
+        build "node scripts/build.js"
+        test "uvu test"
+        bench "node scripts/bench.js"
+        book "scripts/book.sh"
+    }
+    dev-dependencies {
+        "@bgotink/kdl-v1" "=0.1.7" package="@bgotink/kdl" workspace="./legacy"
+        "@types/benchmark" ^2.1.5
+        "@types/node" ^22
+        benchmark ^2.1.4
+        esbuild ^0.24.2
+        express-check-in ^0.2.0
+        husky "=9.1.7-dotconfig.0.1.0" package="@dot-config/husky"
+        is-ci ^3.0.1
+        kdljs ^0.2.0
+        marked ^14.1.2
+        prettier "=3.4.2-dotconfig.0.1.0" package="@dot-config/prettier"
+        typedoc ^0.27.6
+        typedoc-plugin-markdown ^4.3.3
+        typescript ~5.6.2
+        uvu ^0.5.6
+    }
+}
+
+metadata {
+    // TODO: update this link when we're ready to release something.
+    id "https://github.com/kdl-org/kdl/blob/main/schema/package.kdl"
+    title "NPM package.kdl schema" lang=en
+    description "KDL-based translation of the package.json schema." lang=en
+    author "Kat Marchán" {
+        link "https://github.com/zkat" rel=self
+    }
+    link "https://github.com/kdl-org/kdl" rel=documentation
+    link "https://docs.npmjs.com/cli/v11/configuring-npm/package-json" rel=documentation
+    license "Creative Commons Attribution-ShareAlike 4.0 International License" spdx=CC-BY-SA-4.0 {
+        link "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+}
+
+document {
+    node dependencies
+}
+
+definitions {
+    node person about="""
+        A person
+        
+        Someone who has been involved in creating and maintaining this package.
+        """ {
+        arg about="Person name" {
+            type string
+        }
+        prop email about="Person's email address" {
+            type string
+            format email
+        }
+        prop url about="URL related to this person" {
+            type string
+            format url
+        }
+    }
+    node dependency-block {
+        
+    }
+}
