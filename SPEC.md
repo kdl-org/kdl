@@ -342,10 +342,17 @@ The following characters cannot be the first character in an
 * Any decimal digit (0-9)
 * Any [non-identifier characters](#non-identifier-characters)
 
-Additionally, the `-` character can only be used as an initial character if
-the second character is *not* a digit. This allows identifiers to look like
-`--this`, and removes the ambiguity of having an identifier look like a
-negative number.
+Additionally, the following initial characters impose limitations on subsequent
+characters:
+
+* the `+` and `-` characters can only be used as an initial character if
+  the second character is *not* a digit. If the second character is `.`, then
+  the third character must *not* be a digit.
+* the `.` character can only be used as an initial character if
+  the second character is *not* a digit.
+
+This allows identifiers to look like `--this` or `.md`, and removes the
+ambiguity of having an identifier look like a number.
 
 #### Non-identifier characters
 
