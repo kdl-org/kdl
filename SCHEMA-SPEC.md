@@ -287,7 +287,7 @@ and property names when the `node-names` or `prop-names` options are activated.
     * `country-subdivision`: ISO 3166-2 country subdivision code.
     * `email`: RFC5302 email address.
     * `idn-email`: RFC6531 internationalized email address.
-    * `hostname`: RFC1132 internet hostname.
+    * `hostname`: RFC1123 internet hostname.
     * `idn-hostname`: RFC5890 internationalized internet hostname.
     * `ipv4`: RFC2673 dotted-quad IPv4 address.
     * `ipv6`: RFC2373 IPv6 address.
