@@ -266,7 +266,8 @@ IEEE 754-2008 decimal floating point numbers
 * `email`: RFC5322 email address.
 * `idn-email`: RFC6531 internationalized email address.
 * `hostname`: RFC1132 internet hostname (only ASCII segments)
-* `idn-hostname`: RFC5890 internationalized internet hostname (only `xn--`-prefixed ASCII "punycode" segments, or non-ASCII segments)
+* `idn-hostname`: RFC5890 internationalized internet hostname
+  (only `xn--`-prefixed ASCII "punycode" segments, or non-ASCII segments)
 * `ipv4`: RFC2673 dotted-quad IPv4 address.
 * `ipv6`: RFC2373 IPv6 address.
 * `url`: RFC3986 URI.
@@ -333,9 +334,6 @@ Identifiers that match these patterns _MUST_ be treated as a syntax error; such
 values can only be written as quoted or raw strings. The precise details of the
 identifier syntax is specified in the [Full Grammar](#full-grammar) below.
 
-Identifier Strings are terminated by [Whitespace](#whitespace), 
-[Newlines](#newline), or the end of the file/stream (an `EOF`).
-
 #### Non-initial characters
 
 The following characters cannot be the first character in an
@@ -344,10 +342,17 @@ The following characters cannot be the first character in an
 * Any decimal digit (0-9)
 * Any [non-identifier characters](#non-identifier-characters)
 
-Additionally, the `-` character can only be used as an initial character if
-the second character is *not* a digit. This allows identifiers to look like
-`--this`, and removes the ambiguity of having an identifier look like a
-negative number.
+Additionally, the following initial characters impose limitations on subsequent
+characters:
+
+* the `+` and `-` characters can only be used as an initial character if
+  the second character is *not* a digit. If the second character is `.`, then
+  the third character must *not* be a digit.
+* the `.` character can only be used as an initial character if
+  the second character is *not* a digit.
+
+This allows identifiers to look like `--this` or `.md`, and removes the
+ambiguity of having an identifier look like a number.
 
 #### Non-identifier characters
 
@@ -611,7 +616,7 @@ while the following example is allowed
 bar
   baz
   \   """
-  
+
   // equivalent to
   """
   foo bar
@@ -656,23 +661,23 @@ The string contains the literal characters `hello\n\r\asd"#world`
 
 ```kdl
 raw-multi-line #"""
-    You can show examples of """
-        multi-line strings
+    Here's a """
+        multiline string
         """
-    without worrying about escapes.
+    without escapes.
     """#
 ```
 
 The string contains the value
 
-```
-You can show examples of """
-    multi-line strings
+~~~
+Here's a """
+    multiline string
     """
-without worrying about escapes.
-```
+without escapes.
+~~~
 
-or equivalently, `"You can show examples of \"\"\"\n    multi-line strings\n    \"\"\"\nwithout worrying about escapes."` as a Quoted String.
+or equivalently, `"Here's a \"\"\"\n    multiline string\n    \"\"\"\nwithout escapes."` as a Quoted String.
 
 ### Number
 
@@ -793,7 +798,7 @@ annotations, if present:
 * A [Children Block](#children-block): the entire block, including all
   children within, is treated as Whitespace. Only other children blocks, whether
   slashdashed or not, may follow a slashdashed children block.
-  
+
 A slashdash may be be followed by any amount of whitespace, including newlines and
 comments (other than other slashdashes), before the element that it comments out.
 
@@ -846,12 +851,12 @@ document := bom? version? nodes
 nodes := (line-space* node)* line-space*
 
 base-node := slashdash? type? node-space* string
-      (node-space+ slashdash? node-prop-or-arg)*
-      // slashdashed node-children must always be after props and args.
-      (node-space+ slashdash node-children)*
-      (node-space+ node-children)?
-      (node-space+ slashdash node-children)*
-      node-space*
+    (node-space+ slashdash? node-prop-or-arg)*
+    // slashdashed node-children must always be after props and args.
+    (node-space+ slashdash node-children)*
+    (node-space+ node-children)?
+    (node-space+ slashdash node-children)*
+    node-space*
 node := base-node node-terminator
 final-node := base-node node-terminator?
 
@@ -868,16 +873,32 @@ type := '(' node-space* string node-space* ')'
 string := identifier-string | quoted-string | raw-string ¶
 
 identifier-string := unambiguous-ident | signed-ident | dotted-ident
-unambiguous-ident := ((identifier-char - digit - sign - '.') identifier-char*) - disallowed-keyword-strings
-signed-ident := sign ((identifier-char - digit - '.') identifier-char*)?
-dotted-ident := sign? '.' ((identifier-char - digit) identifier-char*)?
-identifier-char := unicode - unicode-space - newline - [\\/(){};\[\]"#=] - disallowed-literal-code-points
-disallowed-keyword-identifiers := 'true' | 'false' | 'null' | 'inf' | '-inf' | 'nan'
+unambiguous-ident :=
+    ((identifier-char - digit - sign - '.') identifier-char*)
+    - disallowed-keyword-strings
+signed-ident :=
+    sign ((identifier-char - digit - '.') identifier-char*)?
+dotted-ident :=
+    sign? '.' ((identifier-char - digit) identifier-char*)?
+identifier-char :=
+    unicode - unicode-space - newline - [\\/(){};\[\]"#=]
+    - disallowed-literal-code-points
+disallowed-keyword-identifiers :=
+    'true' | 'false' | 'null' | 'inf' | '-inf' | 'nan'
 
-quoted-string := '"' single-line-string-body '"' | '"""' (newline multi-line-string-body)? newline (unicode-space | ws-escape)* '"""'
+quoted-string :=
+    '"' single-line-string-body '"' |
+    '"""' newline
+    (multi-line-string-body newline)?
+    (unicode-space | ws-escape)* '"""'
+
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
-string-character := '\\' (["\\bfnrts] | 'u{' hex-unicode '}') | ws-escape | [^\\"] - disallowed-literal-code-points
+string-character :=
+    '\\' (["\\bfnrts] |
+    'u{' hex-unicode '}') |
+    ws-escape |
+    [^\\"] - disallowed-literal-code-points
 ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
 hex-unicode := hex-digit{1, 6} - surrogates
@@ -886,10 +907,21 @@ surrogates := [dD][8-9a-fA-F]hex-digit{2}
 //              D  F         FF
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
-raw-string-quotes := '"' single-line-raw-string-body '"' | '"""' (newline multi-line-raw-string-body)? newline unicode-space* '"""'
-single-line-raw-string-body := '' | (single-line-raw-string-char - '"') single-line-raw-string-char*? | '"' (single-line-raw-string-char - '"') single-line-raw-string-char*?
-single-line-raw-string-char := unicode - newline - disallowed-literal-code-points
-multi-line-raw-string-body := (unicode - disallowed-literal-code-points)*?
+raw-string-quotes :=
+    '"' single-line-raw-string-body '"' |
+    '"""' newline
+    (multi-line-raw-string-body newline)?
+    unicode-space* '"""'
+single-line-raw-string-body :=
+    '' |
+    (single-line-raw-string-char - '"')
+        single-line-raw-string-char*? |
+    '"' (single-line-raw-string-char - '"')
+        single-line-raw-string-char*?
+single-line-raw-string-char :=
+    unicode - newline - disallowed-literal-code-points
+multi-line-raw-string-body :=
+    (unicode - disallowed-literal-code-points)*?
 
 // Numbers
 number := keyword-number | hex | octal | binary | decimal
@@ -911,14 +943,17 @@ boolean := '#true' | '#false'
 
 // Specific code points
 bom := '\u{FEFF}'
-disallowed-literal-code-points := See Table (Disallowed Literal Code Points)
+disallowed-literal-code-points :=
+    See Table (Disallowed Literal Code Points)
 unicode := Any Unicode Scalar Value
-unicode-space := See Table (All White_Space unicode characters which are not `newline`)
+unicode-space := See Table
+    (All White_Space unicode characters which are not `newline`)
 
 // Comments
 single-line-comment := '//' ^newline* (newline | eof)
 multi-line-comment := '/*' commented-block
-commented-block := '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
+commented-block :=
+    '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
 slashdash := '/-' line-space*
 
 // Whitespace
@@ -927,12 +962,15 @@ escline := '\\' ws* (single-line-comment | newline | eof)
 newline := See Table (All Newline White_Space)
 // Whitespace where newlines are allowed.
 line-space := node-space | newline | single-line-comment
-// Whitespace within nodes, where newline-ish things must be esclined.
+// Whitespace within nodes,
+// where newline-ish things must be esclined.
 node-space := ws* escline ws* | ws+
 
 // Version marker
-version := '/-' unicode-space* 'kdl-version' unicode-space+ ('1' | '2') unicode-space* newline
-```
+version :=
+    '/-' unicode-space* 'kdl-version' unicode-space+ ('1' | '2')
+    unicode-space* newline
+~~~
 
 ### Grammar language
 
