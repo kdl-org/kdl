@@ -891,7 +891,6 @@ quoted-string :=
     '"""' newline
     (multi-line-string-body newline)?
     (unicode-space | ws-escape)* '"""'
-
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
 string-character :=
