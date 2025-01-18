@@ -54,3 +54,7 @@ please send a PR.
 If you think the disagreement is due to a genuine error or oversight in the
 KDL specification, please open an issue explaining the matter and the change
 will be considered for the next version of the KDL spec.
+
+# Benchmarks
+
+The `benchmarks` folder contains some large or gnarly documents intended to be used to stress-test your parser and help with profiling. They are intentionally not part of the testsuite, and just provided for your own personal benefit.
