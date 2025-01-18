@@ -889,7 +889,7 @@ disallowed-keyword-identifiers :=
 quoted-string :=
     '"' single-line-string-body '"' |
     '"""' newline
-    multi-line-string-body newline
+    (multi-line-string-body newline)?
     (unicode-space | ws-escape)* '"""'
 single-line-string-body := (string-character - newline)*
 multi-line-string-body := (('"' | '""')? string-character)*
@@ -909,7 +909,7 @@ raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
 raw-string-quotes :=
     '"' single-line-raw-string-body '"' |
     '"""' newline
-    multi-line-raw-string-body newline
+    (multi-line-raw-string-body newline)?
     unicode-space* '"""'
 single-line-raw-string-body :=
     '' |
