@@ -22,7 +22,8 @@ simultaneously. For example, `node "foo"` is a valid node in both versions, and
 should be represented identically by parsers.
 
 KDL v2 is designed such that for any given KDL document written as KDL
-1.0 or [KDL 2.0](./SPEC.md), the parse will either fail completely, or, if the
+1.0 or [KDL 2.0](https://kdl-org.github.io/kdl/#go.draft-marchan-kdl2.html),
+the parse will either fail completely, or, if the
 parse succeeds, the data represented by a v1 or v2 parser will be identical.
 This means that it's safe to use a fallback parsing strategy in order to support
 both v1 and v2 simultaneously. For example, `node "foo"` is a valid node in both
