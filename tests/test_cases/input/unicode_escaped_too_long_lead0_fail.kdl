@@ -1,1 +1,1 @@
-no "Even with leading 0s Unicode Scalar Value escapes must ≤6: \u{0123456}"
+no "Even with leading 0s Unicode Scalar Value escapes must ≤6: \u{0012345}"
