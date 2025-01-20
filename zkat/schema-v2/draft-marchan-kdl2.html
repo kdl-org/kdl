@@ -1,0 +1,2965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>The KDL Document Language</title>
+<meta content="Katerina Zoé Marchán Salvá" name="author">
+<meta content="The KDL Contributors" name="author">
+<meta content="
+       KDL is a node-oriented document language. Its niche and purpose overlaps with
+XML, and as do many of its semantics. You can use KDL both as a configuration
+language, and a data exchange or storage format, if you so choose. 
+       This is the formal specification for KDL, including the intended data model and
+the grammar. 
+       This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
+is the latest stable version of the language, and will only be edited for minor
+copyedits or major errata. 
+    " name="description">
+<meta content="xml2rfc 3.25.0" name="generator">
+<meta content="Document-Language" name="keyword">
+<meta content="Configuration" name="keyword">
+<meta content="draft-marchan-kdl2-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.25.0
+    Python 3.12.8
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.1
+    intervaltree 3.1.0
+    Jinja2 3.1.5
+    lxml 5.3.0
+    platformdirs 4.3.6
+    pycountry 24.6.1
+    PyYAML 6.0.2
+    requests 2.32.3
+    setuptools 70.3.0
+    wcwidth 0.2.13
+-->
+<link href="draft-marchan-kdl2.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 680;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+  & li {
+    margin-top: 0.5em;
+  }
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+    }
+  }
+  &.olPercent > dt {
+    float: none;
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+  caption-side: bottom;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
+}
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
+  }
+}
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
+}
+
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+/* Comments */
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+
+@media screen {
+  #toc nav {
+    font-family: var(--font-title);
+    font-weight: 360;
+    & > ul { margin-bottom: 2em; }
+    & ul {
+      margin: 0 0 0 4px;
+      & :is(p, li) {
+        margin: 2px 0;
+      }
+    }
+  }
+  #toc a.toplink {
+    float: right;
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+    &::before { /* css hamburger */
+      float: right;
+      position: relative;
+      width: 1em;
+      height: 1px;
+      left: -164px;
+      margin: 8px 0 0 0;
+      background: white none repeat scroll 0 0;
+      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+      content: "";
+    }
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active {
+    opacity: 1;
+    & nav { display: block; }
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:is(:link, :focus, :hover),
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin: 2px 0.5em 0;
+  }
+}
+
+/* TOC layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+  #toc a.toplink {
+    margin: 8px 0.5em 0;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left"></td>
+<td class="center">KDL</td>
+<td class="right">January 2025</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Marchán &amp; KDL Contributors</td>
+<td class="center">Experimental</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">KDL Community</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2025-01-20" class="published">20 January 2025</time>
+    </dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">K. Marchán</div>
+<div class="org">Microsoft</div>
+</div>
+<div class="author">
+      <div class="author-name">KDL Contributors</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">The KDL Document Language</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">KDL is a node-oriented document language. Its niche and purpose overlaps with
+XML, and as do many of its semantics. You can use KDL both as a configuration
+language, and a data exchange or storage format, if you so choose.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This is the formal specification for KDL, including the intended data model and
+the grammar.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
+is the latest stable version of the language, and will only be edited for minor
+copyedits or major errata.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-marchan-kdl2/">https://datatracker.ietf.org/doc/draft-marchan-kdl2/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+         information can be found at <span><a href="https://kdl.dev/">https://kdl.dev/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/kdl-org/kdl">https://github.com/kdl-org/kdl</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<section class="note" id="section-note.2">
+      <h2 id="name-license">
+<a href="#name-license" class="section-name selfRef">License</a>
+      </h2>
+<p id="section-note.2-1">This work is licensed under Creative Commons Attribution-ShareAlike 4.0
+International. To view a copy of this license, visit
+https://creativecommons.org/licenses/by-sa/4.0/<a href="#section-note.2-1" class="pilcrow">¶</a></p>
+</section>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-compatibility" class="internal xref">Compatibility</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-components" class="internal xref">Components</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-document" class="internal xref">Document</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.1">
+                    <p id="section-toc.1-1.3.2.1.2.1.1" class="keepWithNext"><a href="#section-3.1.1" class="auto internal xref">3.1.1</a>.  <a href="#name-example" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-node" class="internal xref">Node</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-example-2" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-line-continuation" class="internal xref">Line Continuation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-example-3" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-property" class="internal xref">Property</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-argument" class="internal xref">Argument</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5.2.1">
+                    <p id="section-toc.1-1.3.2.5.2.1.1"><a href="#section-3.5.1" class="auto internal xref">3.5.1</a>.  <a href="#name-example-4" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-children-block" class="internal xref">Children Block</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.1">
+                    <p id="section-toc.1-1.3.2.6.2.1.1"><a href="#section-3.6.1" class="auto internal xref">3.6.1</a>.  <a href="#name-example-5" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
+                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-value" class="internal xref">Value</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8">
+                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-type-annotation" class="internal xref">Type Annotation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.1">
+                    <p id="section-toc.1-1.3.2.8.2.1.1"><a href="#section-3.8.1" class="auto internal xref">3.8.1</a>.  <a href="#name-reserved-type-annotations-f" class="internal xref">Reserved Type Annotations for Numbers Without Decimals:</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.2">
+                    <p id="section-toc.1-1.3.2.8.2.2.1"><a href="#section-3.8.2" class="auto internal xref">3.8.2</a>.  <a href="#name-reserved-type-annotations-fo" class="internal xref">Reserved Type Annotations for Numbers With Decimals:</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.3">
+                    <p id="section-toc.1-1.3.2.8.2.3.1"><a href="#section-3.8.3" class="auto internal xref">3.8.3</a>.  <a href="#name-reserved-type-annotations-for" class="internal xref">Reserved Type Annotations for Strings:</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.4">
+                    <p id="section-toc.1-1.3.2.8.2.4.1"><a href="#section-3.8.4" class="auto internal xref">3.8.4</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.9">
+                <p id="section-toc.1-1.3.2.9.1"><a href="#section-3.9" class="auto internal xref">3.9</a>.  <a href="#name-string" class="internal xref">String</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10">
+                <p id="section-toc.1-1.3.2.10.1"><a href="#section-3.10" class="auto internal xref">3.10</a>. <a href="#name-identifier-string" class="internal xref">Identifier String</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10.2.1">
+                    <p id="section-toc.1-1.3.2.10.2.1.1"><a href="#section-3.10.1" class="auto internal xref">3.10.1</a>.  <a href="#name-non-initial-characters" class="internal xref">Non-initial characters</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10.2.2">
+                    <p id="section-toc.1-1.3.2.10.2.2.1"><a href="#section-3.10.2" class="auto internal xref">3.10.2</a>.  <a href="#name-non-identifier-characters" class="internal xref">Non-identifier characters</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11">
+                <p id="section-toc.1-1.3.2.11.1"><a href="#section-3.11" class="auto internal xref">3.11</a>. <a href="#name-quoted-string" class="internal xref">Quoted String</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11.2.1">
+                    <p id="section-toc.1-1.3.2.11.2.1.1"><a href="#section-3.11.1" class="auto internal xref">3.11.1</a>.  <a href="#name-escapes" class="internal xref">Escapes</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.12">
+                <p id="section-toc.1-1.3.2.12.1"><a href="#section-3.12" class="auto internal xref">3.12</a>. <a href="#name-multi-line-string" class="internal xref">Multi-line String</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.12.2.1">
+                    <p id="section-toc.1-1.3.2.12.2.1.1"><a href="#section-3.12.1" class="auto internal xref">3.12.1</a>.  <a href="#name-newline-normalization" class="internal xref">Newline Normalization</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.12.2.2">
+                    <p id="section-toc.1-1.3.2.12.2.2.1"><a href="#section-3.12.2" class="auto internal xref">3.12.2</a>.  <a href="#name-examples-2" class="internal xref">Examples</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.12.2.3">
+                    <p id="section-toc.1-1.3.2.12.2.3.1"><a href="#section-3.12.3" class="auto internal xref">3.12.3</a>.  <a href="#name-interaction-with-whitespace" class="internal xref">Interaction with Whitespace Escapes</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.13">
+                <p id="section-toc.1-1.3.2.13.1"><a href="#section-3.13" class="auto internal xref">3.13</a>. <a href="#name-raw-string" class="internal xref">Raw String</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.13.2.1">
+                    <p id="section-toc.1-1.3.2.13.2.1.1"><a href="#section-3.13.1" class="auto internal xref">3.13.1</a>.  <a href="#name-example-6" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.14">
+                <p id="section-toc.1-1.3.2.14.1"><a href="#section-3.14" class="auto internal xref">3.14</a>. <a href="#name-number" class="internal xref">Number</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.14.2.1">
+                    <p id="section-toc.1-1.3.2.14.2.1.1"><a href="#section-3.14.1" class="auto internal xref">3.14.1</a>.  <a href="#name-keyword-numbers" class="internal xref">Keyword Numbers</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15">
+                <p id="section-toc.1-1.3.2.15.1"><a href="#section-3.15" class="auto internal xref">3.15</a>. <a href="#name-boolean" class="internal xref">Boolean</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15.2.1">
+                    <p id="section-toc.1-1.3.2.15.2.1.1"><a href="#section-3.15.1" class="auto internal xref">3.15.1</a>.  <a href="#name-example-7" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16">
+                <p id="section-toc.1-1.3.2.16.1"><a href="#section-3.16" class="auto internal xref">3.16</a>. <a href="#name-null" class="internal xref">Null</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16.2.1">
+                    <p id="section-toc.1-1.3.2.16.2.1.1"><a href="#section-3.16.1" class="auto internal xref">3.16.1</a>.  <a href="#name-example-8" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17">
+                <p id="section-toc.1-1.3.2.17.1"><a href="#section-3.17" class="auto internal xref">3.17</a>. <a href="#name-whitespace" class="internal xref">Whitespace</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17.2.1">
+                    <p id="section-toc.1-1.3.2.17.2.1.1"><a href="#section-3.17.1" class="auto internal xref">3.17.1</a>.  <a href="#name-single-line-comments" class="internal xref">Single-line comments</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17.2.2">
+                    <p id="section-toc.1-1.3.2.17.2.2.1"><a href="#section-3.17.2" class="auto internal xref">3.17.2</a>.  <a href="#name-multi-line-comments" class="internal xref">Multi-line comments</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17.2.3">
+                    <p id="section-toc.1-1.3.2.17.2.3.1"><a href="#section-3.17.3" class="auto internal xref">3.17.3</a>.  <a href="#name-slashdash-comments" class="internal xref">Slashdash comments</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.18">
+                <p id="section-toc.1-1.3.2.18.1"><a href="#section-3.18" class="auto internal xref">3.18</a>. <a href="#name-newline" class="internal xref">Newline</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.19">
+                <p id="section-toc.1-1.3.2.19.1"><a href="#section-3.19" class="auto internal xref">3.19</a>. <a href="#name-disallowed-literal-code-poi" class="internal xref">Disallowed Literal Code Points</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-full-grammar" class="internal xref">Full Grammar</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-grammar-language" class="internal xref">Grammar language</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="compatibility">
+<section id="section-1">
+      <h2 id="name-compatibility">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-compatibility" class="section-name selfRef">Compatibility</a>
+      </h2>
+<p id="section-1-1">KDL 2.0 is designed such that for any given KDL document written as <a href="./SPEC_v1.md">KDL
+1.0</a> or KDL 2.0, the parse will either fail completely, or, if the
+parse succeeds, the data represented by a v1 or v2 parser will be identical.
+This means that it's safe to use a fallback parsing strategy in order to support
+both v1 and v2 simultaneously. For example, <code>node "foo"</code> is a valid node in both
+versions, and should be represented identically by parsers.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">A version marker <code>/- kdl-version 2</code> (or <code>1</code>) <em>MAY</em> be added to the beginning of
+a KDL document, optionally preceded by the BOM, and parsers <em>MAY</em> use that as a
+hint as to which version to parse the document as.<a href="#section-1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="introduction">
+<section id="section-2">
+      <h2 id="name-introduction">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-2-1">KDL is a node-oriented document language. Its niche and purpose overlaps with
+XML, and as do many of its semantics. You can use KDL both as a configuration
+language, and a data exchange or storage format, if you so choose.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">The bulk of this document is dedicated to a long-form description of all
+Components (<a href="#components" class="auto internal xref">Section 3</a>) of a KDL document.
+There is also a much more terse
+Grammar (<a href="#full-grammar" class="auto internal xref">Section 4</a>) at the end of the document that covers most of the
+rules, with some semantic exceptions involving the data model.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">KDL is designed to be easy to read <em>and</em> easy to implement.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">In this document, references to "left" or "right" refer to directions in the
+<em>data stream</em> towards the beginning or end, respectively; in other words,
+the directions if the data stream were only ASCII text. They do not refer
+to the writing direction of text, which can flow in either direction,
+depending on the characters used.<a href="#section-2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="components">
+<section id="section-3">
+      <h2 id="name-components">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-components" class="section-name selfRef">Components</a>
+      </h2>
+<div id="document">
+<section id="section-3.1">
+        <h3 id="name-document">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-document" class="section-name selfRef">Document</a>
+        </h3>
+<p id="section-3.1-1">The toplevel concept of KDL is a Document. A Document is composed of zero or
+more Nodes (<a href="#node" class="auto internal xref">Section 3.2</a>), separated by newlines and whitespace, and eventually
+terminated by an EOF.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">All KDL documents should be UTF-8 encoded and conform to the specifications in
+this document.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<div id="example">
+<section id="section-3.1.1">
+          <h4 id="name-example">
+<a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-example" class="section-name selfRef">Example</a>
+          </h4>
+<p id="section-3.1.1-1">The following is a document composed of two toplevel nodes:<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.1.1-2">
+<pre>
+foo {
+    bar
+}
+baz
+</pre><a href="#section-3.1.1-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="node">
+<section id="section-3.2">
+        <h3 id="name-node">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-node" class="section-name selfRef">Node</a>
+        </h3>
+<p id="section-3.2-1">Being a node-oriented language means that the real core component of any KDL
+document is the "node". Every node must have a name, which must be a
+String (<a href="#string" class="auto internal xref">Section 3.9</a>).<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">The name may be preceded by a Type Annotation (<a href="#type-annotation" class="auto internal xref">Section 3.8</a>) to further
+clarify its type, particularly in relation to its parent node. (For example,
+clarifying that a particular <code>date</code> child node is for the <em>publication</em> date,
+rather than the last-modified date, with <code>(published)date</code>.)<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">Following the name are zero or more Arguments (<a href="#argument" class="auto internal xref">Section 3.5</a>) or
+Properties (<a href="#property" class="auto internal xref">Section 3.4</a>), separated by either whitespace (<a href="#whitespace" class="auto internal xref">Section 3.17</a>) or a
+slash-escaped line continuation (<a href="#line-continuation" class="auto internal xref">Section 3.3</a>). Arguments and Properties
+may be interspersed in any order, much like is common with positional arguments
+vs options in command line tools. Collectively, Arguments and Properties may be
+referred to as "Entries".<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">Children (<a href="#children-block" class="auto internal xref">Section 3.6</a>) can be placed after the name and the optional
+Entries, possibly separated by either whitespace or a
+slash-escaped line continuation.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5">Arguments are ordered relative to each other and that order must be preserved in
+order to maintain the semantics. Properties between Arguments do not affect
+Argument ordering.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.2-6">By contrast, Properties <em>SHOULD NOT</em> be assumed to be presented in a given
+order. Children (<a href="#children-block" class="auto internal xref">Section 3.6</a>) should be used if an order-sensitive
+key/value data structure must be represented in KDL. Cf. JSON objects
+preserving key order.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2-7">Nodes <em>MAY</em> be prefixed with Slashdash (<a href="#slashdash-comments" class="auto internal xref">Section 3.17.3</a>) to "comment out"
+the entire node, including its properties, arguments, and children, and make
+it act as plain whitespace, even if it spreads across multiple lines.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.2-8">Finally, a node is terminated by either a Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>), a semicolon
+(<code>;</code>), the end of a child block (<code>}</code>) or the end of the file/stream (an <code>EOF</code>).<a href="#section-3.2-8" class="pilcrow">¶</a></p>
+<div id="example-1">
+<section id="section-3.2.1">
+          <h4 id="name-example-2">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-example-2" class="section-name selfRef">Example</a>
+          </h4>
+<div class="lang-kdl sourcecode" id="section-3.2.1-1">
+<pre>
+// `foo` will have an Argument value list like `[1, 3]`.
+foo 1 key=val 3 {
+    bar
+    (role)baz 1 2
+}
+</pre><a href="#section-3.2.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="line-continuation">
+<section id="section-3.3">
+        <h3 id="name-line-continuation">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-line-continuation" class="section-name selfRef">Line Continuation</a>
+        </h3>
+<p id="section-3.3-1">Line continuations allow Nodes (<a href="#node" class="auto internal xref">Section 3.2</a>) to be spread across multiple lines.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">A line continuation is a <code>\</code> character followed by zero or more whitespace
+items (including multiline comments) and an optional single-line comment. It
+must be terminated by a Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>) (including the Newline that is
+part of single-line comments).<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">Following a line continuation, processing of a Node can continue as usual.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<div id="example-2">
+<section id="section-3.3.1">
+          <h4 id="name-example-3">
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-example-3" class="section-name selfRef">Example</a>
+          </h4>
+<div class="lang-kdl sourcecode" id="section-3.3.1-1">
+<pre>
+my-node 1 2 \  // comments are ok after \
+        3 4    // This is the actual end of the Node.
+</pre><a href="#section-3.3.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="property">
+<section id="section-3.4">
+        <h3 id="name-property">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-property" class="section-name selfRef">Property</a>
+        </h3>
+<p id="section-3.4-1">A Property is a key/value pair attached to a Node (<a href="#node" class="auto internal xref">Section 3.2</a>). A Property is
+composed of a String (<a href="#string" class="auto internal xref">Section 3.9</a>), followed immediately by an equals sign (<code>=</code>, <code>U+003D</code>),
+and then a Value (<a href="#value" class="auto internal xref">Section 3.7</a>).<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">Properties should be interpreted left-to-right, with rightmost properties with
+identical names overriding earlier properties. That is:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.4-3">
+<pre>
+node a=1 a=2
+</pre><a href="#section-3.4-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.4-4">In this example, the node's <code>a</code> value must be <code>2</code>, not <code>1</code>.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4-5">No other guarantees about order should be expected by implementers.
+Deserialized representations may iterate over properties in any order and
+still be spec-compliant.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.4-6">Properties <em>MAY</em> be prefixed with <code>/-</code> to "comment out" the entire token and
+make it act as plain whitespace, even if it spreads across multiple lines.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="argument">
+<section id="section-3.5">
+        <h3 id="name-argument">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-argument" class="section-name selfRef">Argument</a>
+        </h3>
+<p id="section-3.5-1">An Argument is a bare Value (<a href="#value" class="auto internal xref">Section 3.7</a>) attached to a Node (<a href="#node" class="auto internal xref">Section 3.2</a>), with no
+associated key. It shares the same space as Properties (<a href="#property" class="auto internal xref">Section 3.4</a>), and may be interleaved with them.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-2">A Node may have any number of Arguments, which should be evaluated left to
+right. KDL implementations <em>MUST</em> preserve the order of Arguments relative to
+each other (not counting Properties).<a href="#section-3.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.5-3">Arguments <em>MAY</em> be prefixed with <code>/-</code> to "comment out" the entire token and
+make it act as plain whitespace, even if it spreads across multiple lines.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+<div id="example-3">
+<section id="section-3.5.1">
+          <h4 id="name-example-4">
+<a href="#section-3.5.1" class="section-number selfRef">3.5.1. </a><a href="#name-example-4" class="section-name selfRef">Example</a>
+          </h4>
+<div class="lang-kdl sourcecode" id="section-3.5.1-1">
+<pre>
+my-node 1 2 3 a b c
+</pre><a href="#section-3.5.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="children-block">
+<section id="section-3.6">
+        <h3 id="name-children-block">
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-children-block" class="section-name selfRef">Children Block</a>
+        </h3>
+<p id="section-3.6-1">A children block is a block of Nodes (<a href="#node" class="auto internal xref">Section 3.2</a>), surrounded by <code>{</code> and <code>}</code>. They
+are an optional part of nodes, and create a hierarchy of KDL nodes.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.6-2">Regular node termination rules apply, which means multiple nodes can be
+included in a single-line children block, as long as they're all terminated by
+<code>;</code>.<a href="#section-3.6-2" class="pilcrow">¶</a></p>
+<div id="example-4">
+<section id="section-3.6.1">
+          <h4 id="name-example-5">
+<a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-example-5" class="section-name selfRef">Example</a>
+          </h4>
+<div class="lang-kdl sourcecode" id="section-3.6.1-1">
+<pre>
+parent {
+    child1
+    child2
+}
+
+parent { child1; child2; }
+</pre><a href="#section-3.6.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="value">
+<section id="section-3.7">
+        <h3 id="name-value">
+<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-value" class="section-name selfRef">Value</a>
+        </h3>
+<p id="section-3.7-1">A value is either: a String (<a href="#string" class="auto internal xref">Section 3.9</a>), a Number (<a href="#number" class="auto internal xref">Section 3.14</a>), a
+Boolean (<a href="#boolean" class="auto internal xref">Section 3.15</a>), or Null (<a href="#null" class="auto internal xref">Section 3.16</a>).<a href="#section-3.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.7-2">Values <em>MUST</em> be either Arguments (<a href="#argument" class="auto internal xref">Section 3.5</a>) or values of
+Properties (<a href="#property" class="auto internal xref">Section 3.4</a>). Only String (<a href="#string" class="auto internal xref">Section 3.9</a>) values may be used as
+Node (<a href="#node" class="auto internal xref">Section 3.2</a>) names or Property (<a href="#property" class="auto internal xref">Section 3.4</a>) keys.<a href="#section-3.7-2" class="pilcrow">¶</a></p>
+<p id="section-3.7-3">Values (both as arguments and in properties) <em>MAY</em> be prefixed by a single
+Type Annotation (<a href="#type-annotation" class="auto internal xref">Section 3.8</a>).<a href="#section-3.7-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="type-annotation">
+<section id="section-3.8">
+        <h3 id="name-type-annotation">
+<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-type-annotation" class="section-name selfRef">Type Annotation</a>
+        </h3>
+<p id="section-3.8-1">A type annotation is a prefix to any Node Name (<a href="#node" class="auto internal xref">Section 3.2</a>) or Value (<a href="#value" class="auto internal xref">Section 3.7</a>) that
+includes a <em>suggestion</em> of what type the value is <em>intended</em> to be treated as,
+or as a <em>context-specific elaboration</em> of the more generic type the node name
+indicates.<a href="#section-3.8-1" class="pilcrow">¶</a></p>
+<p id="section-3.8-2">Type annotations are written as a set of <code>(</code> and <code>)</code> with a single
+String (<a href="#string" class="auto internal xref">Section 3.9</a>) in it. It may contain Whitespace after the <code>(</code> and before
+the <code>)</code>, and may be separated from its target by Whitespace.<a href="#section-3.8-2" class="pilcrow">¶</a></p>
+<p id="section-3.8-3">KDL does not specify any restrictions on what implementations might do with
+these annotations. They are free to ignore them, or use them to make decisions
+about how to interpret a value.<a href="#section-3.8-3" class="pilcrow">¶</a></p>
+<p id="section-3.8-4">Additionally, the following type annotations MAY be recognized by KDL parsers
+and, if used, SHOULD interpret these types as follows:<a href="#section-3.8-4" class="pilcrow">¶</a></p>
+<div id="reserved-type-annotations-for-numbers-without-decimals">
+<section id="section-3.8.1">
+          <h4 id="name-reserved-type-annotations-f">
+<a href="#section-3.8.1" class="section-number selfRef">3.8.1. </a><a href="#name-reserved-type-annotations-f" class="section-name selfRef">Reserved Type Annotations for Numbers Without Decimals:</a>
+          </h4>
+<p id="section-3.8.1-1">Signed integers of various sizes (the number is the bit size):<a href="#section-3.8.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.8.1-2.1">
+              <p id="section-3.8.1-2.1.1"><code>i8</code><a href="#section-3.8.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.1-2.2">
+              <p id="section-3.8.1-2.2.1"><code>i16</code><a href="#section-3.8.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.1-2.3">
+              <p id="section-3.8.1-2.3.1"><code>i32</code><a href="#section-3.8.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.1-2.4">
+              <p id="section-3.8.1-2.4.1"><code>i64</code><a href="#section-3.8.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.1-2.5">
+              <p id="section-3.8.1-2.5.1"><code>i128</code><a href="#section-3.8.1-2.5.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.8.1-3">Unsigned integers of various sizes (the number is the bit size):<a href="#section-3.8.1-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.8.1-4.1">
+              <p id="section-3.8.1-4.1.1"><code>u8</code><a href="#section-3.8.1-4.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.1-4.2">
+              <p id="section-3.8.1-4.2.1"><code>u16</code><a href="#section-3.8.1-4.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.1-4.3">
+              <p id="section-3.8.1-4.3.1"><code>u32</code><a href="#section-3.8.1-4.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.1-4.4">
+              <p id="section-3.8.1-4.4.1"><code>u64</code><a href="#section-3.8.1-4.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.1-4.5">
+              <p id="section-3.8.1-4.5.1"><code>u128</code><a href="#section-3.8.1-4.5.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.8.1-5">Platform-dependent integer types, both signed and unsigned:<a href="#section-3.8.1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.8.1-6.1">
+              <p id="section-3.8.1-6.1.1"><code>isize</code><a href="#section-3.8.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.1-6.2">
+              <p id="section-3.8.1-6.2.1"><code>usize</code><a href="#section-3.8.1-6.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="reserved-type-annotations-for-numbers-with-decimals">
+<section id="section-3.8.2">
+          <h4 id="name-reserved-type-annotations-fo">
+<a href="#section-3.8.2" class="section-number selfRef">3.8.2. </a><a href="#name-reserved-type-annotations-fo" class="section-name selfRef">Reserved Type Annotations for Numbers With Decimals:</a>
+          </h4>
+<p id="section-3.8.2-1">IEEE 754 floating point numbers, both single (32) and double (64) precision:<a href="#section-3.8.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.8.2-2.1">
+              <p id="section-3.8.2-2.1.1"><code>f32</code><a href="#section-3.8.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.2-2.2">
+              <p id="section-3.8.2-2.2.1"><code>f64</code><a href="#section-3.8.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.8.2-3">IEEE 754-2008 decimal floating point numbers<a href="#section-3.8.2-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.8.2-4.1">
+              <p id="section-3.8.2-4.1.1"><code>decimal64</code><a href="#section-3.8.2-4.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.2-4.2">
+              <p id="section-3.8.2-4.2.1"><code>decimal128</code><a href="#section-3.8.2-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="reserved-type-annotations-for-strings">
+<section id="section-3.8.3">
+          <h4 id="name-reserved-type-annotations-for">
+<a href="#section-3.8.3" class="section-number selfRef">3.8.3. </a><a href="#name-reserved-type-annotations-for" class="section-name selfRef">Reserved Type Annotations for Strings:</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-3.8.3-1.1">
+              <p id="section-3.8.3-1.1.1"><code>date-time</code>: ISO8601 date/time format.<a href="#section-3.8.3-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.2">
+              <p id="section-3.8.3-1.2.1"><code>time</code>: "Time" section of ISO8601.<a href="#section-3.8.3-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.3">
+              <p id="section-3.8.3-1.3.1"><code>date</code>: "Date" section of ISO8601.<a href="#section-3.8.3-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.4">
+              <p id="section-3.8.3-1.4.1"><code>duration</code>: ISO8601 duration format.<a href="#section-3.8.3-1.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.5">
+              <p id="section-3.8.3-1.5.1"><code>decimal</code>: IEEE 754-2008 decimal string format.<a href="#section-3.8.3-1.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.6">
+              <p id="section-3.8.3-1.6.1"><code>currency</code>: ISO 4217 currency code.<a href="#section-3.8.3-1.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.7">
+              <p id="section-3.8.3-1.7.1"><code>country-2</code>: ISO 3166-1 alpha-2 country code.<a href="#section-3.8.3-1.7.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.8">
+              <p id="section-3.8.3-1.8.1"><code>country-3</code>: ISO 3166-1 alpha-3 country code.<a href="#section-3.8.3-1.8.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.9">
+              <p id="section-3.8.3-1.9.1"><code>country-subdivision</code>: ISO 3166-2 country subdivision code.<a href="#section-3.8.3-1.9.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.10">
+              <p id="section-3.8.3-1.10.1"><code>email</code>: RFC5322 email address.<a href="#section-3.8.3-1.10.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.11">
+              <p id="section-3.8.3-1.11.1"><code>idn-email</code>: RFC6531 internationalized email address.<a href="#section-3.8.3-1.11.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.12">
+              <p id="section-3.8.3-1.12.1"><code>hostname</code>: RFC1123 internet hostname (only ASCII segments)<a href="#section-3.8.3-1.12.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.13">
+              <p id="section-3.8.3-1.13.1"><code>idn-hostname</code>: RFC5890 internationalized internet hostname
+(only <code>xn--</code>-prefixed ASCII "punycode" segments, or non-ASCII segments)<a href="#section-3.8.3-1.13.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.14">
+              <p id="section-3.8.3-1.14.1"><code>ipv4</code>: RFC2673 dotted-quad IPv4 address.<a href="#section-3.8.3-1.14.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.15">
+              <p id="section-3.8.3-1.15.1"><code>ipv6</code>: RFC2373 IPv6 address.<a href="#section-3.8.3-1.15.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.16">
+              <p id="section-3.8.3-1.16.1"><code>url</code>: RFC3986 URI.<a href="#section-3.8.3-1.16.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.17">
+              <p id="section-3.8.3-1.17.1"><code>url-reference</code>: RFC3986 URI Reference.<a href="#section-3.8.3-1.17.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.18">
+              <p id="section-3.8.3-1.18.1"><code>irl</code>: RFC3987 Internationalized Resource Identifier.<a href="#section-3.8.3-1.18.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.19">
+              <p id="section-3.8.3-1.19.1"><code>irl-reference</code>: RFC3987 Internationalized Resource Identifier Reference.<a href="#section-3.8.3-1.19.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.20">
+              <p id="section-3.8.3-1.20.1"><code>url-template</code>: RFC6570 URI Template.<a href="#section-3.8.3-1.20.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.21">
+              <p id="section-3.8.3-1.21.1"><code>uuid</code>: RFC4122 UUID.<a href="#section-3.8.3-1.21.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.22">
+              <p id="section-3.8.3-1.22.1"><code>regex</code>: Regular expression. Specific patterns may be implementation-dependent.<a href="#section-3.8.3-1.22.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.3-1.23">
+              <p id="section-3.8.3-1.23.1"><code>base64</code>: A Base64-encoded string, denoting arbitrary binary data.<a href="#section-3.8.3-1.23.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="examples">
+<section id="section-3.8.4">
+          <h4 id="name-examples">
+<a href="#section-3.8.4" class="section-number selfRef">3.8.4. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+          </h4>
+<div class="lang-kdl sourcecode" id="section-3.8.4-1">
+<pre>
+node (u8)123
+node prop=(regex).*
+(published)date "1970-01-01"
+(contributor)person name="Foo McBar"
+</pre><a href="#section-3.8.4-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="string">
+<section id="section-3.9">
+        <h3 id="name-string">
+<a href="#section-3.9" class="section-number selfRef">3.9. </a><a href="#name-string" class="section-name selfRef">String</a>
+        </h3>
+<p id="section-3.9-1">Strings in KDL represent textual UTF-8 Values (<a href="#value" class="auto internal xref">Section 3.7</a>). A String is either an
+Identifier String (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>) (like <code>foo</code>), a
+Quoted String (<a href="#quoted-string" class="auto internal xref">Section 3.11</a>) (like <code>"foo"</code>)
+or a Multi-Line String (<a href="#multi-line-string" class="auto internal xref">Section 3.12</a>).
+Both Quoted and Multiline strings come in normal
+and Raw String (<a href="#raw-string" class="auto internal xref">Section 3.13</a>) variants (like <code>#"foo"#</code>):<a href="#section-3.9-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.9-2.1">
+            <p id="section-3.9-2.1.1">Identifier Strings let you write short, "single-word" strings with a
+minimum of syntax<a href="#section-3.9-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.9-2.2">
+            <p id="section-3.9-2.2.1">Quoted Strings let you write strings "like normal", with whitespace and escapes.<a href="#section-3.9-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.9-2.3">
+            <p id="section-3.9-2.3.1">Multi-Line Strings let you write strings across multiple lines
+  and with indentation that's not part of the string value.<a href="#section-3.9-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.9-2.4">
+            <p id="section-3.9-2.4.1">Raw Strings don't allow any escapes,
+allowing you to not worry about the string's content containing anything that
+might look like an escape.<a href="#section-3.9-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.9-3">Strings <em>MUST</em> be represented as UTF-8 values.<a href="#section-3.9-3" class="pilcrow">¶</a></p>
+<p id="section-3.9-4">Strings <em>MUST NOT</em> include the code points for
+disallowed literal code points (<a href="#disallowed-literal-code-points" class="auto internal xref">Section 3.19</a>) directly.
+Quoted and Multi-Line Strings may include these code points as <em>values</em>
+by representing them with their corresponding <code>\u{...}</code> escape.<a href="#section-3.9-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="identifier-string">
+<section id="section-3.10">
+        <h3 id="name-identifier-string">
+<a href="#section-3.10" class="section-number selfRef">3.10. </a><a href="#name-identifier-string" class="section-name selfRef">Identifier String</a>
+        </h3>
+<p id="section-3.10-1">An Identifier String (sometimes referred to as just an "identifier") is
+composed of any <a href="https://unicode.org/glossary/#unicode_scalar_value">Unicode Scalar
+Value</a> other than
+non-initial characters (<a href="#non-initial-characters" class="auto internal xref">Section 3.10.1</a>), followed by any number of
+Unicode Scalar Values other than non-identifier
+characters (<a href="#non-identifier-characters" class="auto internal xref">Section 3.10.2</a>).<a href="#section-3.10-1" class="pilcrow">¶</a></p>
+<p id="section-3.10-2">A handful of patterns are disallowed, to avoid confusion with other values:<a href="#section-3.10-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.10-3.1">
+            <p id="section-3.10-3.1.1">idents that appear to start with a Number (<a href="#number" class="auto internal xref">Section 3.14</a>) (like <code>1.0v2</code> or
+  <code>-1em</code>) or the "almost a number" pattern of a decimal point without a
+  leading digit (like <code>.1</code>).<a href="#section-3.10-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.10-3.2">
+            <p id="section-3.10-3.2.1">idents that are the language keywords (<code>inf</code>, <code>-inf</code>, <code>nan</code>, <code>true</code>,
+<code>false</code>, and <code>null</code>) without their leading <code>#</code>.<a href="#section-3.10-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.10-4">Identifiers that match these patterns <em>MUST</em> be treated as a syntax error; such
+values can only be written as quoted or raw strings. The precise details of the
+identifier syntax is specified in the Full Grammar in <a href="#full-grammar" class="auto internal xref">Section 4</a>.<a href="#section-3.10-4" class="pilcrow">¶</a></p>
+<div id="non-initial-characters">
+<section id="section-3.10.1">
+          <h4 id="name-non-initial-characters">
+<a href="#section-3.10.1" class="section-number selfRef">3.10.1. </a><a href="#name-non-initial-characters" class="section-name selfRef">Non-initial characters</a>
+          </h4>
+<p id="section-3.10.1-1">The following characters cannot be the first character in an
+Identifier String (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>):<a href="#section-3.10.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.10.1-2.1">
+              <p id="section-3.10.1-2.1.1">Any decimal digit (0-9)<a href="#section-3.10.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.10.1-2.2">
+              <p id="section-3.10.1-2.2.1">Any non-identifier characters (<a href="#non-identifier-characters" class="auto internal xref">Section 3.10.2</a>)<a href="#section-3.10.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.10.1-3">Additionally, the following initial characters impose limitations on subsequent
+characters:<a href="#section-3.10.1-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.10.1-4.1">
+              <p id="section-3.10.1-4.1.1">the <code>+</code> and <code>-</code> characters can only be used as an initial character if
+the second character is <em>not</em> a digit. If the second character is <code>.</code>, then
+the third character must <em>not</em> be a digit.<a href="#section-3.10.1-4.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.10.1-4.2">
+              <p id="section-3.10.1-4.2.1">the <code>.</code> character can only be used as an initial character if
+the second character is <em>not</em> a digit.<a href="#section-3.10.1-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.10.1-5">This allows identifiers to look like <code>--this</code> or <code>.md</code>, and removes the
+ambiguity of having an identifier look like a number.<a href="#section-3.10.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="non-identifier-characters">
+<section id="section-3.10.2">
+          <h4 id="name-non-identifier-characters">
+<a href="#section-3.10.2" class="section-number selfRef">3.10.2. </a><a href="#name-non-identifier-characters" class="section-name selfRef">Non-identifier characters</a>
+          </h4>
+<p id="section-3.10.2-1">The following characters cannot be used anywhere in a Identifier String (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>):<a href="#section-3.10.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.10.2-2.1">
+              <p id="section-3.10.2-2.1.1">Any of <code>(){}[]/\"#;=</code><a href="#section-3.10.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.10.2-2.2">
+              <p id="section-3.10.2-2.2.1">Any Whitespace (<a href="#whitespace" class="auto internal xref">Section 3.17</a>) or Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>).<a href="#section-3.10.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.10.2-2.3">
+              <p id="section-3.10.2-2.3.1">Any disallowed literal code points (<a href="#disallowed-literal-code-points" class="auto internal xref">Section 3.19</a>) in KDL
+documents.<a href="#section-3.10.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="quoted-string">
+<section id="section-3.11">
+        <h3 id="name-quoted-string">
+<a href="#section-3.11" class="section-number selfRef">3.11. </a><a href="#name-quoted-string" class="section-name selfRef">Quoted String</a>
+        </h3>
+<p id="section-3.11-1">A Quoted String is delimited by <code>"</code> on either side of any number of literal
+string characters except unescaped <code>"</code> and <code>\</code>.<a href="#section-3.11-1" class="pilcrow">¶</a></p>
+<p id="section-3.11-2">Literal Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>) characters can only be included
+if they are Escaped Whitespace (<a href="#escaped-whitespace" class="auto internal xref">Section 3.11.1.1</a>),
+which discards them from the string value.
+Actually including a newline in the value requires using a newline escape sequence,
+like <code>\n</code>,
+or using a Multi-Line String (<a href="#multi-line-string" class="auto internal xref">Section 3.12</a>)
+which is actually designed for strings stretching across multiple lines.<a href="#section-3.11-2" class="pilcrow">¶</a></p>
+<p id="section-3.11-3">Like Identifier Strings, Quoted Strings <em>MUST NOT</em> include any of the
+disallowed literal code-points (<a href="#disallowed-literal-code-points" class="auto internal xref">Section 3.19</a>) as code
+points in their body.<a href="#section-3.11-3" class="pilcrow">¶</a></p>
+<p id="section-3.11-4">Quoted Strings have a Raw String (<a href="#raw-string" class="auto internal xref">Section 3.13</a>) variant,
+which disallows escapes.<a href="#section-3.11-4" class="pilcrow">¶</a></p>
+<div id="escapes">
+<section id="section-3.11.1">
+          <h4 id="name-escapes">
+<a href="#section-3.11.1" class="section-number selfRef">3.11.1. </a><a href="#name-escapes" class="section-name selfRef">Escapes</a>
+          </h4>
+<p id="section-3.11.1-1">In addition to literal code points, a number of "escapes" are supported in Quoted Strings.
+"Escapes" are the character <code>\</code> followed by another character, and are
+interpreted as described in the following table:<a href="#section-3.11.1-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-1">
+            <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<thead>
+              <tr>
+                <th class="text-left" rowspan="1" colspan="1">Name</th>
+                <th class="text-left" rowspan="1" colspan="1">Escape</th>
+                <th class="text-left" rowspan="1" colspan="1">Code Pt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Line Feed</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>\n</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>U+000A</code>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Carriage Return</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>\r</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>U+000D</code>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Character Tabulation (Tab)</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>\t</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>U+0009</code>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Reverse Solidus (Backslash)</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>\\</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>U+005C</code>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Quotation Mark (Double Quote)</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>\"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>U+0022</code>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Backspace</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>\b</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>U+0008</code>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Form Feed</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>\f</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>U+000C</code>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Space</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>\s</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>U+0020</code>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Unicode Escape</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>\u{(1-6 hex chars)}</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Code point described by hex characters, as long as it represents a <a href="https://unicode.org/glossary/#unicode_scalar_value">Unicode Scalar Value</a>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Whitespace Escape</td>
+                <td class="text-left" rowspan="1" colspan="1">See below</td>
+                <td class="text-left" rowspan="1" colspan="1">N/A</td>
+              </tr>
+            </tbody>
+          </table>
+<div id="escaped-whitespace">
+<section id="section-3.11.1.1">
+            <h5 id="name-escaped-whitespace">
+<a href="#section-3.11.1.1" class="section-number selfRef">3.11.1.1. </a><a href="#name-escaped-whitespace" class="section-name selfRef">Escaped Whitespace</a>
+            </h5>
+<p id="section-3.11.1.1-1">In addition to escaping individual characters, <code>\</code> can also escape whitespace.
+When a <code>\</code> is followed by one or more literal whitespace characters, the <code>\</code>
+and all of that whitespace are discarded. For example,<a href="#section-3.11.1.1-1" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.11.1.1-2">
+<pre>
+"Hello World"
+</pre><a href="#section-3.11.1.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.11.1.1-3">and<a href="#section-3.11.1.1-3" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.11.1.1-4">
+<pre>
+"Hello \    World"
+</pre><a href="#section-3.11.1.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.11.1.1-5">are semantically identical. See whitespace (<a href="#whitespace" class="auto internal xref">Section 3.17</a>)
+and newlines (<a href="#newline" class="auto internal xref">Section 3.18</a>) for how whitespace is defined.<a href="#section-3.11.1.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.11.1.1-6">Note that only literal whitespace is escaped; whitespace escapes (<code>\n</code> and
+such) are retained. For example, these strings are all semantically identical:<a href="#section-3.11.1.1-6" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.11.1.1-7">
+<pre>
+"Hello\       \nWorld"
+
+    "Hello\n\
+    World"
+
+"Hello\nWorld"
+
+"""
+  Hello
+  World
+  """
+</pre><a href="#section-3.11.1.1-7" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="invalid-escapes">
+<section id="section-3.11.1.2">
+            <h5 id="name-invalid-escapes">
+<a href="#section-3.11.1.2" class="section-number selfRef">3.11.1.2. </a><a href="#name-invalid-escapes" class="section-name selfRef">Invalid escapes</a>
+            </h5>
+<p id="section-3.11.1.2-1">Except as described in the escapes table, above, <code>\</code> <em>MUST NOT</em> precede any
+other characters in a string.<a href="#section-3.11.1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="multi-line-string">
+<section id="section-3.12">
+        <h3 id="name-multi-line-string">
+<a href="#section-3.12" class="section-number selfRef">3.12. </a><a href="#name-multi-line-string" class="section-name selfRef">Multi-line String</a>
+        </h3>
+<p id="section-3.12-1">Multi-Line Strings support multiple lines with literal, non-escaped
+Newlines. They must use a special multi-line syntax, and they automatically
+"dedent" the string, allowing its value to be indented to a visually matching
+level as desired.<a href="#section-3.12-1" class="pilcrow">¶</a></p>
+<p id="section-3.12-2">A Multi-Line String is opened and closed by <em>three</em> double-quote characters,
+like <code>"""</code>.
+Its first line <em>MUST</em> immediately start with a Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>)
+after its opening <code>"""</code>.
+Its final line <em>MUST</em> contain only whitespace
+before the closing <code>"""</code>.
+All in-between lines that contain non-newline, non-whitespace characters
+<em>MUST</em> start with <em>at least</em> the exact same whitespace as the final line
+(precisely matching codepoints, not merely counting characters or "size");
+they may contain additional whitespace following this prefix. The lines in
+between may contain unescaped <code>"</code> (but no unescaped <code>"""</code> as this would close
+the string).<a href="#section-3.12-2" class="pilcrow">¶</a></p>
+<p id="section-3.12-3">The value of the Multi-Line String omits the first and last Newline, the
+Whitespace of the last line, and the matching Whitespace prefix on all
+intermediate lines. The first and last Newline can be the same character (that
+is, empty multi-line strings are legal).<a href="#section-3.12-3" class="pilcrow">¶</a></p>
+<p id="section-3.12-4">In other words, the final line specifies the whitespace prefix that will be
+removed from all other lines.<a href="#section-3.12-4" class="pilcrow">¶</a></p>
+<p id="section-3.12-5">Multi-line Strings that do not immediately start with a Newline and whose final
+<code>"""</code> is not preceeded by optional whitespace and a Newline are illegal. This
+also means that <code>"""</code> may not be used for a single-line String (e.g.
+<code>"""foo"""</code>).<a href="#section-3.12-5" class="pilcrow">¶</a></p>
+<div id="newline-normalization">
+<section id="section-3.12.1">
+          <h4 id="name-newline-normalization">
+<a href="#section-3.12.1" class="section-number selfRef">3.12.1. </a><a href="#name-newline-normalization" class="section-name selfRef">Newline Normalization</a>
+          </h4>
+<p id="section-3.12.1-1">Literal Newline sequences in Multi-line Strings must be normalized to a single
+<code>U+000A</code> (<code>LF</code>) during deserialization. This means, for example, that <code>CR LF</code>
+becomes a single <code>LF</code> during parsing.<a href="#section-3.12.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.12.1-2">This normalization does not apply to non-literal Newlines entered using escape
+sequences. That is:<a href="#section-3.12.1-2" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.1-3">
+<pre>
+multi-line """
+    \r\n[CRLF]
+    foo[CRLF]
+    """
+</pre><a href="#section-3.12.1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.1-4">becomes:<a href="#section-3.12.1-4" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.1-5">
+<pre>
+single-line "\r\n\nfoo"
+</pre><a href="#section-3.12.1-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.1-6">For clarity: this normalization applies to each individual Newline sequence.
+That is, the literal sequence <code>CRLF CRLF</code> becomes <code>LF LF</code>, not <code>LF</code>.<a href="#section-3.12.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="examples-1">
+<section id="section-3.12.2">
+          <h4 id="name-examples-2">
+<a href="#section-3.12.2" class="section-number selfRef">3.12.2. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
+          </h4>
+<div id="indented-multi-line-string">
+<section id="section-3.12.2.1">
+            <h5 id="name-indented-multi-line-string">
+<a href="#section-3.12.2.1" class="section-number selfRef">3.12.2.1. </a><a href="#name-indented-multi-line-string" class="section-name selfRef">Indented multi-line string</a>
+            </h5>
+<div class="lang-kdl sourcecode" id="section-3.12.2.1-1">
+<pre>
+multi-line """
+        foo
+    This is the base indentation
+            bar
+    """
+</pre><a href="#section-3.12.2.1-1" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.2.1-2">This example's string value will be:<a href="#section-3.12.2.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.12.2.1-3">
+<pre>
+    foo
+This is the base indentation
+        bar
+</pre><a href="#section-3.12.2.1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.2.1-4">which is equivalent to<a href="#section-3.12.2.1-4" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.2.1-5">
+<pre>
+"    foo\nThis is the base indentation\n        bar"
+</pre><a href="#section-3.12.2.1-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.2.1-6">when written as a single-line string.<a href="#section-3.12.2.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="shorter-last-line-indent">
+<section id="section-3.12.2.2">
+            <h5 id="name-shorter-last-line-indent">
+<a href="#section-3.12.2.2" class="section-number selfRef">3.12.2.2. </a><a href="#name-shorter-last-line-indent" class="section-name selfRef">Shorter last-line indent</a>
+            </h5>
+<p id="section-3.12.2.2-1">If the last line wasn't indented as far,
+it won't dedent the rest of the lines as much:<a href="#section-3.12.2.2-1" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.2.2-2">
+<pre>
+multi-line """
+        foo
+    This is no longer on the left edge
+            bar
+  """
+</pre><a href="#section-3.12.2.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.2.2-3">This example's string value will be:<a href="#section-3.12.2.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.12.2.2-4">
+<pre>
+      foo
+  This is no longer on the left edge
+          bar
+</pre><a href="#section-3.12.2.2-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.2.2-5">Equivalent to<a href="#section-3.12.2.2-5" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.2.2-6">
+<pre>
+"      foo\n  This is no longer on the left edge\n          bar"
+</pre><a href="#section-3.12.2.2-6" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="empty-lines">
+<section id="section-3.12.2.3">
+            <h5 id="name-empty-lines">
+<a href="#section-3.12.2.3" class="section-number selfRef">3.12.2.3. </a><a href="#name-empty-lines" class="section-name selfRef">Empty lines</a>
+            </h5>
+<p id="section-3.12.2.3-1">Empty lines can contain any whitespace, or none at all, and will be reflected as empty in the value:<a href="#section-3.12.2.3-1" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.2.3-2">
+<pre>
+multi-line """
+    Indented a bit
+
+    A second indented paragraph.
+    """
+</pre><a href="#section-3.12.2.3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.2.3-3">This example's string value will be:<a href="#section-3.12.2.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.12.2.3-4">
+<pre>
+Indented a bit.
+
+A second indented paragraph.
+</pre><a href="#section-3.12.2.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.2.3-5">Equivalent to<a href="#section-3.12.2.3-5" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.2.3-6">
+<pre>
+"Indented a bit.\n\nA second indented paragraph."
+</pre><a href="#section-3.12.2.3-6" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="syntax-errors">
+<section id="section-3.12.2.4">
+            <h5 id="name-syntax-errors">
+<a href="#section-3.12.2.4" class="section-number selfRef">3.12.2.4. </a><a href="#name-syntax-errors" class="section-name selfRef">Syntax errors</a>
+            </h5>
+<p id="section-3.12.2.4-1">The following yield <strong>syntax errors</strong>:<a href="#section-3.12.2.4-1" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.2.4-2">
+<pre>
+multi-line """can't be single line"""
+</pre><a href="#section-3.12.2.4-2" class="pilcrow">¶</a>
+</div>
+<div class="lang-kdl sourcecode" id="section-3.12.2.4-3">
+<pre>
+multi-line """
+  closing quote with non-whitespace prefix"""
+</pre><a href="#section-3.12.2.4-3" class="pilcrow">¶</a>
+</div>
+<div class="lang-kdl sourcecode" id="section-3.12.2.4-4">
+<pre>
+multi-line """stuff
+  """
+</pre><a href="#section-3.12.2.4-4" class="pilcrow">¶</a>
+</div>
+<div class="lang-kdl sourcecode" id="section-3.12.2.4-5">
+<pre>
+// Every line must share the exact same prefix as the closing line.
+multi-line """[\n]
+[tab]a[\n]
+[space][space]b[\n]
+[space][tab][\n]
+[tab]"""
+</pre><a href="#section-3.12.2.4-5" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="interaction-with-whitespace-escapes">
+<section id="section-3.12.3">
+          <h4 id="name-interaction-with-whitespace">
+<a href="#section-3.12.3" class="section-number selfRef">3.12.3. </a><a href="#name-interaction-with-whitespace" class="section-name selfRef">Interaction with Whitespace Escapes</a>
+          </h4>
+<p id="section-3.12.3-1">Multi-line strings support the same mechanism for escaping whitespace as Quoted
+Strings.<a href="#section-3.12.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.12.3-2">When processing a Multi-line String, implementations MUST dedent the string
+<em>after</em> resolving all whitespace escapes, but <em>before</em> resolving other backslash
+escapes. This means a whitespace escape that attempts to escape the final line's
+newline and/or whitespace prefix can be invalid: if removing escaped whitespace
+places the closing <code>"""</code> on a line with non-whitespace characters, this escape
+is invalid.<a href="#section-3.12.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.12.3-3">For example, the following example is illegal:<a href="#section-3.12.3-3" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.3-4">
+<pre>
+  """
+  foo
+  bar\
+  """
+
+  // equivalent to
+  """
+  foo
+  bar"""
+</pre><a href="#section-3.12.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.12.3-5">while the following example is allowed<a href="#section-3.12.3-5" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.12.3-6">
+<pre>
+  """
+  foo \
+bar
+  baz
+  \   """
+
+  // equivalent to
+  """
+  foo bar
+  baz
+  """
+</pre><a href="#section-3.12.3-6" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="raw-string">
+<section id="section-3.13">
+        <h3 id="name-raw-string">
+<a href="#section-3.13" class="section-number selfRef">3.13. </a><a href="#name-raw-string" class="section-name selfRef">Raw String</a>
+        </h3>
+<p id="section-3.13-1">Both Quoted (<a href="#quoted-string" class="auto internal xref">Section 3.11</a>) and Multi-Line Strings (<a href="#multi-line-string" class="auto internal xref">Section 3.12</a>) have
+Raw String variants, which are identical in syntax except they do not support
+<code>\</code>-escapes. This includes line-continuation escapes (<code>\</code> + <code>ws</code> collapsing to
+nothing). They otherwise share the same properties as far as literal
+Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>) characters go, multi-line rules, and the requirement of
+UTF-8 representation.<a href="#section-3.13-1" class="pilcrow">¶</a></p>
+<p id="section-3.13-2">The Raw String variants are indicated by preceding the strings's opening quotes
+with one or more <code>#</code> characters. The string is then closed by its normal closing
+quotes, followed by a <em>matching</em> number of <code>#</code> characters. This means that the
+string may contain any combination of <code>"</code> and <code>#</code> characters other than its
+closing delimiter (e.g., if a raw string starts with <code>##"</code>, it can contain <code>"</code>
+or <code>"#</code>, but not <code>"##</code> or <code>"###</code>).<a href="#section-3.13-2" class="pilcrow">¶</a></p>
+<p id="section-3.13-3">Like other Strings, Raw Strings <em>MUST NOT</em> include any of the disallowed
+literal code-points (<a href="#disallowed-literal-code-points" class="auto internal xref">Section 3.19</a>) as code points in their
+body. Unlike with Quoted Strings, these cannot simply be escaped, and are thus
+unrepresentable when using Raw Strings.<a href="#section-3.13-3" class="pilcrow">¶</a></p>
+<div id="example-5">
+<section id="section-3.13.1">
+          <h4 id="name-example-6">
+<a href="#section-3.13.1" class="section-number selfRef">3.13.1. </a><a href="#name-example-6" class="section-name selfRef">Example</a>
+          </h4>
+<div class="lang-kdl sourcecode" id="section-3.13.1-1">
+<pre>
+just-escapes #"\n will be literal"#
+</pre><a href="#section-3.13.1-1" class="pilcrow">¶</a>
+</div>
+<p id="section-3.13.1-2">The string contains the literal characters <code>\n will be literal</code>.<a href="#section-3.13.1-2" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.13.1-3">
+<pre>
+quotes-and-escapes ##"hello\n\r\asd"#world"##
+</pre><a href="#section-3.13.1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.13.1-4">The string contains the literal characters <code>hello\n\r\asd"#world</code><a href="#section-3.13.1-4" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.13.1-5">
+<pre>
+raw-multi-line #"""
+    Here's a """
+        multiline string
+        """
+    without escapes.
+    """#
+</pre><a href="#section-3.13.1-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.13.1-6">The string contains the value<a href="#section-3.13.1-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.13.1-7">
+<pre>
+Here's a """
+    multiline string
+    """
+without escapes.
+</pre><a href="#section-3.13.1-7" class="pilcrow">¶</a>
+</div>
+<p id="section-3.13.1-8">or equivalently,<a href="#section-3.13.1-8" class="pilcrow">¶</a></p>
+<div class="lang-kdl sourcecode" id="section-3.13.1-9">
+<pre>
+"Here's a \"\"\"\n    multiline string\n    \"\"\"\nwithout escapes."
+</pre><a href="#section-3.13.1-9" class="pilcrow">¶</a>
+</div>
+<p id="section-3.13.1-10">as a Quoted String.<a href="#section-3.13.1-10" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="number">
+<section id="section-3.14">
+        <h3 id="name-number">
+<a href="#section-3.14" class="section-number selfRef">3.14. </a><a href="#name-number" class="section-name selfRef">Number</a>
+        </h3>
+<p id="section-3.14-1">Numbers in KDL represent numerical Values (<a href="#value" class="auto internal xref">Section 3.7</a>). There is no logical distinction in KDL
+between real numbers, integers, and floating point numbers. It's up to
+individual implementations to determine how to represent KDL numbers.<a href="#section-3.14-1" class="pilcrow">¶</a></p>
+<p id="section-3.14-2">There are five syntaxes for Numbers: Keywords, Decimal, Hexadecimal, Octal, and Binary.<a href="#section-3.14-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.14-3.1">
+            <p id="section-3.14-3.1.1">All non-Keyword (<a href="#keyword-numbers" class="auto internal xref">Section 3.14.1</a>) numbers may optionally start with one of <code>-</code> or <code>+</code>, which determine whether they'll be positive or negative.<a href="#section-3.14-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.14-3.2">
+            <p id="section-3.14-3.2.1">Binary numbers start with <code>0b</code> and only allow <code>0</code> and <code>1</code> as digits, which may be separated by <code>_</code>. They represent numbers in radix 2.<a href="#section-3.14-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.14-3.3">
+            <p id="section-3.14-3.3.1">Octal numbers start with <code>0o</code> and only allow digits between <code>0</code> and <code>7</code>, which may be separated by <code>_</code>. They represent numbers in radix 8.<a href="#section-3.14-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.14-3.4">
+            <p id="section-3.14-3.4.1">Hexadecimal numbers start with <code>0x</code> and allow digits between <code>0</code> and <code>9</code>, as well as letters <code>A</code> through <code>F</code>, in either lower or upper case, which may be separated by <code>_</code>. They represent numbers in radix 16.<a href="#section-3.14-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.14-3.5">
+            <p id="section-3.14-3.5.1">Decimal numbers are a bit more special:<a href="#section-3.14-3.5.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.14-3.5.2.1">
+                <p id="section-3.14-3.5.2.1.1">They have no radix prefix.<a href="#section-3.14-3.5.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.14-3.5.2.2">
+                <p id="section-3.14-3.5.2.2.1">They use digits <code>0</code> through <code>9</code>, which may be separated by <code>_</code>.<a href="#section-3.14-3.5.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.14-3.5.2.3">
+                <p id="section-3.14-3.5.2.3.1">They may optionally include a decimal separator <code>.</code>, followed by more digits, which may again be separated by <code>_</code>.<a href="#section-3.14-3.5.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.14-3.5.2.4">
+                <p id="section-3.14-3.5.2.4.1">They may optionally be followed by <code>E</code> or <code>e</code>, an optional <code>-</code> or <code>+</code>, and more digits, to represent an exponent value.<a href="#section-3.14-3.5.2.4.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+        </ul>
+<p id="section-3.14-4">Note that, similar to JSON and some other languages,
+numbers without an integer digit (such as <code>.1</code>) are illegal.
+They must be written with at least one integer digit, like <code>0.1</code>.
+(These patterns are also disallowed from Identifier Strings (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>), to avoid confusion.)<a href="#section-3.14-4" class="pilcrow">¶</a></p>
+<div id="keyword-numbers">
+<section id="section-3.14.1">
+          <h4 id="name-keyword-numbers">
+<a href="#section-3.14.1" class="section-number selfRef">3.14.1. </a><a href="#name-keyword-numbers" class="section-name selfRef">Keyword Numbers</a>
+          </h4>
+<p id="section-3.14.1-1">There are three special "keyword" numbers included in KDL to accomodate the
+widespread use of <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> floats:<a href="#section-3.14.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.14.1-2.1">
+              <p id="section-3.14.1-2.1.1"><code>#inf</code> - floating point positive infinity.<a href="#section-3.14.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.14.1-2.2">
+              <p id="section-3.14.1-2.2.1"><code>#-inf</code> - floating point negative infinity.<a href="#section-3.14.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.14.1-2.3">
+              <p id="section-3.14.1-2.3.1"><code>#nan</code> - floating point NaN/Not a Number.<a href="#section-3.14.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.14.1-3">To go along with this and prevent foot guns, the bare Identifier
+Strings (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>) <code>inf</code>, <code>-inf</code>, and <code>nan</code> are considered illegal
+identifiers and should yield a syntax error.<a href="#section-3.14.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.14.1-4">The existence of these keywords does not imply that any numbers be represented
+as IEEE 754 floats. These are simply for clarity and convenience for any
+implementation that chooses to represent their numbers in this way.<a href="#section-3.14.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="boolean">
+<section id="section-3.15">
+        <h3 id="name-boolean">
+<a href="#section-3.15" class="section-number selfRef">3.15. </a><a href="#name-boolean" class="section-name selfRef">Boolean</a>
+        </h3>
+<p id="section-3.15-1">A boolean Value (<a href="#value" class="auto internal xref">Section 3.7</a>) is either the symbol <code>#true</code> or <code>#false</code>. These
+<em>SHOULD</em> be represented by implementation as boolean logical values, or some
+approximation thereof.<a href="#section-3.15-1" class="pilcrow">¶</a></p>
+<div id="example-6">
+<section id="section-3.15.1">
+          <h4 id="name-example-7">
+<a href="#section-3.15.1" class="section-number selfRef">3.15.1. </a><a href="#name-example-7" class="section-name selfRef">Example</a>
+          </h4>
+<div class="lang-kdl sourcecode" id="section-3.15.1-1">
+<pre>
+my-node #true value=#false
+</pre><a href="#section-3.15.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="null">
+<section id="section-3.16">
+        <h3 id="name-null">
+<a href="#section-3.16" class="section-number selfRef">3.16. </a><a href="#name-null" class="section-name selfRef">Null</a>
+        </h3>
+<p id="section-3.16-1">The symbol <code>#null</code> represents a null Value (<a href="#value" class="auto internal xref">Section 3.7</a>). It's up to the
+implementation to decide how to represent this, but it generally signals the
+"absence" of a value.<a href="#section-3.16-1" class="pilcrow">¶</a></p>
+<div id="example-7">
+<section id="section-3.16.1">
+          <h4 id="name-example-8">
+<a href="#section-3.16.1" class="section-number selfRef">3.16.1. </a><a href="#name-example-8" class="section-name selfRef">Example</a>
+          </h4>
+<div class="lang-kdl sourcecode" id="section-3.16.1-1">
+<pre>
+my-node #null key=#null
+</pre><a href="#section-3.16.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="whitespace">
+<section id="section-3.17">
+        <h3 id="name-whitespace">
+<a href="#section-3.17" class="section-number selfRef">3.17. </a><a href="#name-whitespace" class="section-name selfRef">Whitespace</a>
+        </h3>
+<p id="section-3.17-1">The following characters should be treated as non-Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>) <a href="https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt">white
+space</a>:<a href="#section-3.17-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-2">
+          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Name</th>
+              <th class="text-left" rowspan="1" colspan="1">Code Pt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Character Tabulation</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+0009</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+0020</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">No-Break Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+00A0</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Ogham Space Mark</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+1680</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">En Quad</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2000</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Em Quad</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2001</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">En Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2002</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Em Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2003</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Three-Per-Em Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2004</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Four-Per-Em Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2005</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Six-Per-Em Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2006</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Figure Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2007</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Punctuation Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2008</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Thin Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2009</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Hair Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+200A</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Narrow No-Break Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+202F</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Medium Mathematical Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+205F</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Ideographic Space</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+3000</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+<div id="single-line-comments">
+<section id="section-3.17.1">
+          <h4 id="name-single-line-comments">
+<a href="#section-3.17.1" class="section-number selfRef">3.17.1. </a><a href="#name-single-line-comments" class="section-name selfRef">Single-line comments</a>
+          </h4>
+<p id="section-3.17.1-1">Any text after <code>//</code>, until the next literal Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>) is "commented
+out", and is considered to be Whitespace (<a href="#whitespace" class="auto internal xref">Section 3.17</a>).<a href="#section-3.17.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="multi-line-comments">
+<section id="section-3.17.2">
+          <h4 id="name-multi-line-comments">
+<a href="#section-3.17.2" class="section-number selfRef">3.17.2. </a><a href="#name-multi-line-comments" class="section-name selfRef">Multi-line comments</a>
+          </h4>
+<p id="section-3.17.2-1">In addition to single-line comments using <code>//</code>, comments can also be started
+with <code>/*</code> and ended with <code>*/</code>. These comments can span multiple lines. They
+are allowed in all positions where Whitespace (<a href="#whitespace" class="auto internal xref">Section 3.17</a>) is allowed and
+can be nested.<a href="#section-3.17.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="slashdash-comments">
+<section id="section-3.17.3">
+          <h4 id="name-slashdash-comments">
+<a href="#section-3.17.3" class="section-number selfRef">3.17.3. </a><a href="#name-slashdash-comments" class="section-name selfRef">Slashdash comments</a>
+          </h4>
+<p id="section-3.17.3-1">Finally, a special kind of comment called a "slashdash", denoted by <code>/-</code>, can
+be used to comment out entire <em>components</em> of a KDL document logically, and
+have those elements not be included as part of the parsed document data.<a href="#section-3.17.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.17.3-2">Slashdash comments can be used before the following, including before their type
+annotations, if present:<a href="#section-3.17.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.17.3-3.1">
+              <p id="section-3.17.3-3.1.1">A Node (<a href="#node" class="auto internal xref">Section 3.2</a>): the entire Node is treated as Whitespace, including all
+props, args, and children.<a href="#section-3.17.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.17.3-3.2">
+              <p id="section-3.17.3-3.2.1">An Argument (<a href="#argument" class="auto internal xref">Section 3.5</a>): the Argument value is treated as Whitespace.<a href="#section-3.17.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.17.3-3.3">
+              <p id="section-3.17.3-3.3.1">A Property (<a href="#property" class="auto internal xref">Section 3.4</a>) key: the entire property, including both key and value,
+is treated as Whitespace. A slashdash of just the property value is not allowed.<a href="#section-3.17.3-3.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.17.3-3.4">
+              <p id="section-3.17.3-3.4.1">A Children Block (<a href="#children-block" class="auto internal xref">Section 3.6</a>): the entire block, including all
+children within, is treated as Whitespace. Only other children blocks, whether
+slashdashed or not, may follow a slashdashed children block.<a href="#section-3.17.3-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.17.3-4">A slashdash may be be followed by any amount of whitespace, including newlines and
+comments (other than other slashdashes), before the element that it comments out.<a href="#section-3.17.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="newline">
+<section id="section-3.18">
+        <h3 id="name-newline">
+<a href="#section-3.18" class="section-number selfRef">3.18. </a><a href="#name-newline" class="section-name selfRef">Newline</a>
+        </h3>
+<p id="section-3.18-1">The following character sequences <a href="https://www.unicode.org/versions/Unicode16.0.0/core-spec/chapter-5/#G41643">should be treated as new
+lines</a>:<a href="#section-3.18-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-3">
+          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Acronym</th>
+              <th class="text-left" rowspan="1" colspan="1">Name</th>
+              <th class="text-left" rowspan="1" colspan="1">Code Pt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">CRLF</td>
+              <td class="text-left" rowspan="1" colspan="1">Carriage Return and Line Feed</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+000D</code> + <code>U+000A</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">CR</td>
+              <td class="text-left" rowspan="1" colspan="1">Carriage Return</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+000D</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">LF</td>
+              <td class="text-left" rowspan="1" colspan="1">Line Feed</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+000A</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">NEL</td>
+              <td class="text-left" rowspan="1" colspan="1">Next Line</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+0085</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">VT</td>
+              <td class="text-left" rowspan="1" colspan="1">Vertical tab</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+000B</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">FF</td>
+              <td class="text-left" rowspan="1" colspan="1">Form Feed</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+000C</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">LS</td>
+              <td class="text-left" rowspan="1" colspan="1">Line Separator</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2028</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">PS</td>
+              <td class="text-left" rowspan="1" colspan="1">Paragraph Separator</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>U+2029</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+<p id="section-3.18-3">Note that for the purpose of new lines, the specific sequence <code>CRLF</code> is
+considered <em>a single newline</em>.<a href="#section-3.18-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="disallowed-literal-code-points">
+<section id="section-3.19">
+        <h3 id="name-disallowed-literal-code-poi">
+<a href="#section-3.19" class="section-number selfRef">3.19. </a><a href="#name-disallowed-literal-code-poi" class="section-name selfRef">Disallowed Literal Code Points</a>
+        </h3>
+<p id="section-3.19-1">The following code points may not appear literally anywhere in the document.
+They may be represented in Strings (but not Raw Strings) using Unicode Escapes (<a href="#escapes" class="auto internal xref">Section 3.11.1</a>) (<code>\u{...}</code>,
+except for non Unicode Scalar Value, which can't be represented even as escapes).<a href="#section-3.19-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.19-2.1">
+            <p id="section-3.19-2.1.1">The codepoints <code>U+0000-0008</code> or the codepoints <code>U+000E-001F</code>  (various
+control characters).<a href="#section-3.19-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.19-2.2">
+            <p id="section-3.19-2.2.1"><code>U+007F</code> (the Delete control character).<a href="#section-3.19-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.19-2.3">
+            <p id="section-3.19-2.3.1">Any codepoint that is not a <a href="https://unicode.org/glossary/#unicode_scalar_value">Unicode Scalar
+Value</a> (<code>U+D800-DFFF</code>).<a href="#section-3.19-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.19-2.4">
+            <p id="section-3.19-2.4.1"><code>U+200E-200F</code>, <code>U+202A-202E</code>, and <code>U+2066-2069</code>, the <a href="https://www.w3.org/International/questions/qa-bidi-unicode-controls">unicode
+"direction control"
+characters</a><a href="#section-3.19-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.19-2.5">
+            <p id="section-3.19-2.5.1"><code>U+FEFF</code>, aka Zero-width Non-breaking Space (ZWNBSP)/Byte Order Mark (BOM),
+except as the first code point in a document.<a href="#section-3.19-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="full-grammar">
+<section id="section-4">
+      <h2 id="name-full-grammar">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-full-grammar" class="section-name selfRef">Full Grammar</a>
+      </h2>
+<p id="section-4-1">This is the full official grammar for KDL and should be considered
+authoritative if something seems to disagree with the text above. The grammar
+language syntax is defined in <a href="#grammar-language" class="auto internal xref">Section 4.1</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div class="breakable lang-abnf sourcecode" id="section-4-2">
+<pre>
+document := bom? version? nodes
+
+// Nodes
+nodes := (line-space* node)* line-space*
+
+base-node := slashdash? type? node-space* string
+    (node-space+ slashdash? node-prop-or-arg)*
+    // slashdashed node-children must always be after props and args.
+    (node-space+ slashdash node-children)*
+    (node-space+ node-children)?
+    (node-space+ slashdash node-children)*
+    node-space*
+node := base-node node-terminator
+final-node := base-node node-terminator?
+
+// Entries
+node-prop-or-arg := prop | value
+node-children := '{' nodes final-node? '}'
+node-terminator := single-line-comment | newline | ';' | eof
+
+prop := string node-space* '=' node-space* value
+value := type? node-space* (string | number | keyword)
+type := '(' node-space* string node-space* ')'
+
+// Strings
+string := identifier-string | quoted-string | raw-string ¶
+
+identifier-string := unambiguous-ident | signed-ident | dotted-ident
+unambiguous-ident :=
+    ((identifier-char - digit - sign - '.') identifier-char*)
+    - disallowed-keyword-strings
+signed-ident :=
+    sign ((identifier-char - digit - '.') identifier-char*)?
+dotted-ident :=
+    sign? '.' ((identifier-char - digit) identifier-char*)?
+identifier-char :=
+    unicode - unicode-space - newline - [\\/(){};\[\]"#=]
+    - disallowed-literal-code-points
+disallowed-keyword-identifiers :=
+    'true' | 'false' | 'null' | 'inf' | '-inf' | 'nan'
+
+quoted-string :=
+    '"' single-line-string-body '"' |
+    '"""' newline
+    (multi-line-string-body newline)?
+    (unicode-space | ws-escape)* '"""'
+single-line-string-body := (string-character - newline)*
+multi-line-string-body := (('"' | '""')? string-character)*
+string-character :=
+    '\\' (["\\bfnrts] |
+    'u{' hex-unicode '}') |
+    ws-escape |
+    [^\\"] - disallowed-literal-code-points
+ws-escape := '\\' (unicode-space | newline)+
+hex-digit := [0-9a-fA-F]
+hex-unicode := hex-digit{1, 6} - surrogates
+surrogates := [dD][8-9a-fA-F]hex-digit{2}
+// U+D800-DFFF: D  8         00
+//              D  F         FF
+
+raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
+raw-string-quotes :=
+    '"' single-line-raw-string-body '"' |
+    '"""' newline
+    (multi-line-raw-string-body newline)?
+    unicode-space* '"""'
+single-line-raw-string-body :=
+    '' |
+    (single-line-raw-string-char - '"')
+        single-line-raw-string-char*? |
+    '"' (single-line-raw-string-char - '"')
+        single-line-raw-string-char*?
+single-line-raw-string-char :=
+    unicode - newline - disallowed-literal-code-points
+multi-line-raw-string-body :=
+    (unicode - disallowed-literal-code-points)*?
+
+// Numbers
+number := keyword-number | hex | octal | binary | decimal
+
+decimal := sign? integer ('.' integer)? exponent?
+exponent := ('e' | 'E') sign? integer
+integer := digit (digit | '_')*
+digit := [0-9]
+sign := '+' | '-'
+
+hex := sign? '0x' hex-digit (hex-digit | '_')*
+octal := sign? '0o' [0-7] [0-7_]*
+binary := sign? '0b' ('0' | '1') ('0' | '1' | '_')*
+
+// Keywords and booleans.
+keyword := boolean | '#null'
+keyword-number := '#inf' | '#-inf' | '#nan'
+boolean := '#true' | '#false'
+
+// Specific code points
+bom := '\u{FEFF}'
+disallowed-literal-code-points :=
+    See Table (Disallowed Literal Code Points)
+unicode := Any Unicode Scalar Value
+unicode-space := See Table
+    (All White_Space unicode characters which are not `newline`)
+
+// Comments
+single-line-comment := '//' ^newline* (newline | eof)
+multi-line-comment := '/*' commented-block
+commented-block :=
+    '*/' | (multi-line-comment | '*' | '/' | [^*/]+) commented-block
+slashdash := '/-' line-space*
+
+// Whitespace
+ws := unicode-space | multi-line-comment
+escline := '\\' ws* (single-line-comment | newline | eof)
+newline := See Table (All Newline White_Space)
+// Whitespace where newlines are allowed.
+line-space := node-space | newline | single-line-comment
+// Whitespace within nodes,
+// where newline-ish things must be esclined.
+node-space := ws* escline ws* | ws+
+
+// Version marker
+version :=
+    '/-' unicode-space* 'kdl-version' unicode-space+ ('1' | '2')
+    unicode-space* newline
+</pre><a href="#section-4-2" class="pilcrow">¶</a>
+</div>
+<div id="grammar-language">
+<section id="section-4.1">
+        <h3 id="name-grammar-language">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-grammar-language" class="section-name selfRef">Grammar language</a>
+        </h3>
+<p id="section-4.1-1">The grammar language syntax is a combination of ABNF with some regex spice thrown in.
+Specifically:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-2.1">
+            <p id="section-4.1-2.1.1">Single quotes (<code>'</code>) are used to denote literal text. <code>\</code> within a literal
+string is used for escaping other single-quotes, for initiating unicode
+characters using hex values (<code>\u{FEFF}</code>), and for escaping <code>\</code> itself
+(<code>\\</code>).<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.2">
+            <p id="section-4.1-2.2.1"><code>*</code> is used for "zero or more", <code>+</code> is used for "one or more", and <code>?</code> is
+used for "zero or one". Per standard regex semantics, <code>*</code> and <code>+</code> are <em>greedy</em>;
+they match as many instances as possible without failing the match.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.3">
+            <p id="section-4.1-2.3.1"><code>*?</code> (used only in raw strings) indicates a <em>non-greedy</em> match;
+it matches as <em>few</em> instances as possible without failing the match.<a href="#section-4.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.4">
+            <p id="section-4.1-2.4.1"><code>¶</code> is a <em>cut point</em>. It always matches and consumes no characters,
+but once matched, the parser is not allowed to backtrack past that point in the source.
+If a parser would rewind past the cut point, it must instead fail the overall parse,
+as if it had run out of options.
+(This is only used with the <code>raw-string</code> production,
+to ensure the first instance of the appropriate closing quote sequence
+is guaranteed to be the end of the raw string,
+rather than allowing it to potentially consume more of the document unexpectedly.)<a href="#section-4.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.5">
+            <p id="section-4.1-2.5.1"><code>()</code> can be used to group matches that must be matched together.<a href="#section-4.1-2.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.6">
+            <p id="section-4.1-2.6.1"><code>a | b</code> means <code>a or b</code>, whichever matches first. If multiple items are before
+a <code>|</code>, they are a single group. <code>a b c | d</code> is equivalent to <code>(a b c) | d</code>.<a href="#section-4.1-2.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.7">
+            <p id="section-4.1-2.7.1"><code>[]</code> are used for regex-style character matches, where any character between
+the brackets will be a single match. <code>\</code> is used to escape <code>\</code>, <code>[</code>, and
+<code>]</code>. They also support character ranges (<code>0-9</code>), and negation (<code>^</code>)<a href="#section-4.1-2.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.8">
+            <p id="section-4.1-2.8.1"><code>-</code> is used for "except for" or "minus" whatever follows it. For example,
+<code>a - 'x'</code> means "any <code>a</code>, except something that matches the literal <code>'x'</code>".<a href="#section-4.1-2.8.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.9">
+            <p id="section-4.1-2.9.1">The prefix <code>^</code> means "something that does not match" whatever follows it.
+For example, <code>^foo</code> means "must not match <code>foo</code>".<a href="#section-4.1-2.9.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.10">
+            <p id="section-4.1-2.10.1">A single definition may be split over multiple lines. Newlines are treated as
+spaces.<a href="#section-4.1-2.10.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.11">
+            <p id="section-4.1-2.11.1"><code>//</code> followed by text on its own line is used as comment syntax.<a href="#section-4.1-2.11.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-A">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Katerina Zoé Marchán Salvá</span></div>
+<div dir="auto" class="left"><span class="org">Microsoft</span></div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">The KDL Contributors</span></div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
