@@ -97,7 +97,7 @@ The toplevel concept of KDL is a Document. A Document is composed of zero or
 more Nodes ({{node}}), separated by newlines and whitespace, and eventually
 terminated by an EOF.
 
-All KDL documents should be UTF-8 encoded and conform to the specifications in
+All KDL documents MUST be encoded in UTF-8 and conform to the specifications in
 this document.
 
 ### Example
