@@ -983,10 +983,13 @@ string-character :=
     [^\\"] - disallowed-literal-code-points
 ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
-hex-unicode := hex-digit{1, 6} - surrogates
-surrogates := [dD][8-9a-fA-F]hex-digit{2}
-// U+D800-DFFF: D  8         00
-//              D  F         FF
+hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar  // Unicode Scalar Value in hex₁₆, leading 0s allowed within length ≤ 6
+surrogate := [0]{0, 2} [dD] [8-9a-fA-F] hex-digit{2}
+//  U+D800-DFFF:         D   8          00
+//                       D   F          FF
+above-max-scalar = [2-9a-fA-F] hex-digit{5} | [1] [1-9a-fA-F] hex-digit{4}
+// >U+10FFFF:      >1          _____           1  >0          ____
+
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
 raw-string-quotes :=
