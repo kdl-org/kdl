@@ -86,6 +86,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 * [Niri](https://github.com/YaLTeR/niri) - Scrollable-tiling window manager for Wayland
 * [Bikeshed](https://github.com/speced/bikeshed) ([here](https://github.com/speced/bikeshed-boilerplate/blob/main/boilerplate/doctypes.kdl) and [here](https://github.com/speced/bikeshed-data/blob/main/data/manifest.txt)) - Specification pre-processor used by CSS, C++, WHATWG, various W3C working groups, and others.
 * [orogene](https://orogene.dev) - Lightning-fast JavaScript package manager
+* [Onyx](https://onyxlang.io/) - An efficient, procedural, and pragmatic programming language that compiles to WASM. Used for package manifests.
 * [Pop!_OS/System76 Scheduler](https://github.com/pop-os/system76-scheduler) - Scheduling service which optimizes Linux's CPU scheduler and makes it go faster.
 * [ImStyle](https://patitotective.github.io/ImStyle/) - ImGui application styling with Nim and KDL
 * [fmod-rs](https://github.com/CAD97/fmod-rs) - Rust bindings to FMOD Core and FMOD Studio
