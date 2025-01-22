@@ -1347,7 +1347,7 @@ depending on the characters used.<a href="#section-2-4" class="pilcrow">¶</a></
 <p id="section-3.1-1">The toplevel concept of KDL is a Document. A Document is composed of zero or
 more Nodes (<a href="#node" class="auto internal xref">Section 3.2</a>), separated by newlines and whitespace, and eventually
 terminated by an EOF.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">All KDL documents should be UTF-8 encoded and conform to the specifications in
+<p id="section-3.1-2">All KDL documents MUST be encoded in UTF-8 and conform to the specifications in
 this document.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <div id="example">
 <section id="section-3.1.1">
@@ -2803,10 +2803,13 @@ string-character :=
     [^\\"] - disallowed-literal-code-points
 ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
-hex-unicode := hex-digit{1, 6} - surrogates
-surrogates := [dD][8-9a-fA-F]hex-digit{2}
-// U+D800-DFFF: D  8         00
-//              D  F         FF
+hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar  // Unicode Scalar Value in hex₁₆, leading 0s allowed within length ≤ 6
+surrogate := [0]{0, 2} [dD] [8-9a-fA-F] hex-digit{2}
+//  U+D800-DFFF:         D   8          00
+//                       D   F          FF
+above-max-scalar = [2-9a-fA-F] hex-digit{5} | [1] [1-9a-fA-F] hex-digit{4}
+// &gt;U+10FFFF:      &gt;1          _____           1  &gt;0          ____
+
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
 raw-string-quotes :=
