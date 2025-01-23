@@ -329,9 +329,7 @@ IEEE 754-2008 decimal floating point numbers
 - `uuid`: RFC4122 UUID.
 - `regex`: Regular expression. Specific patterns may be implementation-dependent.
 - `base64`: A Base64-encoded string, denoting arbitrary binary data.
-- `base85`: An [`Ascii85`](https://en.wikipedia.org/wiki/Ascii85)-encoded
-  string, denoting arbitrary binary data. `"` and `\` will need to be
-  escaped if using Quoted Strings ({{quoted-string}}), but not Raw Strings ({{raw-string}}).
+- `base85`: An [Ascii85](https://en.wikipedia.org/wiki/Ascii85)-encoded string, denoting arbitrary binary data.
 
 ### Examples
 
