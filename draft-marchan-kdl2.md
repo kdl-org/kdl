@@ -452,7 +452,7 @@ interpreted as described in the following table:
 | Form Feed                     | `\f`   | `U+000C` |
 | Space                         | `\s`   | `U+0020` |
 | Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, as long as it represents a [Unicode Scalar Value](https://unicode.org/glossary/#unicode_scalar_value) |
-| Whitespace Escape             | See below | N/A | 
+| Whitespace Escape             | See below | N/A |
 
 #### Escaped Whitespace
 
@@ -985,12 +985,12 @@ string-character :=
     [^\\"] - disallowed-literal-code-points
 ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
-hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar  // Unicode Scalar Value in hex₁₆, leading 0s allowed within length ≤ 6
+hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar
 surrogate := [0]{0, 2} [dD] [8-9a-fA-F] hex-digit{2}
 //  U+D800-DFFF:         D   8          00
 //                       D   F          FF
-above-max-scalar = [2-9a-fA-F] hex-digit{5} | [1] [1-9a-fA-F] hex-digit{4}
-// >U+10FFFF:      >1          _____           1  >0          ____
+above-max-scalar = [2-9a-fA-F] hex-digit{5} |
+    [1] [1-9a-fA-F] hex-digit{4}
 
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
