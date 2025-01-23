@@ -20,18 +20,15 @@ smart_quotes: no
 pi: [toc, sortrefs, symrefs]
 
 author:
- -
-    name: Katerina Zoé Marchán Salvá
+  - name: Katerina Zoé Marchán Salvá
     ins: K. Marchán
     organization: Microsoft
- -
-    name: The KDL Contributors
+  - name: The KDL Contributors
     ins: KDL Contributors
 
 normative:
 
 informative:
-
 
 --- abstract
 
@@ -42,17 +39,20 @@ language, and a data exchange or storage format, if you so choose.
 This is the formal specification for KDL, including the intended data model and
 the grammar.
 
+This document describes an unreleased minor change to KDL. For the latest
+oficial version of the language, see https://kdl.dev/spec.
+
+<!--
 This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
 is the latest stable version of the language, and will only be edited for minor
 copyedits or major errata.
-
+-->
 
 --- note_License
 
 This work is licensed under Creative Commons Attribution-ShareAlike 4.0
 International. To view a copy of this license, visit
 https://creativecommons.org/licenses/by-sa/4.0/
-
 
 --- middle
 
@@ -84,7 +84,7 @@ rules, with some semantic exceptions involving the data model.
 KDL is designed to be easy to read _and_ easy to implement.
 
 In this document, references to "left" or "right" refer to directions in the
-*data stream* towards the beginning or end, respectively; in other words,
+_data stream_ towards the beginning or end, respectively; in other words,
 the directions if the data stream were only ASCII text. They do not refer
 to the writing direction of text, which can flow in either direction,
 depending on the characters used.
@@ -94,7 +94,7 @@ depending on the characters used.
 ## Document
 
 The toplevel concept of KDL is a Document. A Document is composed of zero or
-more Nodes ({{node}}), separated by newlines and whitespace, and eventually
+more Nodes ({{node}}), separated by newlines, semicolons, and whitespace, and eventually
 terminated by an EOF.
 
 All KDL documents MUST be encoded in UTF-8 and conform to the specifications in
@@ -147,7 +147,8 @@ the entire node, including its properties, arguments, and children, and make
 it act as plain whitespace, even if it spreads across multiple lines.
 
 Finally, a node is terminated by either a Newline ({{newline}}), a semicolon
-(`;`), the end of a child block (`}`) or the end of the file/stream (an `EOF`).
+(`;`), the end of its parent's child block (`}`) or the end of the file/stream
+(an `EOF`).
 
 ### Example
 
@@ -234,7 +235,7 @@ parent {
     child2
 }
 
-parent { child1; child2; }
+parent { child1; child2 }
 ~~~
 
 ## Value
@@ -271,63 +272,64 @@ and, if used, SHOULD interpret these types as follows:
 
 Signed integers of various sizes (the number is the bit size):
 
-* `i8`
-* `i16`
-* `i32`
-* `i64`
-* `i128`
+- `i8`
+- `i16`
+- `i32`
+- `i64`
+- `i128`
 
 Unsigned integers of various sizes (the number is the bit size):
 
-* `u8`
-* `u16`
-* `u32`
-* `u64`
-* `u128`
+- `u8`
+- `u16`
+- `u32`
+- `u64`
+- `u128`
 
 Platform-dependent integer types, both signed and unsigned:
 
-* `isize`
-* `usize`
+- `isize`
+- `usize`
 
 ### Reserved Type Annotations for Numbers With Decimals:
 
 IEEE 754 floating point numbers, both single (32) and double (64) precision:
 
-* `f32`
-* `f64`
+- `f32`
+- `f64`
 
 IEEE 754-2008 decimal floating point numbers
 
-* `decimal64`
-* `decimal128`
+- `decimal64`
+- `decimal128`
 
 ### Reserved Type Annotations for Strings:
 
-* `date-time`: ISO8601 date/time format.
-* `time`: "Time" section of ISO8601.
-* `date`: "Date" section of ISO8601.
-* `duration`: ISO8601 duration format.
-* `decimal`: IEEE 754-2008 decimal string format.
-* `currency`: ISO 4217 currency code.
-* `country-2`: ISO 3166-1 alpha-2 country code.
-* `country-3`: ISO 3166-1 alpha-3 country code.
-* `country-subdivision`: ISO 3166-2 country subdivision code.
-* `email`: RFC5322 email address.
-* `idn-email`: RFC6531 internationalized email address.
-* `hostname`: RFC1123 internet hostname (only ASCII segments)
-* `idn-hostname`: RFC5890 internationalized internet hostname
+- `date-time`: ISO8601 date/time format.
+- `time`: "Time" section of ISO8601.
+- `date`: "Date" section of ISO8601.
+- `duration`: ISO8601 duration format.
+- `decimal`: IEEE 754-2008 decimal string format.
+- `currency`: ISO 4217 currency code.
+- `country-2`: ISO 3166-1 alpha-2 country code.
+- `country-3`: ISO 3166-1 alpha-3 country code.
+- `country-subdivision`: ISO 3166-2 country subdivision code.
+- `email`: RFC5322 email address.
+- `idn-email`: RFC6531 internationalized email address.
+- `hostname`: RFC1123 internet hostname (only ASCII segments)
+- `idn-hostname`: RFC5890 internationalized internet hostname
   (only `xn--`-prefixed ASCII "punycode" segments, or non-ASCII segments)
-* `ipv4`: RFC2673 dotted-quad IPv4 address.
-* `ipv6`: RFC2373 IPv6 address.
-* `url`: RFC3986 URI.
-* `url-reference`: RFC3986 URI Reference.
-* `irl`: RFC3987 Internationalized Resource Identifier.
-* `irl-reference`: RFC3987 Internationalized Resource Identifier Reference.
-* `url-template`: RFC6570 URI Template.
-* `uuid`: RFC4122 UUID.
-* `regex`: Regular expression. Specific patterns may be implementation-dependent.
-* `base64`: A Base64-encoded string, denoting arbitrary binary data.
+- `ipv4`: RFC2673 dotted-quad IPv4 address.
+- `ipv6`: RFC2373 IPv6 address.
+- `url`: RFC3986 URI.
+- `url-reference`: RFC3986 URI Reference.
+- `irl`: RFC3987 Internationalized Resource Identifier.
+- `irl-reference`: RFC3987 Internationalized Resource Identifier Reference.
+- `url-template`: RFC6570 URI Template.
+- `uuid`: RFC4122 UUID.
+- `regex`: Regular expression. Specific patterns may be implementation-dependent.
+- `base64`: A Base64-encoded string, denoting arbitrary binary data.
+- `base85`: An [Ascii85](https://en.wikipedia.org/wiki/Ascii85)-encoded string, denoting arbitrary binary data.
 
 ### Examples
 
@@ -347,12 +349,12 @@ or a Multi-Line String ({{multi-line-string}}).
 Both Quoted and Multiline strings come in normal
 and Raw String ({{raw-string}}) variants (like `#"foo"#`):
 
-* Identifier Strings let you write short, "single-word" strings with a
+- Identifier Strings let you write short, "single-word" strings with a
   minimum of syntax
-* Quoted Strings let you write strings "like normal", with whitespace and escapes.
-* Multi-Line Strings let you write strings across multiple lines
-    and with indentation that's not part of the string value.
-* Raw Strings don't allow any escapes,
+- Quoted Strings let you write strings "like normal", with whitespace and escapes.
+- Multi-Line Strings let you write strings across multiple lines
+  and with indentation that's not part of the string value.
+- Raw Strings don't allow any escapes,
   allowing you to not worry about the string's content containing anything that
   might look like an escape.
 
@@ -374,10 +376,10 @@ characters ({{non-identifier-characters}}).
 
 A handful of patterns are disallowed, to avoid confusion with other values:
 
-* idents that appear to start with a Number ({{number}}) (like `1.0v2` or
-    `-1em`) or the "almost a number" pattern of a decimal point without a
-    leading digit (like `.1`).
-* idents that are the language keywords (`inf`, `-inf`, `nan`, `true`,
+- idents that appear to start with a Number ({{number}}) (like `1.0v2` or
+  `-1em`) or the "almost a number" pattern of a decimal point without a
+  leading digit (like `.1`).
+- idents that are the language keywords (`inf`, `-inf`, `nan`, `true`,
   `false`, and `null`) without their leading `#`.
 
 Identifiers that match these patterns _MUST_ be treated as a syntax error; such
@@ -389,17 +391,17 @@ identifier syntax is specified in the Full Grammar in {{full-grammar}}.
 The following characters cannot be the first character in an
 Identifier String ({{identifier-string}}):
 
-* Any decimal digit (0-9)
-* Any non-identifier characters ({{non-identifier-characters}})
+- Any decimal digit (0-9)
+- Any non-identifier characters ({{non-identifier-characters}})
 
 Additionally, the following initial characters impose limitations on subsequent
 characters:
 
-* the `+` and `-` characters can only be used as an initial character if
-  the second character is *not* a digit. If the second character is `.`, then
-  the third character must *not* be a digit.
-* the `.` character can only be used as an initial character if
-  the second character is *not* a digit.
+- the `+` and `-` characters can only be used as an initial character if
+  the second character is _not_ a digit. If the second character is `.`, then
+  the third character must _not_ be a digit.
+- the `.` character can only be used as an initial character if
+  the second character is _not_ a digit.
 
 This allows identifiers to look like `--this` or `.md`, and removes the
 ambiguity of having an identifier look like a number.
@@ -408,9 +410,9 @@ ambiguity of having an identifier look like a number.
 
 The following characters cannot be used anywhere in a Identifier String ({{identifier-string}}):
 
-* Any of `(){}[]/\"#;=`
-* Any Whitespace ({{whitespace}}) or Newline ({{newline}}).
-* Any disallowed literal code points ({{disallowed-literal-code-points}}) in KDL
+- Any of `(){}[]/\"#;=`
+- Any Whitespace ({{whitespace}}) or Newline ({{newline}}).
+- Any disallowed literal code points ({{disallowed-literal-code-points}}) in KDL
   documents.
 
 ## Quoted String
@@ -450,7 +452,7 @@ interpreted as described in the following table:
 | Form Feed                     | `\f`   | `U+000C` |
 | Space                         | `\s`   | `U+0020` |
 | Unicode Escape                | `\u{(1-6 hex chars)}` | Code point described by hex characters, as long as it represents a [Unicode Scalar Value](https://unicode.org/glossary/#unicode_scalar_value) |
-| Whitespace Escape             | See below | N/A   |
+| Whitespace Escape             | See below | N/A |
 
 #### Escaped Whitespace
 
@@ -490,7 +492,7 @@ such) are retained. For example, these strings are all semantically identical:
 
 #### Invalid escapes
 
-Except as described in the escapes table, above, `\` *MUST NOT* precede any
+Except as described in the escapes table, above, `\` _MUST NOT_ precede any
 other characters in a string.
 
 ## Multi-line String
@@ -500,7 +502,7 @@ Newlines. They must use a special multi-line syntax, and they automatically
 "dedent" the string, allowing its value to be indented to a visually matching
 level as desired.
 
-A Multi-Line String is opened and closed by *three* double-quote characters,
+A Multi-Line String is opened and closed by _three_ double-quote characters,
 like `"""`.
 Its first line _MUST_ immediately start with a Newline ({{newline}})
 after its opening `"""`.
@@ -770,15 +772,15 @@ individual implementations to determine how to represent KDL numbers.
 
 There are five syntaxes for Numbers: Keywords, Decimal, Hexadecimal, Octal, and Binary.
 
-* All non-Keyword ({{keyword-numbers}}) numbers may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
-* Binary numbers start with `0b` and only allow `0` and `1` as digits, which may be separated by `_`. They represent numbers in radix 2.
-* Octal numbers start with `0o` and only allow digits between `0` and `7`, which may be separated by `_`. They represent numbers in radix 8.
-* Hexadecimal numbers start with `0x` and allow digits between `0` and `9`, as well as letters `A` through `F`, in either lower or upper case, which may be separated by `_`. They represent numbers in radix 16.
-* Decimal numbers are a bit more special:
-    * They have no radix prefix.
-    * They use digits `0` through `9`, which may be separated by `_`.
-    * They may optionally include a decimal separator `.`, followed by more digits, which may again be separated by `_`.
-    * They may optionally be followed by `E` or `e`, an optional `-` or `+`, and more digits, to represent an exponent value.
+- All non-Keyword ({{keyword-numbers}}) numbers may optionally start with one of `-` or `+`, which determine whether they'll be positive or negative.
+- Binary numbers start with `0b` and only allow `0` and `1` as digits, which may be separated by `_`. They represent numbers in radix 2.
+- Octal numbers start with `0o` and only allow digits between `0` and `7`, which may be separated by `_`. They represent numbers in radix 8.
+- Hexadecimal numbers start with `0x` and allow digits between `0` and `9`, as well as letters `A` through `F`, in either lower or upper case, which may be separated by `_`. They represent numbers in radix 16.
+- Decimal numbers are a bit more special:
+  - They have no radix prefix.
+  - They use digits `0` through `9`, which may be separated by `_`.
+  - They may optionally include a decimal separator `.`, followed by more digits, which may again be separated by `_`.
+  - They may optionally be followed by `E` or `e`, an optional `-` or `+`, and more digits, to represent an exponent value.
 
 Note that, similar to JSON and some other languages,
 numbers without an integer digit (such as `.1`) are illegal.
@@ -790,9 +792,9 @@ They must be written with at least one integer digit, like `0.1`.
 There are three special "keyword" numbers included in KDL to accomodate the
 widespread use of [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floats:
 
-* `#inf` - floating point positive infinity.
-* `#-inf` - floating point negative infinity.
-* `#nan` - floating point NaN/Not a Number.
+- `#inf` - floating point positive infinity.
+- `#-inf` - floating point negative infinity.
+- `#nan` - floating point NaN/Not a Number.
 
 To go along with this and prevent foot guns, the bare Identifier
 Strings ({{identifier-string}}) `inf`, `-inf`, and `nan` are considered illegal
@@ -831,26 +833,26 @@ my-node #null key=#null
 The following characters should be treated as non-Newline ({{newline}}) [white
 space](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt):
 
-| Name                 | Code Pt |
-|----------------------|---------|
-| Character Tabulation | `U+0009`  |
-| Space                | `U+0020`  |
-| No-Break Space       | `U+00A0`  |
-| Ogham Space Mark     | `U+1680`  |
-| En Quad              | `U+2000`  |
-| Em Quad              | `U+2001`  |
-| En Space             | `U+2002`  |
-| Em Space             | `U+2003`  |
-| Three-Per-Em Space   | `U+2004`  |
-| Four-Per-Em Space    | `U+2005`  |
-| Six-Per-Em Space     | `U+2006`  |
-| Figure Space         | `U+2007`  |
-| Punctuation Space    | `U+2008`  |
-| Thin Space           | `U+2009`  |
-| Hair Space           | `U+200A`  |
-| Narrow No-Break Space| `U+202F`  |
-| Medium Mathematical Space | `U+205F`  |
-| Ideographic Space    | `U+3000`  |
+| Name                      | Code Pt  |
+| ------------------------- | -------- |
+| Character Tabulation      | `U+0009` |
+| Space                     | `U+0020` |
+| No-Break Space            | `U+00A0` |
+| Ogham Space Mark          | `U+1680` |
+| En Quad                   | `U+2000` |
+| Em Quad                   | `U+2001` |
+| En Space                  | `U+2002` |
+| Em Space                  | `U+2003` |
+| Three-Per-Em Space        | `U+2004` |
+| Four-Per-Em Space         | `U+2005` |
+| Six-Per-Em Space          | `U+2006` |
+| Figure Space              | `U+2007` |
+| Punctuation Space         | `U+2008` |
+| Thin Space                | `U+2009` |
+| Hair Space                | `U+200A` |
+| Narrow No-Break Space     | `U+202F` |
+| Medium Mathematical Space | `U+205F` |
+| Ideographic Space         | `U+3000` |
 
 ### Single-line comments
 
@@ -873,12 +875,12 @@ have those elements not be included as part of the parsed document data.
 Slashdash comments can be used before the following, including before their type
 annotations, if present:
 
-* A Node ({{node}}): the entire Node is treated as Whitespace, including all
+- A Node ({{node}}): the entire Node is treated as Whitespace, including all
   props, args, and children.
-* An Argument ({{argument}}): the Argument value is treated as Whitespace.
-* A Property ({{property}}) key: the entire property, including both key and value,
+- An Argument ({{argument}}): the Argument value is treated as Whitespace.
+- A Property ({{property}}) key: the entire property, including both key and value,
   is treated as Whitespace. A slashdash of just the property value is not allowed.
-* A Children Block ({{children-block}}): the entire block, including all
+- A Children Block ({{children-block}}): the entire block, including all
   children within, is treated as Whitespace. Only other children blocks, whether
   slashdashed or not, may follow a slashdashed children block.
 
@@ -890,16 +892,16 @@ comments (other than other slashdashes), before the element that it comments out
 The following character sequences [should be treated as new
 lines](https://www.unicode.org/versions/Unicode16.0.0/core-spec/chapter-5/#G41643):
 
-| Acronym | Name            | Code Pt |
-|---------|-----------------|---------|
+| Acronym | Name                          | Code Pt             |
+| ------- | ----------------------------- | ------------------- |
 | CRLF    | Carriage Return and Line Feed | `U+000D` + `U+000A` |
-| CR      | Carriage Return | `U+000D`  |
-| LF      | Line Feed       | `U+000A`  |
-| NEL     | Next Line       | `U+0085`  |
-| VT      | Vertical tab    | `U+000B`  |
-| FF      | Form Feed       | `U+000C`  |
-| LS      | Line Separator  | `U+2028`  |
-| PS      | Paragraph Separator | `U+2029` |
+| CR      | Carriage Return               | `U+000D`            |
+| LF      | Line Feed                     | `U+000A`            |
+| NEL     | Next Line                     | `U+0085`            |
+| VT      | Vertical tab                  | `U+000B`            |
+| FF      | Form Feed                     | `U+000C`            |
+| LS      | Line Separator                | `U+2028`            |
+| PS      | Paragraph Separator           | `U+2029`            |
 
 Note that for the purpose of new lines, the specific sequence `CRLF` is
 considered _a single newline_.
@@ -910,15 +912,15 @@ The following code points may not appear literally anywhere in the document.
 They may be represented in Strings (but not Raw Strings) using Unicode Escapes ({{escapes}}) (`\u{...}`,
 except for non Unicode Scalar Value, which can't be represented even as escapes).
 
-* The codepoints `U+0000-0008` or the codepoints `U+000E-001F`  (various
+- The codepoints `U+0000-0008` or the codepoints `U+000E-001F` (various
   control characters).
-* `U+007F` (the Delete control character).
-* Any codepoint that is not a [Unicode Scalar
+- `U+007F` (the Delete control character).
+- Any codepoint that is not a [Unicode Scalar
   Value](https://unicode.org/glossary/#unicode_scalar_value) (`U+D800-DFFF`).
-* `U+200E-200F`, `U+202A-202E`, and `U+2066-2069`, the [unicode
+- `U+200E-200F`, `U+202A-202E`, and `U+2066-2069`, the [unicode
   "direction control"
   characters](https://www.w3.org/International/questions/qa-bidi-unicode-controls)
-* `U+FEFF`, aka Zero-width Non-breaking Space (ZWNBSP)/Byte Order Mark (BOM),
+- `U+FEFF`, aka Zero-width Non-breaking Space (ZWNBSP)/Byte Order Mark (BOM),
   except as the first code point in a document.
 
 # Full Grammar
@@ -983,12 +985,12 @@ string-character :=
     [^\\"] - disallowed-literal-code-points
 ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
-hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar  // Unicode Scalar Value in hex₁₆, leading 0s allowed within length ≤ 6
+hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar
 surrogate := [0]{0, 2} [dD] [8-9a-fA-F] hex-digit{2}
 //  U+D800-DFFF:         D   8          00
 //                       D   F          FF
-above-max-scalar = [2-9a-fA-F] hex-digit{5} | [1] [1-9a-fA-F] hex-digit{4}
-// >U+10FFFF:      >1          _____           1  >0          ____
+above-max-scalar = [2-9a-fA-F] hex-digit{5} |
+    [1] [1-9a-fA-F] hex-digit{4}
 
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
@@ -1062,16 +1064,16 @@ version :=
 The grammar language syntax is a combination of ABNF with some regex spice thrown in.
 Specifically:
 
-* Single quotes (`'`) are used to denote literal text. `\` within a literal
+- Single quotes (`'`) are used to denote literal text. `\` within a literal
   string is used for escaping other single-quotes, for initiating unicode
   characters using hex values (`\u{FEFF}`), and for escaping `\` itself
   (`\\`).
-* `*` is used for "zero or more", `+` is used for "one or more", and `?` is
-  used for "zero or one". Per standard regex semantics, `*` and `+` are *greedy*;
+- `*` is used for "zero or more", `+` is used for "one or more", and `?` is
+  used for "zero or one". Per standard regex semantics, `*` and `+` are _greedy_;
   they match as many instances as possible without failing the match.
-* `*?` (used only in raw strings) indicates a *non-greedy* match;
-  it matches as *few* instances as possible without failing the match.
-* `¶` is a *cut point*. It always matches and consumes no characters,
+- `*?` (used only in raw strings) indicates a _non-greedy_ match;
+  it matches as _few_ instances as possible without failing the match.
+- `¶` is a _cut point_. It always matches and consumes no characters,
   but once matched, the parser is not allowed to backtrack past that point in the source.
   If a parser would rewind past the cut point, it must instead fail the overall parse,
   as if it had run out of options.
@@ -1079,16 +1081,16 @@ Specifically:
   to ensure the first instance of the appropriate closing quote sequence
   is guaranteed to be the end of the raw string,
   rather than allowing it to potentially consume more of the document unexpectedly.)
-* `()` can be used to group matches that must be matched together.
-* `a | b` means `a or b`, whichever matches first. If multiple items are before
+- `()` can be used to group matches that must be matched together.
+- `a | b` means `a or b`, whichever matches first. If multiple items are before
   a `|`, they are a single group. `a b c | d` is equivalent to `(a b c) | d`.
-* `[]` are used for regex-style character matches, where any character between
+- `[]` are used for regex-style character matches, where any character between
   the brackets will be a single match. `\` is used to escape `\`, `[`, and
   `]`. They also support character ranges (`0-9`), and negation (`^`)
-* `-` is used for "except for" or "minus" whatever follows it. For example,
+- `-` is used for "except for" or "minus" whatever follows it. For example,
   `a - 'x'` means "any `a`, except something that matches the literal `'x'`".
-* The prefix `^` means "something that does not match" whatever follows it.
+- The prefix `^` means "something that does not match" whatever follows it.
   For example, `^foo` means "must not match `foo`".
-* A single definition may be split over multiple lines. Newlines are treated as
+- A single definition may be split over multiple lines. Newlines are treated as
   spaces.
-* `//` followed by text on its own line is used as comment syntax.
+- `//` followed by text on its own line is used as comment syntax.
