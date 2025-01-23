@@ -145,6 +145,7 @@ entirety, but in the future, may be required to in order to be included here.
 * [TreeSitter](https://github.com/tree-sitter-grammars/tree-sitter-kdl) (neovim, among others)
 * [VS Code](https://marketplace.visualstudio.com/items?itemName=kdl-org.kdl&ssr=false#review-details)\*
 * [vim](https://github.com/imsnif/kdl.vim)
+* [Kate](https://github.com/larsgw/katepart-kdl)\*
 
 \* Supports KDL 2.0.0
 
