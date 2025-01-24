@@ -5,7 +5,7 @@
 KDL Community                                                 K. Marchán
                                                                Microsoft
                                                         KDL Contributors
-                                                         22 January 2025
+                                                         24 January 2025
 
 
                        The KDL Document Language
@@ -21,9 +21,8 @@ Abstract
    This is the formal specification for KDL, including the intended data
    model and the grammar.
 
-   This document describes KDL version KDL 2.0.0.  It was released on
-   2024-12-21.  It is the latest stable version of the language, and
-   will only be edited for minor copyedits or major errata.
+   This document describes an unreleased minor change to KDL.  For the
+   latest oficial version of the language, see https://kdl.dev/spec.
 
 About This Document
 
@@ -134,8 +133,8 @@ Table of Contents
 3.1.  Document
 
    The toplevel concept of KDL is a Document.  A Document is composed of
-   zero or more Nodes (Section 3.2), separated by newlines and
-   whitespace, and eventually terminated by an EOF.
+   zero or more Nodes (Section 3.2), separated by newlines, semicolons,
+   and whitespace, and eventually terminated by an EOF.
 
    All KDL documents MUST be encoded in UTF-8 and conform to the
    specifications in this document.
@@ -188,8 +187,8 @@ Table of Contents
    across multiple lines.
 
    Finally, a node is terminated by either a Newline (Section 3.18), a
-   semicolon (;), the end of a child block (}) or the end of the file/
-   stream (an EOF).
+   semicolon (;), the end of its parent's child block (}) or the end of
+   the file/stream (an EOF).
 
 3.2.1.  Example
 
@@ -275,7 +274,7 @@ Table of Contents
        child2
    }
 
-   parent { child1; child2; }
+   parent { child1; child2 }
 
 3.7.  Value
 
@@ -404,6 +403,9 @@ Table of Contents
       implementation-dependent.
 
    *  base64: A Base64-encoded string, denoting arbitrary binary data.
+
+   *  base85: An Ascii85 (https://en.wikipedia.org/wiki/Ascii85)-encoded
+      string, denoting arbitrary binary data.
 
 3.8.4.  Examples
 
@@ -1111,12 +1113,12 @@ Table of Contents
        [^\\"] - disallowed-literal-code-points
    ws-escape := '\\' (unicode-space | newline)+
    hex-digit := [0-9a-fA-F]
-   hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar  // Unicode Scalar Value in hex₁₆, leading 0s allowed within length ≤ 6
+   hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar
    surrogate := [0]{0, 2} [dD] [8-9a-fA-F] hex-digit{2}
    //  U+D800-DFFF:         D   8          00
    //                       D   F          FF
-   above-max-scalar = [2-9a-fA-F] hex-digit{5} | [1] [1-9a-fA-F] hex-digit{4}
-   // >U+10FFFF:      >1          _____           1  >0          ____
+   above-max-scalar = [2-9a-fA-F] hex-digit{5} |
+       [1] [1-9a-fA-F] hex-digit{4}
 
 
    raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'

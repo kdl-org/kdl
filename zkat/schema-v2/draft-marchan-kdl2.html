@@ -13,9 +13,12 @@ XML, and as do many of its semantics. You can use KDL both as a configuration
 language, and a data exchange or storage format, if you so choose. 
        This is the formal specification for KDL, including the intended data model and
 the grammar. 
-       This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
-is the latest stable version of the language, and will only be edited for minor
-copyedits or major errata. 
+       This document describes an unreleased minor change to KDL. For the latest
+oficial version of the language, see https://kdl.dev/spec. 
+       
+
+
+
     " name="description">
 <meta content="xml2rfc 3.25.0" name="generator">
 <meta content="Document-Language" name="keyword">
@@ -1068,7 +1071,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">KDL Community</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-01-22" class="published">22 January 2025</time>
+<time datetime="2025-01-24" class="published">24 January 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1090,9 +1093,8 @@ XML, and as do many of its semantics. You can use KDL both as a configuration
 language, and a data exchange or storage format, if you so choose.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 <p id="section-abstract-2">This is the formal specification for KDL, including the intended data model and
 the grammar.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
-<p id="section-abstract-3">This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
-is the latest stable version of the language, and will only be edited for minor
-copyedits or major errata.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">This document describes an unreleased minor change to KDL. For the latest
+oficial version of the language, see https://kdl.dev/spec.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1345,7 +1347,7 @@ depending on the characters used.<a href="#section-2-4" class="pilcrow">¶</a></
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-document" class="section-name selfRef">Document</a>
         </h3>
 <p id="section-3.1-1">The toplevel concept of KDL is a Document. A Document is composed of zero or
-more Nodes (<a href="#node" class="auto internal xref">Section 3.2</a>), separated by newlines and whitespace, and eventually
+more Nodes (<a href="#node" class="auto internal xref">Section 3.2</a>), separated by newlines, semicolons, and whitespace, and eventually
 terminated by an EOF.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">All KDL documents MUST be encoded in UTF-8 and conform to the specifications in
 this document.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
@@ -1399,7 +1401,8 @@ preserving key order.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
 the entire node, including its properties, arguments, and children, and make
 it act as plain whitespace, even if it spreads across multiple lines.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
 <p id="section-3.2-8">Finally, a node is terminated by either a Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>), a semicolon
-(<code>;</code>), the end of a child block (<code>}</code>) or the end of the file/stream (an <code>EOF</code>).<a href="#section-3.2-8" class="pilcrow">¶</a></p>
+(<code>;</code>), the end of its parent's child block (<code>}</code>) or the end of the file/stream
+(an <code>EOF</code>).<a href="#section-3.2-8" class="pilcrow">¶</a></p>
 <div id="example-1">
 <section id="section-3.2.1">
           <h4 id="name-example-2">
@@ -1515,7 +1518,7 @@ parent {
     child2
 }
 
-parent { child1; child2; }
+parent { child1; child2 }
 </pre><a href="#section-3.6.1-1" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1706,6 +1709,9 @@ and, if used, SHOULD interpret these types as follows:<a href="#section-3.8-4" c
             <li class="normal" id="section-3.8.3-1.23">
               <p id="section-3.8.3-1.23.1"><code>base64</code>: A Base64-encoded string, denoting arbitrary binary data.<a href="#section-3.8.3-1.23.1" class="pilcrow">¶</a></p>
 </li>
+            <li class="normal" id="section-3.8.3-1.24">
+              <p id="section-3.8.3-1.24.1"><code>base85</code>: An <a href="https://en.wikipedia.org/wiki/Ascii85">Ascii85</a>-encoded string, denoting arbitrary binary data.<a href="#section-3.8.3-1.24.1" class="pilcrow">¶</a></p>
+</li>
           </ul>
 </section>
 </div>
@@ -1747,7 +1753,7 @@ minimum of syntax<a href="#section-3.9-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.9-2.3">
             <p id="section-3.9-2.3.1">Multi-Line Strings let you write strings across multiple lines
-  and with indentation that's not part of the string value.<a href="#section-3.9-2.3.1" class="pilcrow">¶</a></p>
+and with indentation that's not part of the string value.<a href="#section-3.9-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.9-2.4">
             <p id="section-3.9-2.4.1">Raw Strings don't allow any escapes,
@@ -1777,8 +1783,8 @@ characters (<a href="#non-identifier-characters" class="auto internal xref">Sect
 <ul class="normal">
 <li class="normal" id="section-3.10-3.1">
             <p id="section-3.10-3.1.1">idents that appear to start with a Number (<a href="#number" class="auto internal xref">Section 3.14</a>) (like <code>1.0v2</code> or
-  <code>-1em</code>) or the "almost a number" pattern of a decimal point without a
-  leading digit (like <code>.1</code>).<a href="#section-3.10-3.1.1" class="pilcrow">¶</a></p>
+<code>-1em</code>) or the "almost a number" pattern of a decimal point without a
+leading digit (like <code>.1</code>).<a href="#section-3.10-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.10-3.2">
             <p id="section-3.10-3.2.1">idents that are the language keywords (<code>inf</code>, <code>-inf</code>, <code>nan</code>, <code>true</code>,
@@ -2714,7 +2720,7 @@ They may be represented in Strings (but not Raw Strings) using Unicode Escapes (
 except for non Unicode Scalar Value, which can't be represented even as escapes).<a href="#section-3.19-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.19-2.1">
-            <p id="section-3.19-2.1.1">The codepoints <code>U+0000-0008</code> or the codepoints <code>U+000E-001F</code>  (various
+            <p id="section-3.19-2.1.1">The codepoints <code>U+0000-0008</code> or the codepoints <code>U+000E-001F</code> (various
 control characters).<a href="#section-3.19-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.19-2.2">
@@ -2803,12 +2809,12 @@ string-character :=
     [^\\"] - disallowed-literal-code-points
 ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
-hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar  // Unicode Scalar Value in hex₁₆, leading 0s allowed within length ≤ 6
+hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar
 surrogate := [0]{0, 2} [dD] [8-9a-fA-F] hex-digit{2}
 //  U+D800-DFFF:         D   8          00
 //                       D   F          FF
-above-max-scalar = [2-9a-fA-F] hex-digit{5} | [1] [1-9a-fA-F] hex-digit{4}
-// &gt;U+10FFFF:      &gt;1          _____           1  &gt;0          ____
+above-max-scalar = [2-9a-fA-F] hex-digit{5} |
+    [1] [1-9a-fA-F] hex-digit{4}
 
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
