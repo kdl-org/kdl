@@ -936,11 +936,11 @@ document := bom? version? nodes
 nodes := (line-space* node)* line-space*
 
 base-node := slashdash? type? node-space* string
-    (node-space+ slashdash? node-prop-or-arg)*
+    (node-space* (node-space | slashdash) node-prop-or-arg)*
     // slashdashed node-children must always be after props and args.
-    (node-space+ slashdash node-children)*
-    (node-space+ node-children)?
-    (node-space+ slashdash node-children)*
+    (node-space* slashdash node-children)*
+    (node-space* node-children)?
+    (node-space* slashdash node-children)*
     node-space*
 node := base-node node-terminator
 final-node := base-node node-terminator?
