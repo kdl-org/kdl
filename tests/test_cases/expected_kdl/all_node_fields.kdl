@@ -1,3 +1,0 @@
-node arg prop=val {
-    inner_node
-}

@@ -1,2 +1,0 @@
-// This fails because `"""` MUST be followed by a newline.
-node #"""#
