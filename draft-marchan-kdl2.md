@@ -265,10 +265,66 @@ KDL does not specify any restrictions on what implementations might do with
 these annotations. They are free to ignore them, or use them to make decisions
 about how to interpret a value.
 
-Additionally, the following type annotations MAY be recognized by KDL parsers
-and, if used, SHOULD interpret these types as follows:
+### Suffix Type Annotation
 
-### Reserved Type Annotations for Numbers Without Decimals:
+When a ({{value}}) is a ({{number}}), it's possible to attach the type
+annotation as a "suffix", instead of prepending it between `(` and `)`. This
+makes it possible to, for example, write `10px`, `10.5%`, `512GiB`, etc., which
+are equivalent to `(px)10`, `(%)5`, and `(GiB)512`, respectively.
+
+An implementation that finds BOTH a parenthesized and a suffix
+({{type-annotation}}) on the same ({{number}}) MUST yield a syntax error.
+
+Suffixes MUST BE plain ({{identifier-string}})s. No other ({{string}}) is
+acceptable.
+
+There are two kinds of ({{suffix-type-annotation}}) available:
+({{bare-suffix-type-annotation}})s and ({{explicit-suffix-type-annotation}}).
+
+#### Bare Suffix Type Annotation
+
+When a ({{value}}) is a decimal ({{number}}) WITHOUT exponential syntax (`1e+5`
+etc) (and ONLY a decimal), it's possible to attach the type annotation as a
+suffix directly to the number, without any additional syntax.
+
+They also come with some additional rules (like only being available for
+decimals), in order to prevent potential ambiguity or footguns with the syntax.
+This is generally acceptable, as type annotations in particular tend to be
+application-defined and limited in scope, rather than arbitrary user data. In
+designing this feature, it was determined that the value for various real-world
+DSLs outweighed the complexity of the following rules.
+
+As such, to remove ambiguity, the suffix ({{identifier-string}}) MUST NOT start
+with any of the following patterns, all of which MUST yield syntax errors:
+
+* `.`, `,`, or `_`
+* `[a-zA-Z][0-9_]` (to disambiguate all non-decimals, with breathing room)
+* `[eE][+-]?[0-9]` (to disambiguate exponentials)
+* `[xX][a-fA-F]` (to disambiguate hexadecimals)
+
+All other ({{identifier-string}})s can be safely appended to decimal numbers, so
+long as the decimal does not include an exponential component.
+
+If the desired suffix would violate any of the above rules, either regular
+parenthetical ({{type-annotation}})s, or ({{explicit-suffix-type-annotation}})s
+may be used.
+
+#### Explicit Suffix Type Annotation
+
+Any ({{number}}) may have a `#` attached to it, followed by any valid
+({{identifier-string}}). This is an explicit ({{suffix-type-annotation}}) syntax
+without any of the relatively complex requirements of
+({{bare-suffix-type-annotation}}), which can be a useful escape hatch. For
+example: `10.0#u8` is invalid syntax without the `#` prefix.
+
+Note again that, unlike ({{bare-suffix-type-annotation}})s, Explicit Suffixes
+may be used with ALL ({{number}}) formats (hexadecimal, decimal, octal, and
+binary). For example, `0x1234#u16` is valid.
+
+### Reserved Type Annotations for Numbers Without Decimals
+
+Additionally, the following type annotations MAY be recognized by KDL parsers
+and, if used, SHOULD interpret these types as follows.
 
 Signed integers of various sizes (the number is the bit size):
 
@@ -335,6 +391,7 @@ IEEE 754-2008 decimal floating point numbers
 
 ~~~kdl
 node (u8)123
+node 123#i64
 node prop=(regex).*
 (published)date "1970-01-01"
 (contributor)person name="Foo McBar"
@@ -1013,11 +1070,25 @@ multi-line-raw-string-body :=
 // Numbers
 number := keyword-number | hex | octal | binary | decimal
 
-decimal := sign? integer ('.' integer)? exponent?
+decimal := sign? integer ('.' integer)? (
+    // NOTE: This grammar does not explicitly guard against having both
+    // parenthesized and type suffixes.
+    bare-type-suffix |
+    explicit-type-suffix |
+    (exponent explicit-type-suffix?)
+  )?
 exponent := ('e' | 'E') sign? integer
 integer := digit (digit | '_')*
 digit := [0-9]
 sign := '+' | '-'
+
+bare-type-suffix := bare-type-suffix-initial identifier-char*
+bare-type-suffix-initial := identifier-char
+    - '.' - ',' - '_'
+    - ([a-zA-Z] [0-9_])
+    - (('e' | 'E') sign? digit)
+    - (('x' | 'X') [a-fA-F])
+explicit-type-suffix := '#' identifier-string
 
 hex := sign? '0x' hex-digit (hex-digit | '_')*
 octal := sign? '0o' [0-7] [0-7_]*
