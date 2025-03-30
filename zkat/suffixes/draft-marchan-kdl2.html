@@ -13,21 +13,24 @@ XML, and as do many of its semantics. You can use KDL both as a configuration
 language, and a data exchange or storage format, if you so choose. 
        This is the formal specification for KDL, including the intended data model and
 the grammar. 
-       This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
-is the latest stable version of the language, and will only be edited for minor
-copyedits or major errata. 
+       This document describes an unreleased minor change to KDL. For the latest
+oficial version of the language, see https://kdl.dev/spec. 
+       
+
+
+
     " name="description">
-<meta content="xml2rfc 3.25.0" name="generator">
+<meta content="xml2rfc 3.28.0" name="generator">
 <meta content="Document-Language" name="keyword">
 <meta content="Configuration" name="keyword">
 <meta content="draft-marchan-kdl2-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.25.0
-    Python 3.12.8
+  xml2rfc 3.28.0
+    Python 3.12.9
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
-    Jinja2 3.1.5
+    Jinja2 3.1.6
     lxml 5.3.0
     platformdirs 4.3.6
     pycountry 24.6.1
@@ -444,7 +447,7 @@ dl {
     margin-bottom: 0;
   }
 }
-dl > dt {
+dl:not(.dlNewline) > dt {
   float: left;
   margin-right: 2ch;
   min-width: 8ch;
@@ -1053,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left"></td>
 <td class="center">KDL</td>
-<td class="right">January 2025</td>
+<td class="right">March 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Marchán &amp; KDL Contributors</td>
@@ -1068,7 +1071,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">KDL Community</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-01-20" class="published">20 January 2025</time>
+<time datetime="2025-03-30" class="published">30 March 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1090,9 +1093,8 @@ XML, and as do many of its semantics. You can use KDL both as a configuration
 language, and a data exchange or storage format, if you so choose.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 <p id="section-abstract-2">This is the formal specification for KDL, including the intended data model and
 the grammar.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
-<p id="section-abstract-3">This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
-is the latest stable version of the language, and will only be edited for minor
-copyedits or major errata.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">This document describes an unreleased minor change to KDL. For the latest
+oficial version of the language, see https://kdl.dev/spec.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1179,16 +1181,19 @@ https://creativecommons.org/licenses/by-sa/4.0/<a href="#section-note.2-1" class
                 <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-type-annotation" class="internal xref">Type Annotation</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.1">
-                    <p id="section-toc.1-1.3.2.8.2.1.1"><a href="#section-3.8.1" class="auto internal xref">3.8.1</a>.  <a href="#name-reserved-type-annotations-f" class="internal xref">Reserved Type Annotations for Numbers Without Decimals:</a></p>
+                    <p id="section-toc.1-1.3.2.8.2.1.1"><a href="#section-3.8.1" class="auto internal xref">3.8.1</a>.  <a href="#name-suffix-type-annotation" class="internal xref">Suffix Type Annotation</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.2">
-                    <p id="section-toc.1-1.3.2.8.2.2.1"><a href="#section-3.8.2" class="auto internal xref">3.8.2</a>.  <a href="#name-reserved-type-annotations-fo" class="internal xref">Reserved Type Annotations for Numbers With Decimals:</a></p>
+                    <p id="section-toc.1-1.3.2.8.2.2.1"><a href="#section-3.8.2" class="auto internal xref">3.8.2</a>.  <a href="#name-reserved-type-annotations-f" class="internal xref">Reserved Type Annotations for Numbers Without Decimals</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.3">
-                    <p id="section-toc.1-1.3.2.8.2.3.1"><a href="#section-3.8.3" class="auto internal xref">3.8.3</a>.  <a href="#name-reserved-type-annotations-for" class="internal xref">Reserved Type Annotations for Strings:</a></p>
+                    <p id="section-toc.1-1.3.2.8.2.3.1"><a href="#section-3.8.3" class="auto internal xref">3.8.3</a>.  <a href="#name-reserved-type-annotations-fo" class="internal xref">Reserved Type Annotations for Numbers With Decimals:</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.4">
-                    <p id="section-toc.1-1.3.2.8.2.4.1"><a href="#section-3.8.4" class="auto internal xref">3.8.4</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+                    <p id="section-toc.1-1.3.2.8.2.4.1"><a href="#section-3.8.4" class="auto internal xref">3.8.4</a>.  <a href="#name-reserved-type-annotations-for" class="internal xref">Reserved Type Annotations for Strings:</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.5">
+                    <p id="section-toc.1-1.3.2.8.2.5.1"><a href="#section-3.8.5" class="auto internal xref">3.8.5</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
 </li>
                 </ul>
 </li>
@@ -1345,7 +1350,7 @@ depending on the characters used.<a href="#section-2-4" class="pilcrow">¶</a></
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-document" class="section-name selfRef">Document</a>
         </h3>
 <p id="section-3.1-1">The toplevel concept of KDL is a Document. A Document is composed of zero or
-more Nodes (<a href="#node" class="auto internal xref">Section 3.2</a>), separated by newlines and whitespace, and eventually
+more Nodes (<a href="#node" class="auto internal xref">Section 3.2</a>), separated by newlines, semicolons, and whitespace, and eventually
 terminated by an EOF.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">All KDL documents MUST be encoded in UTF-8 and conform to the specifications in
 this document.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
@@ -1399,7 +1404,8 @@ preserving key order.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
 the entire node, including its properties, arguments, and children, and make
 it act as plain whitespace, even if it spreads across multiple lines.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
 <p id="section-3.2-8">Finally, a node is terminated by either a Newline (<a href="#newline" class="auto internal xref">Section 3.18</a>), a semicolon
-(<code>;</code>), the end of a child block (<code>}</code>) or the end of the file/stream (an <code>EOF</code>).<a href="#section-3.2-8" class="pilcrow">¶</a></p>
+(<code>;</code>), the end of its parent's child block (<code>}</code>) or the end of the file/stream
+(an <code>EOF</code>).<a href="#section-3.2-8" class="pilcrow">¶</a></p>
 <div id="example-1">
 <section id="section-3.2.1">
           <h4 id="name-example-2">
@@ -1515,7 +1521,7 @@ parent {
     child2
 }
 
-parent { child1; child2; }
+parent { child1; child2 }
 </pre><a href="#section-3.6.1-1" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1551,176 +1557,248 @@ the <code>)</code>, and may be separated from its target by Whitespace.<a href="
 <p id="section-3.8-3">KDL does not specify any restrictions on what implementations might do with
 these annotations. They are free to ignore them, or use them to make decisions
 about how to interpret a value.<a href="#section-3.8-3" class="pilcrow">¶</a></p>
-<p id="section-3.8-4">Additionally, the following type annotations MAY be recognized by KDL parsers
-and, if used, SHOULD interpret these types as follows:<a href="#section-3.8-4" class="pilcrow">¶</a></p>
-<div id="reserved-type-annotations-for-numbers-without-decimals">
+<div id="suffix-type-annotation">
 <section id="section-3.8.1">
-          <h4 id="name-reserved-type-annotations-f">
-<a href="#section-3.8.1" class="section-number selfRef">3.8.1. </a><a href="#name-reserved-type-annotations-f" class="section-name selfRef">Reserved Type Annotations for Numbers Without Decimals:</a>
+          <h4 id="name-suffix-type-annotation">
+<a href="#section-3.8.1" class="section-number selfRef">3.8.1. </a><a href="#name-suffix-type-annotation" class="section-name selfRef">Suffix Type Annotation</a>
           </h4>
-<p id="section-3.8.1-1">Signed integers of various sizes (the number is the bit size):<a href="#section-3.8.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.8.1-1">When a (<a href="#value" class="auto internal xref">Section 3.7</a>) is a (<a href="#number" class="auto internal xref">Section 3.14</a>), it's possible to attach the type
+annotation as a "suffix", instead of prepending it between <code>(</code> and <code>)</code>. This
+makes it possible to, for example, write <code>10px</code>, <code>10.5%</code>, <code>512GiB</code>, etc., which
+are equivalent to <code>(px)10</code>, <code>(%)5</code>, and <code>(GiB)512</code>, respectively.<a href="#section-3.8.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.8.1-2">An implementation that finds BOTH a parenthesized and a suffix
+(<a href="#type-annotation" class="auto internal xref">Section 3.8</a>) on the same (<a href="#number" class="auto internal xref">Section 3.14</a>) MUST yield a syntax error.<a href="#section-3.8.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.8.1-3">Suffixes MUST BE plain (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>)s. No other (<a href="#string" class="auto internal xref">Section 3.9</a>) is
+acceptable.<a href="#section-3.8.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.8.1-4">There are two kinds of (<a href="#suffix-type-annotation" class="auto internal xref">Section 3.8.1</a>) available:
+(<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>)s and (<a href="#explicit-suffix-type-annotation" class="auto internal xref">Section 3.8.1.2</a>).<a href="#section-3.8.1-4" class="pilcrow">¶</a></p>
+<div id="bare-suffix-type-annotation">
+<section id="section-3.8.1.1">
+            <h5 id="name-bare-suffix-type-annotation">
+<a href="#section-3.8.1.1" class="section-number selfRef">3.8.1.1. </a><a href="#name-bare-suffix-type-annotation" class="section-name selfRef">Bare Suffix Type Annotation</a>
+            </h5>
+<p id="section-3.8.1.1-1">When a (<a href="#value" class="auto internal xref">Section 3.7</a>) is a decimal (<a href="#number" class="auto internal xref">Section 3.14</a>) WITHOUT exponential syntax (<code>1e+5</code>
+etc) (and ONLY a decimal), it's possible to attach the type annotation as a
+suffix directly to the number, without any additional syntax.<a href="#section-3.8.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.1-2">They also come with some additional rules (like only being available for
+decimals), in order to prevent potential ambiguity or footguns with the syntax.
+This is generally acceptable, as type annotations in particular tend to be
+application-defined and limited in scope, rather than arbitrary user data. In
+designing this feature, it was determined that the value for various real-world
+DSLs outweighed the complexity of the following rules.<a href="#section-3.8.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.1-3">As such, to remove ambiguity, the suffix (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>) MUST NOT start
+with any of the following patterns, all of which MUST yield syntax errors:<a href="#section-3.8.1.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.8.1-2.1">
-              <p id="section-3.8.1-2.1.1"><code>i8</code><a href="#section-3.8.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.8.1.1-4.1">
+                <p id="section-3.8.1.1-4.1.1"><code>.</code>, <code>,</code>, or <code>_</code><a href="#section-3.8.1.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.1-2.2">
-              <p id="section-3.8.1-2.2.1"><code>i16</code><a href="#section-3.8.1-2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.8.1.1-4.2">
+                <p id="section-3.8.1.1-4.2.1"><code>[a-zA-Z][0-9_]</code> (to disambiguate all non-decimals, with breathing room)<a href="#section-3.8.1.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.1-2.3">
-              <p id="section-3.8.1-2.3.1"><code>i32</code><a href="#section-3.8.1-2.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.8.1.1-4.3">
+                <p id="section-3.8.1.1-4.3.1"><code>[eE][+-]?[0-9]</code> (to disambiguate exponentials)<a href="#section-3.8.1.1-4.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.1-2.4">
-              <p id="section-3.8.1-2.4.1"><code>i64</code><a href="#section-3.8.1-2.4.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.8.1.1-4.4">
+                <p id="section-3.8.1.1-4.4.1"><code>[xX][a-fA-F]</code> (to disambiguate hexadecimals)<a href="#section-3.8.1.1-4.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.1-2.5">
-              <p id="section-3.8.1-2.5.1"><code>i128</code><a href="#section-3.8.1-2.5.1" class="pilcrow">¶</a></p>
+            </ul>
+<p id="section-3.8.1.1-5">All other (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>)s can be safely appended to decimal numbers, so
+long as the decimal does not include an exponential component.<a href="#section-3.8.1.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.1-6">If the desired suffix would violate any of the above rules, either regular
+parenthetical (<a href="#type-annotation" class="auto internal xref">Section 3.8</a>)s, or (<a href="#explicit-suffix-type-annotation" class="auto internal xref">Section 3.8.1.2</a>)s
+may be used.<a href="#section-3.8.1.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="explicit-suffix-type-annotation">
+<section id="section-3.8.1.2">
+            <h5 id="name-explicit-suffix-type-annota">
+<a href="#section-3.8.1.2" class="section-number selfRef">3.8.1.2. </a><a href="#name-explicit-suffix-type-annota" class="section-name selfRef">Explicit Suffix Type Annotation</a>
+            </h5>
+<p id="section-3.8.1.2-1">Any (<a href="#number" class="auto internal xref">Section 3.14</a>) may have a <code>#</code> attached to it, followed by any valid
+(<a href="#identifier-string" class="auto internal xref">Section 3.10</a>). This is an explicit (<a href="#suffix-type-annotation" class="auto internal xref">Section 3.8.1</a>) syntax
+without any of the relatively complex requirements of
+(<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>), which can be a useful escape hatch. For
+example: <code>10.0#u8</code> is invalid syntax without the <code>#</code> prefix.<a href="#section-3.8.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.2-2">Note again that, unlike Bare Suffixes, Explicit Suffixes may be used with ALL
+(<a href="#number" class="auto internal xref">Section 3.14</a>) formats (hexadecimal, decimal, octal, and binary).<a href="#section-3.8.1.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="reserved-type-annotations-for-numbers-without-decimals">
+<section id="section-3.8.2">
+          <h4 id="name-reserved-type-annotations-f">
+<a href="#section-3.8.2" class="section-number selfRef">3.8.2. </a><a href="#name-reserved-type-annotations-f" class="section-name selfRef">Reserved Type Annotations for Numbers Without Decimals</a>
+          </h4>
+<p id="section-3.8.2-1">Additionally, the following type annotations MAY be recognized by KDL parsers
+and, if used, SHOULD interpret these types as follows.<a href="#section-3.8.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.8.2-2">Signed integers of various sizes (the number is the bit size):<a href="#section-3.8.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.8.2-3.1">
+              <p id="section-3.8.2-3.1.1"><code>i8</code><a href="#section-3.8.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.2-3.2">
+              <p id="section-3.8.2-3.2.1"><code>i16</code><a href="#section-3.8.2-3.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.2-3.3">
+              <p id="section-3.8.2-3.3.1"><code>i32</code><a href="#section-3.8.2-3.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.2-3.4">
+              <p id="section-3.8.2-3.4.1"><code>i64</code><a href="#section-3.8.2-3.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.2-3.5">
+              <p id="section-3.8.2-3.5.1"><code>i128</code><a href="#section-3.8.2-3.5.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.8.1-3">Unsigned integers of various sizes (the number is the bit size):<a href="#section-3.8.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.8.2-4">Unsigned integers of various sizes (the number is the bit size):<a href="#section-3.8.2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.8.1-4.1">
-              <p id="section-3.8.1-4.1.1"><code>u8</code><a href="#section-3.8.1-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.8.2-5.1">
+              <p id="section-3.8.2-5.1.1"><code>u8</code><a href="#section-3.8.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.1-4.2">
-              <p id="section-3.8.1-4.2.1"><code>u16</code><a href="#section-3.8.1-4.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.2-5.2">
+              <p id="section-3.8.2-5.2.1"><code>u16</code><a href="#section-3.8.2-5.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.1-4.3">
-              <p id="section-3.8.1-4.3.1"><code>u32</code><a href="#section-3.8.1-4.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.2-5.3">
+              <p id="section-3.8.2-5.3.1"><code>u32</code><a href="#section-3.8.2-5.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.1-4.4">
-              <p id="section-3.8.1-4.4.1"><code>u64</code><a href="#section-3.8.1-4.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.2-5.4">
+              <p id="section-3.8.2-5.4.1"><code>u64</code><a href="#section-3.8.2-5.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.1-4.5">
-              <p id="section-3.8.1-4.5.1"><code>u128</code><a href="#section-3.8.1-4.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.2-5.5">
+              <p id="section-3.8.2-5.5.1"><code>u128</code><a href="#section-3.8.2-5.5.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.8.1-5">Platform-dependent integer types, both signed and unsigned:<a href="#section-3.8.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.8.2-6">Platform-dependent integer types, both signed and unsigned:<a href="#section-3.8.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.8.1-6.1">
-              <p id="section-3.8.1-6.1.1"><code>isize</code><a href="#section-3.8.1-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.8.2-7.1">
+              <p id="section-3.8.2-7.1.1"><code>isize</code><a href="#section-3.8.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.1-6.2">
-              <p id="section-3.8.1-6.2.1"><code>usize</code><a href="#section-3.8.1-6.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.2-7.2">
+              <p id="section-3.8.2-7.2.1"><code>usize</code><a href="#section-3.8.2-7.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
 <div id="reserved-type-annotations-for-numbers-with-decimals">
-<section id="section-3.8.2">
+<section id="section-3.8.3">
           <h4 id="name-reserved-type-annotations-fo">
-<a href="#section-3.8.2" class="section-number selfRef">3.8.2. </a><a href="#name-reserved-type-annotations-fo" class="section-name selfRef">Reserved Type Annotations for Numbers With Decimals:</a>
+<a href="#section-3.8.3" class="section-number selfRef">3.8.3. </a><a href="#name-reserved-type-annotations-fo" class="section-name selfRef">Reserved Type Annotations for Numbers With Decimals:</a>
           </h4>
-<p id="section-3.8.2-1">IEEE 754 floating point numbers, both single (32) and double (64) precision:<a href="#section-3.8.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.8.3-1">IEEE 754 floating point numbers, both single (32) and double (64) precision:<a href="#section-3.8.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.8.2-2.1">
-              <p id="section-3.8.2-2.1.1"><code>f32</code><a href="#section-3.8.2-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.8.3-2.1">
+              <p id="section-3.8.3-2.1.1"><code>f32</code><a href="#section-3.8.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.2-2.2">
-              <p id="section-3.8.2-2.2.1"><code>f64</code><a href="#section-3.8.2-2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.3-2.2">
+              <p id="section-3.8.3-2.2.1"><code>f64</code><a href="#section-3.8.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.8.2-3">IEEE 754-2008 decimal floating point numbers<a href="#section-3.8.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.8.3-3">IEEE 754-2008 decimal floating point numbers<a href="#section-3.8.3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.8.2-4.1">
-              <p id="section-3.8.2-4.1.1"><code>decimal64</code><a href="#section-3.8.2-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.8.3-4.1">
+              <p id="section-3.8.3-4.1.1"><code>decimal64</code><a href="#section-3.8.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.2-4.2">
-              <p id="section-3.8.2-4.2.1"><code>decimal128</code><a href="#section-3.8.2-4.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.3-4.2">
+              <p id="section-3.8.3-4.2.1"><code>decimal128</code><a href="#section-3.8.3-4.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
 <div id="reserved-type-annotations-for-strings">
-<section id="section-3.8.3">
+<section id="section-3.8.4">
           <h4 id="name-reserved-type-annotations-for">
-<a href="#section-3.8.3" class="section-number selfRef">3.8.3. </a><a href="#name-reserved-type-annotations-for" class="section-name selfRef">Reserved Type Annotations for Strings:</a>
+<a href="#section-3.8.4" class="section-number selfRef">3.8.4. </a><a href="#name-reserved-type-annotations-for" class="section-name selfRef">Reserved Type Annotations for Strings:</a>
           </h4>
 <ul class="normal">
-<li class="normal" id="section-3.8.3-1.1">
-              <p id="section-3.8.3-1.1.1"><code>date-time</code>: ISO8601 date/time format.<a href="#section-3.8.3-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.8.4-1.1">
+              <p id="section-3.8.4-1.1.1"><code>date-time</code>: ISO8601 date/time format.<a href="#section-3.8.4-1.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.2">
-              <p id="section-3.8.3-1.2.1"><code>time</code>: "Time" section of ISO8601.<a href="#section-3.8.3-1.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.2">
+              <p id="section-3.8.4-1.2.1"><code>time</code>: "Time" section of ISO8601.<a href="#section-3.8.4-1.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.3">
-              <p id="section-3.8.3-1.3.1"><code>date</code>: "Date" section of ISO8601.<a href="#section-3.8.3-1.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.3">
+              <p id="section-3.8.4-1.3.1"><code>date</code>: "Date" section of ISO8601.<a href="#section-3.8.4-1.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.4">
-              <p id="section-3.8.3-1.4.1"><code>duration</code>: ISO8601 duration format.<a href="#section-3.8.3-1.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.4">
+              <p id="section-3.8.4-1.4.1"><code>duration</code>: ISO8601 duration format.<a href="#section-3.8.4-1.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.5">
-              <p id="section-3.8.3-1.5.1"><code>decimal</code>: IEEE 754-2008 decimal string format.<a href="#section-3.8.3-1.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.5">
+              <p id="section-3.8.4-1.5.1"><code>decimal</code>: IEEE 754-2008 decimal string format.<a href="#section-3.8.4-1.5.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.6">
-              <p id="section-3.8.3-1.6.1"><code>currency</code>: ISO 4217 currency code.<a href="#section-3.8.3-1.6.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.6">
+              <p id="section-3.8.4-1.6.1"><code>currency</code>: ISO 4217 currency code.<a href="#section-3.8.4-1.6.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.7">
-              <p id="section-3.8.3-1.7.1"><code>country-2</code>: ISO 3166-1 alpha-2 country code.<a href="#section-3.8.3-1.7.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.7">
+              <p id="section-3.8.4-1.7.1"><code>country-2</code>: ISO 3166-1 alpha-2 country code.<a href="#section-3.8.4-1.7.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.8">
-              <p id="section-3.8.3-1.8.1"><code>country-3</code>: ISO 3166-1 alpha-3 country code.<a href="#section-3.8.3-1.8.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.8">
+              <p id="section-3.8.4-1.8.1"><code>country-3</code>: ISO 3166-1 alpha-3 country code.<a href="#section-3.8.4-1.8.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.9">
-              <p id="section-3.8.3-1.9.1"><code>country-subdivision</code>: ISO 3166-2 country subdivision code.<a href="#section-3.8.3-1.9.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.9">
+              <p id="section-3.8.4-1.9.1"><code>country-subdivision</code>: ISO 3166-2 country subdivision code.<a href="#section-3.8.4-1.9.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.10">
-              <p id="section-3.8.3-1.10.1"><code>email</code>: RFC5322 email address.<a href="#section-3.8.3-1.10.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.10">
+              <p id="section-3.8.4-1.10.1"><code>email</code>: RFC5322 email address.<a href="#section-3.8.4-1.10.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.11">
-              <p id="section-3.8.3-1.11.1"><code>idn-email</code>: RFC6531 internationalized email address.<a href="#section-3.8.3-1.11.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.11">
+              <p id="section-3.8.4-1.11.1"><code>idn-email</code>: RFC6531 internationalized email address.<a href="#section-3.8.4-1.11.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.12">
-              <p id="section-3.8.3-1.12.1"><code>hostname</code>: RFC1123 internet hostname (only ASCII segments)<a href="#section-3.8.3-1.12.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.12">
+              <p id="section-3.8.4-1.12.1"><code>hostname</code>: RFC1123 internet hostname (only ASCII segments)<a href="#section-3.8.4-1.12.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.13">
-              <p id="section-3.8.3-1.13.1"><code>idn-hostname</code>: RFC5890 internationalized internet hostname
-(only <code>xn--</code>-prefixed ASCII "punycode" segments, or non-ASCII segments)<a href="#section-3.8.3-1.13.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.13">
+              <p id="section-3.8.4-1.13.1"><code>idn-hostname</code>: RFC5890 internationalized internet hostname
+(only <code>xn--</code>-prefixed ASCII "punycode" segments, or non-ASCII segments)<a href="#section-3.8.4-1.13.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.14">
-              <p id="section-3.8.3-1.14.1"><code>ipv4</code>: RFC2673 dotted-quad IPv4 address.<a href="#section-3.8.3-1.14.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.14">
+              <p id="section-3.8.4-1.14.1"><code>ipv4</code>: RFC2673 dotted-quad IPv4 address.<a href="#section-3.8.4-1.14.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.15">
-              <p id="section-3.8.3-1.15.1"><code>ipv6</code>: RFC2373 IPv6 address.<a href="#section-3.8.3-1.15.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.15">
+              <p id="section-3.8.4-1.15.1"><code>ipv6</code>: RFC2373 IPv6 address.<a href="#section-3.8.4-1.15.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.16">
-              <p id="section-3.8.3-1.16.1"><code>url</code>: RFC3986 URI.<a href="#section-3.8.3-1.16.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.16">
+              <p id="section-3.8.4-1.16.1"><code>url</code>: RFC3986 URI.<a href="#section-3.8.4-1.16.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.17">
-              <p id="section-3.8.3-1.17.1"><code>url-reference</code>: RFC3986 URI Reference.<a href="#section-3.8.3-1.17.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.17">
+              <p id="section-3.8.4-1.17.1"><code>url-reference</code>: RFC3986 URI Reference.<a href="#section-3.8.4-1.17.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.18">
-              <p id="section-3.8.3-1.18.1"><code>irl</code>: RFC3987 Internationalized Resource Identifier.<a href="#section-3.8.3-1.18.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.18">
+              <p id="section-3.8.4-1.18.1"><code>irl</code>: RFC3987 Internationalized Resource Identifier.<a href="#section-3.8.4-1.18.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.19">
-              <p id="section-3.8.3-1.19.1"><code>irl-reference</code>: RFC3987 Internationalized Resource Identifier Reference.<a href="#section-3.8.3-1.19.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.19">
+              <p id="section-3.8.4-1.19.1"><code>irl-reference</code>: RFC3987 Internationalized Resource Identifier Reference.<a href="#section-3.8.4-1.19.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.20">
-              <p id="section-3.8.3-1.20.1"><code>url-template</code>: RFC6570 URI Template.<a href="#section-3.8.3-1.20.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.20">
+              <p id="section-3.8.4-1.20.1"><code>url-template</code>: RFC6570 URI Template.<a href="#section-3.8.4-1.20.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.21">
-              <p id="section-3.8.3-1.21.1"><code>uuid</code>: RFC4122 UUID.<a href="#section-3.8.3-1.21.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.21">
+              <p id="section-3.8.4-1.21.1"><code>uuid</code>: RFC4122 UUID.<a href="#section-3.8.4-1.21.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.22">
-              <p id="section-3.8.3-1.22.1"><code>regex</code>: Regular expression. Specific patterns may be implementation-dependent.<a href="#section-3.8.3-1.22.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.22">
+              <p id="section-3.8.4-1.22.1"><code>regex</code>: Regular expression. Specific patterns may be implementation-dependent.<a href="#section-3.8.4-1.22.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.8.3-1.23">
-              <p id="section-3.8.3-1.23.1"><code>base64</code>: A Base64-encoded string, denoting arbitrary binary data.<a href="#section-3.8.3-1.23.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.8.4-1.23">
+              <p id="section-3.8.4-1.23.1"><code>base64</code>: A Base64-encoded string, denoting arbitrary binary data.<a href="#section-3.8.4-1.23.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.8.4-1.24">
+              <p id="section-3.8.4-1.24.1"><code>base85</code>: An <a href="https://en.wikipedia.org/wiki/Ascii85">Ascii85</a>-encoded string, denoting arbitrary binary data.<a href="#section-3.8.4-1.24.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
 <div id="examples">
-<section id="section-3.8.4">
+<section id="section-3.8.5">
           <h4 id="name-examples">
-<a href="#section-3.8.4" class="section-number selfRef">3.8.4. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+<a href="#section-3.8.5" class="section-number selfRef">3.8.5. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
           </h4>
-<div class="lang-kdl sourcecode" id="section-3.8.4-1">
+<div class="lang-kdl sourcecode" id="section-3.8.5-1">
 <pre>
 node (u8)123
+node 123#i64
 node prop=(regex).*
 (published)date "1970-01-01"
 (contributor)person name="Foo McBar"
-</pre><a href="#section-3.8.4-1" class="pilcrow">¶</a>
+</pre><a href="#section-3.8.5-1" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1747,7 +1825,7 @@ minimum of syntax<a href="#section-3.9-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.9-2.3">
             <p id="section-3.9-2.3.1">Multi-Line Strings let you write strings across multiple lines
-  and with indentation that's not part of the string value.<a href="#section-3.9-2.3.1" class="pilcrow">¶</a></p>
+and with indentation that's not part of the string value.<a href="#section-3.9-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.9-2.4">
             <p id="section-3.9-2.4.1">Raw Strings don't allow any escapes,
@@ -1777,8 +1855,8 @@ characters (<a href="#non-identifier-characters" class="auto internal xref">Sect
 <ul class="normal">
 <li class="normal" id="section-3.10-3.1">
             <p id="section-3.10-3.1.1">idents that appear to start with a Number (<a href="#number" class="auto internal xref">Section 3.14</a>) (like <code>1.0v2</code> or
-  <code>-1em</code>) or the "almost a number" pattern of a decimal point without a
-  leading digit (like <code>.1</code>).<a href="#section-3.10-3.1.1" class="pilcrow">¶</a></p>
+<code>-1em</code>) or the "almost a number" pattern of a decimal point without a
+leading digit (like <code>.1</code>).<a href="#section-3.10-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.10-3.2">
             <p id="section-3.10-3.2.1">idents that are the language keywords (<code>inf</code>, <code>-inf</code>, <code>nan</code>, <code>true</code>,
@@ -2714,7 +2792,7 @@ They may be represented in Strings (but not Raw Strings) using Unicode Escapes (
 except for non Unicode Scalar Value, which can't be represented even as escapes).<a href="#section-3.19-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.19-2.1">
-            <p id="section-3.19-2.1.1">The codepoints <code>U+0000-0008</code> or the codepoints <code>U+000E-001F</code>  (various
+            <p id="section-3.19-2.1.1">The codepoints <code>U+0000-0008</code> or the codepoints <code>U+000E-001F</code> (various
 control characters).<a href="#section-3.19-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.19-2.2">
@@ -2754,11 +2832,11 @@ document := bom? version? nodes
 nodes := (line-space* node)* line-space*
 
 base-node := slashdash? type? node-space* string
-    (node-space+ slashdash? node-prop-or-arg)*
+    (node-space* (node-space | slashdash) node-prop-or-arg)*
     // slashdashed node-children must always be after props and args.
-    (node-space+ slashdash node-children)*
-    (node-space+ node-children)?
-    (node-space+ slashdash node-children)*
+    (node-space* slashdash node-children)*
+    (node-space* node-children)?
+    (node-space* slashdash node-children)*
     node-space*
 node := base-node node-terminator
 final-node := base-node node-terminator?
@@ -2803,10 +2881,13 @@ string-character :=
     [^\\"] - disallowed-literal-code-points
 ws-escape := '\\' (unicode-space | newline)+
 hex-digit := [0-9a-fA-F]
-hex-unicode := hex-digit{1, 6} - surrogates
-surrogates := [dD][8-9a-fA-F]hex-digit{2}
-// U+D800-DFFF: D  8         00
-//              D  F         FF
+hex-unicode := hex-digit{1, 6} - surrogate - above-max-scalar
+surrogate := [0]{0, 2} [dD] [8-9a-fA-F] hex-digit{2}
+//  U+D800-DFFF:         D   8          00
+//                       D   F          FF
+above-max-scalar = [2-9a-fA-F] hex-digit{5} |
+    [1] [1-9a-fA-F] hex-digit{4}
+
 
 raw-string := '#' raw-string-quotes '#' | '#' raw-string '#'
 raw-string-quotes :=
@@ -2828,11 +2909,25 @@ multi-line-raw-string-body :=
 // Numbers
 number := keyword-number | hex | octal | binary | decimal
 
-decimal := sign? integer ('.' integer)? exponent?
+decimal := sign? integer ('.' integer)? (
+    // NOTE: This grammar does not explicitly guard against having both
+    // parenthesized and type suffixes.
+    bare-type-suffix |
+    explicit-type-suffix |
+    (exponent explicit-type-suffix?)
+  )?
 exponent := ('e' | 'E') sign? integer
 integer := digit (digit | '_')*
 digit := [0-9]
 sign := '+' | '-'
+
+bare-type-suffix := bare-type-suffix-initial identifier-char*
+bare-type-suffix-initial := identifier-char
+    - '.' - ',' - '_'
+    - ([a-zA-Z] [0-9_])
+    - (('e' | 'E') sign? digit)
+    - (('x' | 'X') [a-fA-F])
+explicit-type-suffix := '#' identifier-string
 
 hex := sign? '0x' hex-digit (hex-digit | '_')*
 octal := sign? '0o' [0-7] [0-7_]*
