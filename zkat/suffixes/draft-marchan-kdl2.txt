@@ -5,7 +5,7 @@
 KDL Community                                                 K. Marchán
                                                                Microsoft
                                                         KDL Contributors
-                                                           30 March 2025
+                                                           31 March 2025
 
 
                        The KDL Document Language
@@ -366,7 +366,7 @@ Table of Contents
 
    Note again that, unlike Bare Suffixes, Explicit Suffixes may be used
    with ALL (Section 3.14) formats (hexadecimal, decimal, octal, and
-   binary).
+   binary).  For example, 0x1234#u16 is valid.
 
 3.8.2.  Reserved Type Annotations for Numbers Without Decimals
 
