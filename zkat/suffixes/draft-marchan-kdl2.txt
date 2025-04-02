@@ -5,7 +5,7 @@
 KDL Community                                                 K. Marchán
                                                                Microsoft
                                                         KDL Contributors
-                                                           31 March 2025
+                                                            2 April 2025
 
 
                        The KDL Document Language
@@ -364,9 +364,9 @@ Table of Contents
    which can be a useful escape hatch.  For example: 10.0#u8 is invalid
    syntax without the # prefix.
 
-   Note again that, unlike Bare Suffixes, Explicit Suffixes may be used
-   with ALL (Section 3.14) formats (hexadecimal, decimal, octal, and
-   binary).  For example, 0x1234#u16 is valid.
+   Note again that, unlike (Section 3.8.1.1)s, Explicit Suffixes may be
+   used with ALL (Section 3.14) formats (hexadecimal, decimal, octal,
+   and binary).  For example, 0x1234#u16 is valid.
 
 3.8.2.  Reserved Type Annotations for Numbers Without Decimals
 
