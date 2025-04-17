@@ -315,7 +315,7 @@ may be used.
 
 #### Explicit Suffix Type Annotation
 
-Any ({{number}}) may have a `#` attached to it, followed by any valid
+Any ({{number}}) may have a `#` appended to it, followed by any valid
 ({{identifier-string}}). This is an explicit ({{suffix-type-annotation}}) syntax
 without any of the relatively complex requirements of
 ({{bare-suffix-type-annotation}}), which can be a useful escape hatch. For
