@@ -272,15 +272,13 @@ annotation as a "suffix", instead of prepending it between `(` and `)`. This
 makes it possible to, for example, write `10px`, `10.5%`, `512GiB`, etc., which
 are equivalent to `(px)10`, `(%)5`, and `(GiB)512`, respectively.
 
-Most suffixes can be appended directly to the number
-(a ({{bare-suffix-type-annotation}})),
-as shown in the previous paragraph.
-To avoid parsing ambiguity, there are some restrictions on this;
-an ({{explicit-suffix-type-annotation}}) avoids all these restrictions
-by using an additional `#` to explicitly indicate it.
-For example, `10.0u8` is invalid, but `10.0#u8` is valid
-and equivalent to `(u8)10.0`.
-See the "Bare Suffix Type Annotation" section for the full list of restrictions.
+Most suffixes can be appended directly to the number (a
+({{bare-suffix-type-annotation}})), as shown in the previous paragraph. To avoid
+parsing ambiguity, there are some restrictions on this; an
+({{explicit-suffix-type-annotation}}) avoids all these restrictions by using an
+additional `#` to explicitly indicate it. For example, `10.0u8` is invalid, but
+`10.0#u8` is valid and equivalent to `(u8)10.0`. See
+({{bare-suffix-type-annotation}}) for the full list of restrictions.
 
 An implementation that finds BOTH a parenthesized and a suffix
 ({{type-annotation}}) on the same ({{number}}) MUST yield a syntax error.
@@ -294,8 +292,9 @@ There are two kinds of ({{suffix-type-annotation}}) available:
 #### Bare Suffix Type Annotation
 
 When a ({{value}}) is a decimal ({{number}}) WITHOUT exponential syntax (`1e+5`
-etc) (and ONLY a decimal), it's possible to attach the type annotation as a
-suffix directly to the number, without any additional syntax.
+etc) (and ONLY a decimal: that is, numbers which do NOT have a `0b`/`0o`/`0x`
+prefix), it's possible to attach the type annotation as a suffix directly to the
+number, without any additional syntax.
 
 They also come with some additional rules (like only being available for
 decimals), in order to prevent potential ambiguity or footguns with the syntax.
@@ -305,16 +304,17 @@ designing this feature, it was determined that the value for various real-world
 DSLs outweighed the complexity of the following rules.
 
 As such, to remove ambiguity, the suffix ({{identifier-string}}) MUST NOT start
-with any of the following patterns, all of which MUST yield syntax errors
-(if they can be distinguished from other syntaxes at all):
+with any of the following patterns, all of which MUST yield syntax errors (if
+they can be distinguished from other syntaxes at all):
 
 * `.`, `,`, or `_`
-* `[a-zA-Z][0-9_]` (to disambiguate all non-decimals, with breathing room)
 * `[eE][+-]?[0-9]` (to disambiguate exponentials)
-* `[xX][a-fA-F]` (to disambiguate hexadecimals)
 
-For example, `10,000` is illegal, as is `10u16`. `10e0n` is illegal, but `10e0` is a legal 
+For example, `10,000` is illegal. `10e0n` is illegal, but `10e0` is a legal
 *decimal number using exponential syntax*, __not__ equivalent to `(e0)10`.
+Additionally, note that since bare suffixes are only legal on _decimals_, `0u8`
+is legal, but `0xs` is _not_, since hexadecimals are determined by their
+prefixes. Similarly, `1xs` _is_ legal, and equivalent to `(xs)1`.
 
 All other ({{identifier-string}})s can be safely appended to decimal numbers, so
 long as the decimal does not include an exponential component.
@@ -329,11 +329,11 @@ Any ({{number}}) may have a `#` appended to it, followed by any valid
 ({{identifier-string}}). This is an explicit ({{suffix-type-annotation}}) syntax
 without any of the relatively complex requirements of
 ({{bare-suffix-type-annotation}}), which can be a useful escape hatch. For
-example: `10.0#u8` is invalid syntax without the `#` prefix.
+example: `0#b1` is invalid syntax without the `#` prefix.
 
 Note again that, unlike ({{bare-suffix-type-annotation}})s, Explicit Suffixes
 may be used with ALL ({{number}}) formats (hexadecimal, decimal, octal, and
-binary). For example, `0x1234#u16` is valid.
+binary). For example, `0x1234#u32` is valid.
 
 ### Reserved Type Annotations for Numbers Without Decimals
 
@@ -1022,8 +1022,9 @@ node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 prop := string node-space* '=' node-space* value
-value := type? node-space* (string | number | keyword)
+value := normal-value | suffixed-decimal
 type := '(' node-space* string node-space* ')'
+normal-value := type? node-space* (string | number | keyword)
 
 // Strings
 string := identifier-string | quoted-string | raw-string ¶
@@ -1084,24 +1085,25 @@ multi-line-raw-string-body :=
 // Numbers
 number := keyword-number | hex | octal | binary | decimal
 
-decimal := sign? integer ('.' integer)? (
-    // NOTE: This grammar does not explicitly guard against having both
-    // parenthesized and type suffixes.
-    bare-type-suffix |
-    explicit-type-suffix |
-    (exponent explicit-type-suffix?)
-  )?
+decimal := significand exponent?
+suffixed-decimal := significand (
+    bare-type-suffix
+    | (exponent? explicit-type-suffix)
+)
+significand := sign? significand-initial integer? ('.' integer)?
 exponent := ('e' | 'E') sign? integer
 integer := digit (digit | '_')*
+significand-initial = digit
+    - '0b'
+    - '0o'
+    - '0x'
 digit := [0-9]
 sign := '+' | '-'
 
 bare-type-suffix := bare-type-suffix-initial identifier-char*
 bare-type-suffix-initial := identifier-char
     - '.' - ',' - '_'
-    - ([a-zA-Z] [0-9_])
     - (('e' | 'E') sign? digit)
-    - (('x' | 'X') [a-fA-F])
 explicit-type-suffix := '#' identifier-string
 
 hex := sign? '0x' hex-digit (hex-digit | '_')*
