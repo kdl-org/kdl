@@ -295,7 +295,8 @@ designing this feature, it was determined that the value for various real-world
 DSLs outweighed the complexity of the following rules.
 
 As such, to remove ambiguity, the suffix ({{identifier-string}}) MUST NOT start
-with any of the following patterns, all of which MUST yield syntax errors:
+with any of the following patterns, all of which MUST yield syntax errors
+(if they can be distinguished from other syntaxes at all):
 
 * `.`, `,`, or `_`
 * `[a-zA-Z][0-9_]` (to disambiguate all non-decimals, with breathing room)
