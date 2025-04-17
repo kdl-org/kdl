@@ -5,7 +5,7 @@
 KDL Community                                                 K. Marchán
                                                                Microsoft
                                                         KDL Contributors
-                                                            2 April 2025
+                                                           17 April 2025
 
 
                        The KDL Document Language
@@ -338,7 +338,8 @@ Table of Contents
 
    As such, to remove ambiguity, the suffix (Section 3.10) MUST NOT
    start with any of the following patterns, all of which MUST yield
-   syntax errors:
+   syntax errors (if they can be distinguished from other syntaxes at
+   all):
 
    *  ., ,, or _
 
