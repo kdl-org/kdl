@@ -303,6 +303,9 @@ with any of the following patterns, all of which MUST yield syntax errors
 * `[eE][+-]?[0-9]` (to disambiguate exponentials)
 * `[xX][a-fA-F]` (to disambiguate hexadecimals)
 
+For example, `10,000` is illegal, as is `10u16`. `10e0n` is illegal, but `10e0` is a legal 
+*decimal number using exponential syntax*, __not__ equivalent to `(e0)10`.
+
 All other ({{identifier-string}})s can be safely appended to decimal numbers, so
 long as the decimal does not include an exponential component.
 
