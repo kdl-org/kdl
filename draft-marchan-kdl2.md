@@ -272,6 +272,16 @@ annotation as a "suffix", instead of prepending it between `(` and `)`. This
 makes it possible to, for example, write `10px`, `10.5%`, `512GiB`, etc., which
 are equivalent to `(px)10`, `(%)5`, and `(GiB)512`, respectively.
 
+Most suffixes can be appended directly to the number
+(a ({{bare-suffix-type-annotation}})),
+as shown in the previous paragraph.
+To avoid parsing ambiguity, there are some restrictions on this;
+an ({{explicit-suffix-type-annotation}}) avoids all these restrictions
+by using an additional `#` to explicitly indicate it.
+For example, `10.0u8` is invalid, but `10.0#u8` is valid
+and equivalent to `(u8)10.0`.
+See the "Bare Suffix Type Annotation" section for the full list of restrictions.
+
 An implementation that finds BOTH a parenthesized and a suffix
 ({{type-annotation}}) on the same ({{number}}) MUST yield a syntax error.
 
