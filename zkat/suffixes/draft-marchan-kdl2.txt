@@ -312,6 +312,14 @@ Table of Contents
    512GiB, etc., which are equivalent to (px)10, (%)5, and (GiB)512,
    respectively.
 
+   Most suffixes can be appended directly to the number (a
+   (Section 3.8.1.1)), as shown in the previous paragraph.  To avoid
+   parsing ambiguity, there are some restrictions on this; an
+   (Section 3.8.1.2) avoids all these restrictions by using an
+   additional # to explicitly indicate it.  For example, 10.0u8 is
+   invalid, but 10.0#u8 is valid and equivalent to (u8)10.0.  See
+   (Section 3.8.1.1) for the full list of restrictions.
+
    An implementation that finds BOTH a parenthesized and a suffix
    (Section 3.8) on the same (Section 3.14) MUST yield a syntax error.
 
@@ -324,9 +332,9 @@ Table of Contents
 3.8.1.1.  Bare Suffix Type Annotation
 
    When a (Section 3.7) is a decimal (Section 3.14) WITHOUT exponential
-   syntax (1e+5 etc) (and ONLY a decimal), it's possible to attach the
-   type annotation as a suffix directly to the number, without any
-   additional syntax.
+   syntax (1e+5 etc) (and ONLY a decimal: that is, numbers which do NOT
+   have a 0b/0o/0x prefix), it's possible to attach the type annotation
+   as a suffix directly to the number, without any additional syntax.
 
    They also come with some additional rules (like only being available
    for decimals), in order to prevent potential ambiguity or footguns
@@ -343,31 +351,33 @@ Table of Contents
 
    *  ., ,, or _
 
-   *  [a-zA-Z][0-9_] (to disambiguate all non-decimals, with breathing
-      room)
-
    *  [eE][+-]?[0-9] (to disambiguate exponentials)
 
-   *  [xX][a-fA-F] (to disambiguate hexadecimals)
+   For example, 10,000 is illegal. 10e0n is illegal, but 10e0 is a legal
+   _decimal number using exponential syntax_, *not* equivalent to
+   (e0)10.  Additionally, note that since bare suffixes are only legal
+   on _decimals_, 0u8 is legal, but 0xs is _not_, since hexadecimals are
+   determined by their prefixes.  Similarly, 1xs _is_ legal, and
+   equivalent to (xs)1.
 
    All other (Section 3.10)s can be safely appended to decimal numbers,
    so long as the decimal does not include an exponential component.
 
    If the desired suffix would violate any of the above rules, either
-   regular parenthetical (Section 3.8)s, or (Section 3.8.1.2)s may be
+   regular parenthetical (Section 3.8)s or (Section 3.8.1.2)s may be
    used.
 
 3.8.1.2.  Explicit Suffix Type Annotation
 
-   Any (Section 3.14) may have a # attached to it, followed by any valid
+   Any (Section 3.14) may have a # appended to it, followed by any valid
    (Section 3.10).  This is an explicit (Section 3.8.1) syntax without
    any of the relatively complex requirements of (Section 3.8.1.1),
-   which can be a useful escape hatch.  For example: 10.0#u8 is invalid
+   which can be a useful escape hatch.  For example: 0#b1 is invalid
    syntax without the # prefix.
 
    Note again that, unlike (Section 3.8.1.1)s, Explicit Suffixes may be
    used with ALL (Section 3.14) formats (hexadecimal, decimal, octal,
-   and binary).  For example, 0x1234#u16 is valid.
+   and binary).  For example, 0x1234#u32 is valid.
 
 3.8.2.  Reserved Type Annotations for Numbers Without Decimals
 
@@ -1146,8 +1156,9 @@ Table of Contents
    node-terminator := single-line-comment | newline | ';' | eof
 
    prop := string node-space* '=' node-space* value
-   value := type? node-space* (string | number | keyword)
+   value := normal-value | suffixed-decimal
    type := '(' node-space* string node-space* ')'
+   normal-value := type? node-space* (string | number | keyword)
 
    // Strings
    string := identifier-string | quoted-string | raw-string ¶
@@ -1208,24 +1219,25 @@ Table of Contents
    // Numbers
    number := keyword-number | hex | octal | binary | decimal
 
-   decimal := sign? integer ('.' integer)? (
-       // NOTE: This grammar does not explicitly guard against having both
-       // parenthesized and type suffixes.
-       bare-type-suffix |
-       explicit-type-suffix |
-       (exponent explicit-type-suffix?)
-     )?
+   decimal := significand exponent?
+   suffixed-decimal := significand (
+       bare-type-suffix
+       | (exponent? explicit-type-suffix)
+   )
+   significand := sign? significand-initial integer? ('.' integer)?
    exponent := ('e' | 'E') sign? integer
    integer := digit (digit | '_')*
+   significand-initial = digit
+       - '0b'
+       - '0o'
+       - '0x'
    digit := [0-9]
    sign := '+' | '-'
 
    bare-type-suffix := bare-type-suffix-initial identifier-char*
    bare-type-suffix-initial := identifier-char
        - '.' - ',' - '_'
-       - ([a-zA-Z] [0-9_])
        - (('e' | 'E') sign? digit)
-       - (('x' | 'X') [a-fA-F])
    explicit-type-suffix := '#' identifier-string
 
    hex := sign? '0x' hex-digit (hex-digit | '_')*
