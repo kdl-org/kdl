@@ -310,7 +310,7 @@ All other ({{identifier-string}})s can be safely appended to decimal numbers, so
 long as the decimal does not include an exponential component.
 
 If the desired suffix would violate any of the above rules, either regular
-parenthetical ({{type-annotation}})s, or ({{explicit-suffix-type-annotation}})s
+parenthetical ({{type-annotation}})s or ({{explicit-suffix-type-annotation}})s
 may be used.
 
 #### Explicit Suffix Type Annotation
