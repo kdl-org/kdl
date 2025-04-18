@@ -267,75 +267,78 @@ about how to interpret a value.
 
 ### Suffix Type Annotation
 
-When a ({{value}}) is a ({{number}}), it's possible to attach the type
-annotation as a "suffix", instead of prepending it between `(` and `)`. This
-makes it possible to, for example, write `10px`, `10.5%`, `512GiB`, etc., which
-are equivalent to `(px)10`, `(%)5`, and `(GiB)512`, respectively.
+When a Value ({{value}}) is a Number ({{number}}), it's possible to attach the
+type annotation as a "suffix", instead of prepending it between `(` and `)`.
+This makes it possible to, for example, write `10px`, `10.5%`, `512GiB`, etc.,
+which are equivalent to `(px)10`, `(%)5`, and `(GiB)512`, respectively.
 
-Most suffixes can be appended directly to the number (a
-({{bare-suffix-type-annotation}})), as shown in the previous paragraph. To avoid
-parsing ambiguity, there are some restrictions on this; an
-({{explicit-suffix-type-annotation}}) avoids all these restrictions by using an
-additional `#` to explicitly indicate it. For example, `10.0u8` is invalid, but
-`10.0#u8` is valid and equivalent to `(u8)10.0`. See
-({{bare-suffix-type-annotation}}) for the full list of restrictions.
+There are two kinds of Suffix Type Annotations ({{suffix-type-annotation}})
+available: Bare Suffix Type Annotations ({{bare-suffix-type-annotation}})s and
+Explicit Suffix Type Annotations ({{explicit-suffix-type-annotation}}).
 
-An implementation that finds BOTH a parenthesized and a suffix
-({{type-annotation}}) on the same ({{number}}) MUST yield a syntax error.
+Most suffixes can be appended directly to the number (a Bare Suffix Type
+Annotation ({{bare-suffix-type-annotation}})), as shown in the previous
+paragraph. To avoid parsing ambiguity, there are some restrictions on this; an
+Explicit Suffix Type Annotation ({{explicit-suffix-type-annotation}}) avoids all
+these restrictions by using an additional `#` to explicitly indicate it. For
+example, `10.0u8` is invalid, but `10.0#u8` is valid and equivalent to
+`(u8)10.0`. See Bare Suffix Type Annotation ({{bare-suffix-type-annotation}})
+for the full list of restrictions.
 
-Suffixes MUST BE plain ({{identifier-string}})s. No other ({{string}}) is
-acceptable.
+An implementation that finds BOTH a parenthesized ({{type-annotation}}) and a
+Suffix Type Annotation ({{suffix-type-annotation}}) on the same Number
+({{number}}) MUST yield a syntax error.
 
-There are two kinds of ({{suffix-type-annotation}}) available:
-({{bare-suffix-type-annotation}})s and ({{explicit-suffix-type-annotation}}).
+Suffixes MUST BE plain Identifier Strings ({{identifier-string}}). No other
+String ({{string}}) syntax is acceptable.
 
 #### Bare Suffix Type Annotation
 
-When a ({{value}}) is a decimal ({{number}}) WITHOUT exponential syntax (`1e+5`
-etc) (and ONLY a decimal: that is, numbers which do NOT have a `0b`/`0o`/`0x`
-prefix), it's possible to attach the type annotation as a suffix directly to the
-number, without any additional syntax.
+When a Value ({{value}}) is a decimal Number ({{number}}) WITHOUT exponential
+syntax (`1e+5` etc) (and ONLY a decimal. That is, numbers which do NOT have a
+`0b`/`0o`/`0x` prefix with an optional sign), it's possible to append the type
+annotation as a suffix directly to the number, without any additional syntax.
 
-They also come with some additional rules (like only being available for
-decimals), in order to prevent potential ambiguity or footguns with the syntax.
-This is generally acceptable, as type annotations in particular tend to be
-application-defined and limited in scope, rather than arbitrary user data. In
-designing this feature, it was determined that the value for various real-world
-DSLs outweighed the complexity of the following rules.
+To remove further ambiguity, on top of not being available for non-decimal
+prefixes, and for decimals with exponent parts, the suffix Identifier String
+({{identifier-string}}) itself MUST NOT start with any of `.`, `,`, or `_`, as
+well as `[eE][-+]?[0-9]?` as part of the exponential restriction above. Note the
+optional digit, which is added to prevent typo ambiguity.
 
-As such, to remove ambiguity, the suffix ({{identifier-string}}) MUST NOT start
-with any of the following patterns, all of which MUST yield syntax errors (if
-they can be distinguished from other syntaxes at all):
+For example, the following are all illegal:
 
-* `.`, `,`, or `_`
-* `[eE][+-]?[0-9]` (to disambiguate exponentials)
+* `10,000` (suffix would start with `,`)
+* `10e0n` (suffix on an exponential)
+* `0xyz` (starts with reserved hexadecimal prefix)
+* `0b` (starts with reserved binary prefix)
+* `5e+oops` (looks too close to an exponential)
 
-For example, `10,000` is illegal. `10e0n` is illegal, but `10e0` is a legal
-*decimal number using exponential syntax*, __not__ equivalent to `(e0)10`.
-Additionally, note that since bare suffixes are only legal on _decimals_, `0u8`
-is legal, but `0xs` is _not_, since hexadecimals are determined by their
-prefixes. Similarly, `1xs` _is_ legal, and equivalent to `(xs)1`.
+Whereas the following are all legal:
 
-All other ({{identifier-string}})s can be safely appended to decimal numbers, so
-long as the decimal does not include an exponential component.
+* `0u8` (aka `(u8)0`)
+* `5em` (aka `(em)5`. The `e` is not followed by a digit.)
+* `1xyz` (aka `(xyz)1`. No longer starts with `0` as above.)
+* `20b` (aka `(b)20`, "20 bytes". No longer starts with just `0` as above.)
 
 If the desired suffix would violate any of the above rules, either regular
-parenthetical ({{type-annotation}})s or ({{explicit-suffix-type-annotation}})s
-may be used.
+parenthetical Type Annotations ({{type-annotation}}) or Explicit Suffix Type
+Annotations ({{explicit-suffix-type-annotation}}) may be used.
 
 #### Explicit Suffix Type Annotation
 
-Any ({{number}}) may have a `#` appended to it, followed by any valid
-({{identifier-string}}). This is an explicit ({{suffix-type-annotation}}) syntax
-without any of the relatively complex requirements of
-({{bare-suffix-type-annotation}}), which can be a useful escape hatch. For
-example: `0#b1` is invalid syntax without the `#` prefix.
+Any Number ({{number}}) may have a `#` appended to it, followed by any valid
+Identifier String ({{identifier-string}}). This is an Explicit Suffix Type
+Annotation ({{suffix-type-annotation}}) syntax without any of the added
+restrictions of Bare Suffix Type Annotations ({{bare-suffix-type-annotation}}),
+which can be a useful escape hatch. For example: `0#b` is invalid syntax without
+the `#` prefix.
 
-Note again that, unlike ({{bare-suffix-type-annotation}})s, Explicit Suffixes
-may be used with ALL ({{number}}) formats (hexadecimal, decimal, octal, and
-binary). For example, `0x1234#u32` is valid.
+Note that, unlike Bare Suffix Type Annotations
+({{bare-suffix-type-annotation}}), Explicit Suffixes may be used with ALL Number
+({{number}}) formats (hexadecimal, decimal, octal, and binary). For example,
+`0x1234#u32` is valid.
 
-### Reserved Type Annotations for Numbers Without Decimals
+### Reserved Type Annotations for Numbers Without Decimal Parts
 
 Additionally, the following type annotations MAY be recognized by KDL parsers
 and, if used, SHOULD interpret these types as follows.
@@ -361,7 +364,7 @@ Platform-dependent integer types, both signed and unsigned:
 - `isize`
 - `usize`
 
-### Reserved Type Annotations for Numbers With Decimals:
+### Reserved Type Annotations for Numbers With Decimal Parts
 
 IEEE 754 floating point numbers, both single (32) and double (64) precision:
 
@@ -373,7 +376,7 @@ IEEE 754-2008 decimal floating point numbers
 - `decimal64`
 - `decimal128`
 
-### Reserved Type Annotations for Strings:
+### Reserved Type Annotations for Strings
 
 - `date-time`: ISO8601 date/time format.
 - `time`: "Time" section of ISO8601.
@@ -404,8 +407,8 @@ IEEE 754-2008 decimal floating point numbers
 ### Examples
 
 ~~~kdl
-node (u8)123
-node 123#i64
+node 123u8
+node 0#b 20b 50GiB
 node prop=(regex).*
 (published)date "1970-01-01"
 (contributor)person name="Foo McBar"
