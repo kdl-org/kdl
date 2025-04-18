@@ -154,8 +154,8 @@ Table of Contents
    any KDL document is the "node".  Every node must have a name, which
    must be a String (Section 3.9).
 
-   The name may be preceded by a Type Annotation (Section 3.8) to
-   further clarify its type, particularly in relation to its parent
+   The name may be preceded by a Prefix Type Annotation (Section 3.8.2)
+   to further clarify its type, particularly in relation to its parent
    node.  (For example, clarifying that a particular date child node is
    for the _publication_ date, rather than the last-modified date, with
    (published)date.)
@@ -285,8 +285,8 @@ Table of Contents
    Properties (Section 3.4).  Only String (Section 3.9) values may be
    used as Node (Section 3.2) names or Property (Section 3.4) keys.
 
-   Values (both as arguments and in properties) _MAY_ be prefixed by a
-   single Type Annotation (Section 3.8).
+   Values (both as arguments and in properties) _MAY_ include a single
+   Type Annotation (Section 3.8).
 
 3.8.  Type Annotation
 
@@ -329,42 +329,43 @@ Table of Contents
    10.5%, 512GiB, etc., which are equivalent to (px)10, (%)5, and
    (GiB)512, respectively.
 
-   There are two kinds of Suffix Type Annotations (Section 3.8.3)
-   available: Bare Suffix Type Annotations (Section 3.8.3.1)s and
-   Explicit Suffix Type Annotations (Section 3.8.3.2).
-
    Most suffixes can be appended directly to the number (a Bare Suffix
    Type Annotation (Section 3.8.3.1)), as shown in the previous
    paragraph.  To avoid parsing ambiguity, there are some restrictions
    on this; an Explicit Suffix Type Annotation (Section 3.8.3.2) avoids
    all these restrictions by using an additional # to explicitly
-   indicate it.  For example, 10.0u8 is invalid, but 10.0#u8 is valid
-   and equivalent to (u8)10.0.  See Bare Suffix Type Annotation
+   indicate it.  For example, 0bytes is invalid, but 0#bytes is valid
+   and equivalent to (bytes)0.  See Bare Suffix Type Annotation
    (Section 3.8.3.1) for the full list of restrictions.
 
-   An implementation that finds BOTH a parenthesized (Section 3.8) and a
-   Suffix Type Annotation (Section 3.8.3) on the same Number
-   (Section 3.14) MUST yield a syntax error.
+   An implementation that finds BOTH a parenthesized Prefix Type
+   Annotation (Section 3.8.2) and a Suffix Type Annotation
+   (Section 3.8.3) on the same Number (Section 3.14) MUST yield a syntax
+   error.
 
    Suffixes MUST BE plain Identifier Strings (Section 3.10).  No other
    String (Section 3.9) syntax is acceptable.
 
 3.8.3.1.  Bare Suffix Type Annotation
 
-   When a Value (Section 3.7) is a decimal Number (Section 3.14) WITHOUT
-   an exponential part--that is, numbers which do NOT have a 0b/0o/0x
-   prefix with an optional sign, or which look like 5.2e+3--it's
-   possible to append the type annotation as a suffix directly to the
-   number, without any additional syntax.
+   When a Value (Section 3.7) is a Number (Section 3.14) that meets
+   certain criteria, it's possible to append an Identifier String
+   (Section 3.10), and ONLY an Identifier String, as a suffix directly
+   to the Number, as its Type Annotation (Section 3.8).  The criteria
+   are as follows:
 
-   To remove further ambiguity, on top of not being available for non-
-   decimal prefixes, and for decimals with exponent parts, the suffix
-   Identifier String (Section 3.10) itself MUST NOT start with either .
-   or ,, as well as [eE][-+]?[0-9]? (as part of the exponential
-   restriction above).  Note the optional digit, which is added to
-   prevent typo ambiguity.  Additionally, a standalone non-decimal
-   Number (Section 3.14) prefix MUST yield a syntax error (e.g. 0b is an
-   incorrect binary number, not (b)0).
+   *  The Number MUST be a Decimal (that is, it MUST NOT start with 0b,
+      0o, or 0x).  Additionally, the tokens 0b, 0o, and 0x MUST be
+      treated as syntax errors (incomplete non-decimal numbers).
+
+   *  It MUST NOT have an exponent part (e.g. 5.2e+3).
+
+   *  The Identifier String used for the type itself MUST NOT start with
+      either . or ,.
+
+   *  As part of the exponential restriction, the suffix MUST NOT match
+      [eE]([-+]|[0-9]) (e.g. 5.2e+ SHOULD be considered a "bad
+      exponential", and MUST NOT parse as (e+)5.2).
 
    For example, the following are all illegal:
 
@@ -378,20 +379,22 @@ Table of Contents
 
    *  5e+oops (looks too close to an exponential)
 
+   *  1.2.3-abc (suffix would start with . AND Identifier Strings can't
+      start with .<digit>)
+
    Whereas the following are all legal:
 
-   *  0u8 (aka (u8)0)
+   *  0u8 = (u8)0
 
-   *  5em (aka (em)5.  The e is not followed by a digit.)
+   *  5em = (em)5, the e is not followed by a digit.
 
-   *  1xyz (aka (xyz)1.  No longer starts with 0 as above.)
+   *  1xyz = (xyz)1, no longer starts with 0 as above.
 
-   *  20b (aka (b)20, "20 bytes".  No longer starts with just 0 as
-      above.)
+   *  20b = (b)20, "20 bytes", no longer starts with just 0 as above.
 
    If the desired suffix would violate any of the above rules, either
-   regular parenthetical Type Annotations (Section 3.8) or Explicit
-   Suffix Type Annotations (Section 3.8.3.2) may be used.
+   Prefix Type Annotations (Section 3.8.2) or Explicit Suffix Type
+   Annotations (Section 3.8.3.2) may be used.
 
 3.8.3.2.  Explicit Suffix Type Annotation
 
