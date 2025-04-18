@@ -26,7 +26,7 @@ oficial version of the language, see https://kdl.dev/spec.
 <meta content="draft-marchan-kdl2-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.28.1
-    Python 3.12.9
+    Python 3.12.10
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
@@ -1071,7 +1071,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">KDL Community</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-17" class="published">17 April 2025</time>
+<time datetime="2025-04-18" class="published">18 April 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1184,13 +1184,13 @@ https://creativecommons.org/licenses/by-sa/4.0/<a href="#section-note.2-1" class
                     <p id="section-toc.1-1.3.2.8.2.1.1"><a href="#section-3.8.1" class="auto internal xref">3.8.1</a>.  <a href="#name-suffix-type-annotation" class="internal xref">Suffix Type Annotation</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.2">
-                    <p id="section-toc.1-1.3.2.8.2.2.1"><a href="#section-3.8.2" class="auto internal xref">3.8.2</a>.  <a href="#name-reserved-type-annotations-f" class="internal xref">Reserved Type Annotations for Numbers Without Decimals</a></p>
+                    <p id="section-toc.1-1.3.2.8.2.2.1"><a href="#section-3.8.2" class="auto internal xref">3.8.2</a>.  <a href="#name-reserved-type-annotations-f" class="internal xref">Reserved Type Annotations for Numbers Without Decimal Parts</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.3">
-                    <p id="section-toc.1-1.3.2.8.2.3.1"><a href="#section-3.8.3" class="auto internal xref">3.8.3</a>.  <a href="#name-reserved-type-annotations-fo" class="internal xref">Reserved Type Annotations for Numbers With Decimals:</a></p>
+                    <p id="section-toc.1-1.3.2.8.2.3.1"><a href="#section-3.8.3" class="auto internal xref">3.8.3</a>.  <a href="#name-reserved-type-annotations-fo" class="internal xref">Reserved Type Annotations for Numbers With Decimal Parts</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.4">
-                    <p id="section-toc.1-1.3.2.8.2.4.1"><a href="#section-3.8.4" class="auto internal xref">3.8.4</a>.  <a href="#name-reserved-type-annotations-for" class="internal xref">Reserved Type Annotations for Strings:</a></p>
+                    <p id="section-toc.1-1.3.2.8.2.4.1"><a href="#section-3.8.4" class="auto internal xref">3.8.4</a>.  <a href="#name-reserved-type-annotations-for" class="internal xref">Reserved Type Annotations for Strings</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.5">
                     <p id="section-toc.1-1.3.2.8.2.5.1"><a href="#section-3.8.5" class="auto internal xref">3.8.5</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
@@ -1562,59 +1562,76 @@ about how to interpret a value.<a href="#section-3.8-3" class="pilcrow">¶</a></
           <h4 id="name-suffix-type-annotation">
 <a href="#section-3.8.1" class="section-number selfRef">3.8.1. </a><a href="#name-suffix-type-annotation" class="section-name selfRef">Suffix Type Annotation</a>
           </h4>
-<p id="section-3.8.1-1">When a (<a href="#value" class="auto internal xref">Section 3.7</a>) is a (<a href="#number" class="auto internal xref">Section 3.14</a>), it's possible to attach the type
-annotation as a "suffix", instead of prepending it between <code>(</code> and <code>)</code>. This
-makes it possible to, for example, write <code>10px</code>, <code>10.5%</code>, <code>512GiB</code>, etc., which
-are equivalent to <code>(px)10</code>, <code>(%)5</code>, and <code>(GiB)512</code>, respectively.<a href="#section-3.8.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.8.1-2">Most suffixes can be appended directly to the number (a
-(<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>)), as shown in the previous paragraph. To avoid
-parsing ambiguity, there are some restrictions on this; an
-(<a href="#explicit-suffix-type-annotation" class="auto internal xref">Section 3.8.1.2</a>) avoids all these restrictions by using an
-additional <code>#</code> to explicitly indicate it. For example, <code>10.0u8</code> is invalid, but
-<code>10.0#u8</code> is valid and equivalent to <code>(u8)10.0</code>. See
-(<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>) for the full list of restrictions.<a href="#section-3.8.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.8.1-3">An implementation that finds BOTH a parenthesized and a suffix
-(<a href="#type-annotation" class="auto internal xref">Section 3.8</a>) on the same (<a href="#number" class="auto internal xref">Section 3.14</a>) MUST yield a syntax error.<a href="#section-3.8.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.8.1-4">Suffixes MUST BE plain (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>)s. No other (<a href="#string" class="auto internal xref">Section 3.9</a>) is
-acceptable.<a href="#section-3.8.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.8.1-5">There are two kinds of (<a href="#suffix-type-annotation" class="auto internal xref">Section 3.8.1</a>) available:
-(<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>)s and (<a href="#explicit-suffix-type-annotation" class="auto internal xref">Section 3.8.1.2</a>).<a href="#section-3.8.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.8.1-1">When a Value (<a href="#value" class="auto internal xref">Section 3.7</a>) is a Number (<a href="#number" class="auto internal xref">Section 3.14</a>), it's possible to attach the
+type annotation as a "suffix", instead of prepending it between <code>(</code> and <code>)</code>.
+This makes it possible to, for example, write <code>10px</code>, <code>10.5%</code>, <code>512GiB</code>, etc.,
+which are equivalent to <code>(px)10</code>, <code>(%)5</code>, and <code>(GiB)512</code>, respectively.<a href="#section-3.8.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.8.1-2">There are two kinds of Suffix Type Annotations (<a href="#suffix-type-annotation" class="auto internal xref">Section 3.8.1</a>)
+available: Bare Suffix Type Annotations (<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>)s and
+Explicit Suffix Type Annotations (<a href="#explicit-suffix-type-annotation" class="auto internal xref">Section 3.8.1.2</a>).<a href="#section-3.8.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.8.1-3">Most suffixes can be appended directly to the number (a Bare Suffix Type
+Annotation (<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>)), as shown in the previous
+paragraph. To avoid parsing ambiguity, there are some restrictions on this; an
+Explicit Suffix Type Annotation (<a href="#explicit-suffix-type-annotation" class="auto internal xref">Section 3.8.1.2</a>) avoids all
+these restrictions by using an additional <code>#</code> to explicitly indicate it. For
+example, <code>10.0u8</code> is invalid, but <code>10.0#u8</code> is valid and equivalent to
+<code>(u8)10.0</code>. See Bare Suffix Type Annotation (<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>)
+for the full list of restrictions.<a href="#section-3.8.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.8.1-4">An implementation that finds BOTH a parenthesized (<a href="#type-annotation" class="auto internal xref">Section 3.8</a>) and a
+Suffix Type Annotation (<a href="#suffix-type-annotation" class="auto internal xref">Section 3.8.1</a>) on the same Number
+(<a href="#number" class="auto internal xref">Section 3.14</a>) MUST yield a syntax error.<a href="#section-3.8.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.8.1-5">Suffixes MUST BE plain Identifier Strings (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>). No other
+String (<a href="#string" class="auto internal xref">Section 3.9</a>) syntax is acceptable.<a href="#section-3.8.1-5" class="pilcrow">¶</a></p>
 <div id="bare-suffix-type-annotation">
 <section id="section-3.8.1.1">
             <h5 id="name-bare-suffix-type-annotation">
 <a href="#section-3.8.1.1" class="section-number selfRef">3.8.1.1. </a><a href="#name-bare-suffix-type-annotation" class="section-name selfRef">Bare Suffix Type Annotation</a>
             </h5>
-<p id="section-3.8.1.1-1">When a (<a href="#value" class="auto internal xref">Section 3.7</a>) is a decimal (<a href="#number" class="auto internal xref">Section 3.14</a>) WITHOUT exponential syntax (<code>1e+5</code>
-etc) (and ONLY a decimal: that is, numbers which do NOT have a <code>0b</code>/<code>0o</code>/<code>0x</code>
-prefix), it's possible to attach the type annotation as a suffix directly to the
-number, without any additional syntax.<a href="#section-3.8.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.8.1.1-2">They also come with some additional rules (like only being available for
-decimals), in order to prevent potential ambiguity or footguns with the syntax.
-This is generally acceptable, as type annotations in particular tend to be
-application-defined and limited in scope, rather than arbitrary user data. In
-designing this feature, it was determined that the value for various real-world
-DSLs outweighed the complexity of the following rules.<a href="#section-3.8.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.8.1.1-3">As such, to remove ambiguity, the suffix (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>) MUST NOT start
-with any of the following patterns, all of which MUST yield syntax errors (if
-they can be distinguished from other syntaxes at all):<a href="#section-3.8.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.1-1">When a Value (<a href="#value" class="auto internal xref">Section 3.7</a>) is a decimal Number (<a href="#number" class="auto internal xref">Section 3.14</a>) WITHOUT exponential
+syntax (<code>1e+5</code> etc) (and ONLY a decimal. That is, numbers which do NOT have a
+<code>0b</code>/<code>0o</code>/<code>0x</code> prefix with an optional sign), it's possible to append the type
+annotation as a suffix directly to the number, without any additional syntax.<a href="#section-3.8.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.1-2">To remove further ambiguity, on top of not being available for non-decimal
+prefixes, and for decimals with exponent parts, the suffix Identifier String
+(<a href="#identifier-string" class="auto internal xref">Section 3.10</a>) itself MUST NOT start with any of <code>.</code>, <code>,</code>, or <code>_</code>, as
+well as <code>[eE][-+]?[0-9]?</code> as part of the exponential restriction above. Note the
+optional digit, which is added to prevent typo ambiguity.<a href="#section-3.8.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.1-3">For example, the following are all illegal:<a href="#section-3.8.1.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.8.1.1-4.1">
-                <p id="section-3.8.1.1-4.1.1"><code>.</code>, <code>,</code>, or <code>_</code><a href="#section-3.8.1.1-4.1.1" class="pilcrow">¶</a></p>
+                <p id="section-3.8.1.1-4.1.1"><code>10,000</code> (suffix would start with <code>,</code>)<a href="#section-3.8.1.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-3.8.1.1-4.2">
-                <p id="section-3.8.1.1-4.2.1"><code>[eE][+-]?[0-9]</code> (to disambiguate exponentials)<a href="#section-3.8.1.1-4.2.1" class="pilcrow">¶</a></p>
+                <p id="section-3.8.1.1-4.2.1"><code>10e0n</code> (suffix on an exponential)<a href="#section-3.8.1.1-4.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.8.1.1-4.3">
+                <p id="section-3.8.1.1-4.3.1"><code>0xyz</code> (starts with reserved hexadecimal prefix)<a href="#section-3.8.1.1-4.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.8.1.1-4.4">
+                <p id="section-3.8.1.1-4.4.1"><code>0b</code> (starts with reserved binary prefix)<a href="#section-3.8.1.1-4.4.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.8.1.1-4.5">
+                <p id="section-3.8.1.1-4.5.1"><code>5e+oops</code> (looks too close to an exponential)<a href="#section-3.8.1.1-4.5.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-3.8.1.1-5">For example, <code>10,000</code> is illegal. <code>10e0n</code> is illegal, but <code>10e0</code> is a legal
-<em>decimal number using exponential syntax</em>, <strong>not</strong> equivalent to <code>(e0)10</code>.
-Additionally, note that since bare suffixes are only legal on <em>decimals</em>, <code>0u8</code>
-is legal, but <code>0xs</code> is <em>not</em>, since hexadecimals are determined by their
-prefixes. Similarly, <code>1xs</code> <em>is</em> legal, and equivalent to <code>(xs)1</code>.<a href="#section-3.8.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.8.1.1-6">All other (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>)s can be safely appended to decimal numbers, so
-long as the decimal does not include an exponential component.<a href="#section-3.8.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.1-5">Whereas the following are all legal:<a href="#section-3.8.1.1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.8.1.1-6.1">
+                <p id="section-3.8.1.1-6.1.1"><code>0u8</code> (aka <code>(u8)0</code>)<a href="#section-3.8.1.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.8.1.1-6.2">
+                <p id="section-3.8.1.1-6.2.1"><code>5em</code> (aka <code>(em)5</code>. The <code>e</code> is not followed by a digit.)<a href="#section-3.8.1.1-6.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.8.1.1-6.3">
+                <p id="section-3.8.1.1-6.3.1"><code>1xyz</code> (aka <code>(xyz)1</code>. No longer starts with <code>0</code> as above.)<a href="#section-3.8.1.1-6.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.8.1.1-6.4">
+                <p id="section-3.8.1.1-6.4.1"><code>20b</code> (aka <code>(b)20</code>, "20 bytes". No longer starts with just <code>0</code> as above.)<a href="#section-3.8.1.1-6.4.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 <p id="section-3.8.1.1-7">If the desired suffix would violate any of the above rules, either regular
-parenthetical (<a href="#type-annotation" class="auto internal xref">Section 3.8</a>)s or (<a href="#explicit-suffix-type-annotation" class="auto internal xref">Section 3.8.1.2</a>)s
-may be used.<a href="#section-3.8.1.1-7" class="pilcrow">¶</a></p>
+parenthetical Type Annotations (<a href="#type-annotation" class="auto internal xref">Section 3.8</a>) or Explicit Suffix Type
+Annotations (<a href="#explicit-suffix-type-annotation" class="auto internal xref">Section 3.8.1.2</a>) may be used.<a href="#section-3.8.1.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="explicit-suffix-type-annotation">
@@ -1622,22 +1639,24 @@ may be used.<a href="#section-3.8.1.1-7" class="pilcrow">¶</a></p>
             <h5 id="name-explicit-suffix-type-annota">
 <a href="#section-3.8.1.2" class="section-number selfRef">3.8.1.2. </a><a href="#name-explicit-suffix-type-annota" class="section-name selfRef">Explicit Suffix Type Annotation</a>
             </h5>
-<p id="section-3.8.1.2-1">Any (<a href="#number" class="auto internal xref">Section 3.14</a>) may have a <code>#</code> appended to it, followed by any valid
-(<a href="#identifier-string" class="auto internal xref">Section 3.10</a>). This is an explicit (<a href="#suffix-type-annotation" class="auto internal xref">Section 3.8.1</a>) syntax
-without any of the relatively complex requirements of
-(<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>), which can be a useful escape hatch. For
-example: <code>0#b1</code> is invalid syntax without the <code>#</code> prefix.<a href="#section-3.8.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.8.1.2-2">Note again that, unlike (<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>)s, Explicit Suffixes
-may be used with ALL (<a href="#number" class="auto internal xref">Section 3.14</a>) formats (hexadecimal, decimal, octal, and
-binary). For example, <code>0x1234#u32</code> is valid.<a href="#section-3.8.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.2-1">Any Number (<a href="#number" class="auto internal xref">Section 3.14</a>) may have a <code>#</code> appended to it, followed by any valid
+Identifier String (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>). This is an Explicit Suffix Type
+Annotation (<a href="#suffix-type-annotation" class="auto internal xref">Section 3.8.1</a>) syntax without any of the added
+restrictions of Bare Suffix Type Annotations (<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>),
+which can be a useful escape hatch. For example: <code>0#b</code> is invalid syntax without
+the <code>#</code> prefix.<a href="#section-3.8.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.8.1.2-2">Note that, unlike Bare Suffix Type Annotations
+(<a href="#bare-suffix-type-annotation" class="auto internal xref">Section 3.8.1.1</a>), Explicit Suffixes may be used with ALL Number
+(<a href="#number" class="auto internal xref">Section 3.14</a>) formats (hexadecimal, decimal, octal, and binary). For example,
+<code>0x1234#u32</code> is valid.<a href="#section-3.8.1.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
-<div id="reserved-type-annotations-for-numbers-without-decimals">
+<div id="reserved-type-annotations-for-numbers-without-decimal-parts">
 <section id="section-3.8.2">
           <h4 id="name-reserved-type-annotations-f">
-<a href="#section-3.8.2" class="section-number selfRef">3.8.2. </a><a href="#name-reserved-type-annotations-f" class="section-name selfRef">Reserved Type Annotations for Numbers Without Decimals</a>
+<a href="#section-3.8.2" class="section-number selfRef">3.8.2. </a><a href="#name-reserved-type-annotations-f" class="section-name selfRef">Reserved Type Annotations for Numbers Without Decimal Parts</a>
           </h4>
 <p id="section-3.8.2-1">Additionally, the following type annotations MAY be recognized by KDL parsers
 and, if used, SHOULD interpret these types as follows.<a href="#section-3.8.2-1" class="pilcrow">¶</a></p>
@@ -1688,10 +1707,10 @@ and, if used, SHOULD interpret these types as follows.<a href="#section-3.8.2-1"
           </ul>
 </section>
 </div>
-<div id="reserved-type-annotations-for-numbers-with-decimals">
+<div id="reserved-type-annotations-for-numbers-with-decimal-parts">
 <section id="section-3.8.3">
           <h4 id="name-reserved-type-annotations-fo">
-<a href="#section-3.8.3" class="section-number selfRef">3.8.3. </a><a href="#name-reserved-type-annotations-fo" class="section-name selfRef">Reserved Type Annotations for Numbers With Decimals:</a>
+<a href="#section-3.8.3" class="section-number selfRef">3.8.3. </a><a href="#name-reserved-type-annotations-fo" class="section-name selfRef">Reserved Type Annotations for Numbers With Decimal Parts</a>
           </h4>
 <p id="section-3.8.3-1">IEEE 754 floating point numbers, both single (32) and double (64) precision:<a href="#section-3.8.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1716,7 +1735,7 @@ and, if used, SHOULD interpret these types as follows.<a href="#section-3.8.2-1"
 <div id="reserved-type-annotations-for-strings">
 <section id="section-3.8.4">
           <h4 id="name-reserved-type-annotations-for">
-<a href="#section-3.8.4" class="section-number selfRef">3.8.4. </a><a href="#name-reserved-type-annotations-for" class="section-name selfRef">Reserved Type Annotations for Strings:</a>
+<a href="#section-3.8.4" class="section-number selfRef">3.8.4. </a><a href="#name-reserved-type-annotations-for" class="section-name selfRef">Reserved Type Annotations for Strings</a>
           </h4>
 <ul class="normal">
 <li class="normal" id="section-3.8.4-1.1">
@@ -1802,8 +1821,8 @@ and, if used, SHOULD interpret these types as follows.<a href="#section-3.8.2-1"
           </h4>
 <div class="lang-kdl sourcecode" id="section-3.8.5-1">
 <pre>
-node (u8)123
-node 123#i64
+node 123u8
+node 0#b 20b 50GiB
 node prop=(regex).*
 (published)date "1970-01-01"
 (contributor)person name="Foo McBar"
