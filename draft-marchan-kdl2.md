@@ -523,6 +523,12 @@ is, empty multi-line strings are legal).
 In other words, the final line specifies the whitespace prefix that will be
 removed from all other lines.
 
+Whitespace-only lines (that is, lines containing only literal whitespace
+characters, not including whitespace escapes like `\t`) always represent
+empty lines in the string value, regardless of what whitespace they
+contain (if any). They do not have to start with the same whitespace prefix
+that other lines do; all characters on the line are ignored.
+
 Multi-line Strings that do not immediately start with a Newline and whose final
 `"""` is not preceeded by optional whitespace and a Newline are illegal. This
 also means that `"""` may not be used for a single-line String (e.g.
