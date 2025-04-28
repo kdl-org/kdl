@@ -20,19 +20,19 @@ oficial version of the language, see https://kdl.dev/spec.
 
 
     " name="description">
-<meta content="xml2rfc 3.27.0" name="generator">
+<meta content="xml2rfc 3.28.1" name="generator">
 <meta content="Document-Language" name="keyword">
 <meta content="Configuration" name="keyword">
 <meta content="draft-marchan-kdl2-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.27.0
-    Python 3.12.9
+  xml2rfc 3.28.1
+    Python 3.12.10
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
-    Jinja2 3.1.5
+    Jinja2 3.1.6
     lxml 5.3.0
-    platformdirs 4.3.6
+    platformdirs 4.3.7
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.3
@@ -1056,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left"></td>
 <td class="center">KDL</td>
-<td class="right">February 2025</td>
+<td class="right">April 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Marchán &amp; KDL Contributors</td>
@@ -1071,7 +1071,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">KDL Community</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-25" class="published">25 February 2025</time>
+<time datetime="2025-04-28" class="published">28 April 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -2052,10 +2052,15 @@ intermediate lines. The first and last Newline can be the same character (that
 is, empty multi-line strings are legal).<a href="#section-3.12-3" class="pilcrow">¶</a></p>
 <p id="section-3.12-4">In other words, the final line specifies the whitespace prefix that will be
 removed from all other lines.<a href="#section-3.12-4" class="pilcrow">¶</a></p>
-<p id="section-3.12-5">Multi-line Strings that do not immediately start with a Newline and whose final
+<p id="section-3.12-5">Whitespace-only lines (that is, lines containing only literal whitespace
+characters, not including whitespace escapes like <code>\t</code>) always represent
+empty lines in the string value, regardless of what whitespace they
+contain (if any). They do not have to start with the same whitespace prefix
+that other lines do; all characters on the line are ignored.<a href="#section-3.12-5" class="pilcrow">¶</a></p>
+<p id="section-3.12-6">Multi-line Strings that do not immediately start with a Newline and whose final
 <code>"""</code> is not preceeded by optional whitespace and a Newline are illegal. This
 also means that <code>"""</code> may not be used for a single-line String (e.g.
-<code>"""foo"""</code>).<a href="#section-3.12-5" class="pilcrow">¶</a></p>
+<code>"""foo"""</code>).<a href="#section-3.12-6" class="pilcrow">¶</a></p>
 <div id="newline-normalization">
 <section id="section-3.12.1">
           <h4 id="name-newline-normalization">
