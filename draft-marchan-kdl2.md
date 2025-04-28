@@ -788,6 +788,13 @@ There are five syntaxes for Numbers: Keywords, Decimal, Hexadecimal, Octal, and 
   - They may optionally include a decimal separator `.`, followed by more digits, which may again be separated by `_`.
   - They may optionally be followed by `E` or `e`, an optional `-` or `+`, and more digits, to represent an exponent value.
 
+In all cases where the above says that digits "may be separated by `_`",
+this means that between any two digits, or after the digits, any number of
+consecutive `_` characters can appear. Underscores are not allowed *before* the digits.
+That is, `1___2` and `12____` are valid (and both equivalent to just `12`), but
+`_12` is *not* a valid number (it will instead parse as an identifier string),
+nor is `0x_1a` (it will simply be invalid).
+
 Note that, similar to JSON and some other languages,
 numbers without an integer digit (such as `.1`) are illegal.
 They must be written with at least one integer digit, like `0.1`.
