@@ -2380,10 +2380,16 @@ individual implementations to determine how to represent KDL numbers.<a href="#s
             </ul>
 </li>
         </ul>
-<p id="section-3.14-4">Note that, similar to JSON and some other languages,
+<p id="section-3.14-4">In all cases where the above says that digits "may be separated by <code>_</code>",
+this means that between any two digits, or after the digits, any number of
+consecutive <code>_</code> characters can appear. Underscores are not allowed <em>before</em> the digits.
+That is, <code>1___2</code> and <code>12____</code> are valid (and both equivalent to just <code>12</code>), but
+<code>_12</code> is <em>not</em> a valid number (it will instead parse as an identifier string),
+nor is <code>0x_1a</code> (it will simply be invalid).<a href="#section-3.14-4" class="pilcrow">¶</a></p>
+<p id="section-3.14-5">Note that, similar to JSON and some other languages,
 numbers without an integer digit (such as <code>.1</code>) are illegal.
 They must be written with at least one integer digit, like <code>0.1</code>.
-(These patterns are also disallowed from Identifier Strings (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>), to avoid confusion.)<a href="#section-3.14-4" class="pilcrow">¶</a></p>
+(These patterns are also disallowed from Identifier Strings (<a href="#identifier-string" class="auto internal xref">Section 3.10</a>), to avoid confusion.)<a href="#section-3.14-5" class="pilcrow">¶</a></p>
 <div id="keyword-numbers">
 <section id="section-3.14.1">
           <h4 id="name-keyword-numbers">
