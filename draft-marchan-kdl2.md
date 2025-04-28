@@ -523,7 +523,7 @@ is, empty multi-line strings are legal).
 In other words, the final line specifies the whitespace prefix that will be
 removed from all other lines.
 
-Whitespace-only lines (that is, lines containing only literal whitespace 
+Whitespace-only lines (that is, lines containing only literal whitespace
 characters, not including whitespace escapes like `\t`) always represent
 empty lines in the string value, regardless of what whitespace they
 contain (if any). They do not have to start with the same whitespace prefix
