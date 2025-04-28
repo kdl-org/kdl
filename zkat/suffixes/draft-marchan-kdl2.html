@@ -1071,7 +1071,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">KDL Community</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-18" class="published">18 April 2025</time>
+<time datetime="2025-04-28" class="published">28 April 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -2986,10 +2986,9 @@ significand-initial = digit
 digit := [0-9]
 sign := '+' | '-'
 
-bare-type-suffix := bare-type-suffix-initial identifier-char*
-bare-type-suffix-initial := identifier-char
-    - '.' - ','
-    - (('e' | 'E') (sign | digit))
+bare-type-suffix := unambiguous-bare-type-suffix | e-bare-type-suffix
+unambiguous-bare-type-suffix := (identifier-char - ('.' | ',' | 'e' | 'E')) identifier-char*
+e-bare-type-suffix := 'e' | 'E' | ( ((identifier-char - ('.' | ',')) identifier-char) - (('e' | 'E') (sign | digit)) ) identifier-char*
 explicit-type-suffix := '#' identifier-string
 
 hex := sign? '0x' hex-digit (hex-digit | '_')*
