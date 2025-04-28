@@ -1117,10 +1117,9 @@ significand-initial = digit
 digit := [0-9]
 sign := '+' | '-'
 
-bare-type-suffix := bare-type-suffix-initial identifier-char*
-bare-type-suffix-initial := identifier-char
-    - '.' - ','
-    - (('e' | 'E') (sign | digit))
+bare-type-suffix := unambiguous-bare-type-suffix | e-bare-type-suffix
+unambiguous-bare-type-suffix := (identifier-char - ('.' | ',' | 'e' | 'E')) identifier-char*
+e-bare-type-suffix := 'e' | 'E' | ( ((identifier-char - ('.' | ',')) identifier-char) - (('e' | 'E') (sign | digit)) ) identifier-char*
 explicit-type-suffix := '#' identifier-string
 
 hex := sign? '0x' hex-digit (hex-digit | '_')*
