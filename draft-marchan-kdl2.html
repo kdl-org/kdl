@@ -1056,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left"></td>
 <td class="center">KDL</td>
-<td class="right">April 2025</td>
+<td class="right">May 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Marchán &amp; KDL Contributors</td>
@@ -1071,7 +1071,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">KDL Community</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-28" class="published">28 April 2025</time>
+<time datetime="2025-05-09" class="published">9 May 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -2795,7 +2795,7 @@ string := identifier-string | quoted-string | raw-string ¶
 identifier-string := unambiguous-ident | signed-ident | dotted-ident
 unambiguous-ident :=
     ((identifier-char - digit - sign - '.') identifier-char*)
-    - disallowed-keyword-strings
+    - disallowed-keyword-identifiers
 signed-ident :=
     sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident :=

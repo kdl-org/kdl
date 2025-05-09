@@ -5,7 +5,7 @@
 KDL Community                                                 K. Marchán
                                                                Microsoft
                                                         KDL Contributors
-                                                           28 April 2025
+                                                              9 May 2025
 
 
                        The KDL Document Language
@@ -1103,7 +1103,7 @@ Table of Contents
    identifier-string := unambiguous-ident | signed-ident | dotted-ident
    unambiguous-ident :=
        ((identifier-char - digit - sign - '.') identifier-char*)
-       - disallowed-keyword-strings
+       - disallowed-keyword-identifiers
    signed-ident :=
        sign ((identifier-char - digit - '.') identifier-char*)?
    dotted-ident :=
