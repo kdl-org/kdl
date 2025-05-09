@@ -973,7 +973,7 @@ string := identifier-string | quoted-string | raw-string ¶
 identifier-string := unambiguous-ident | signed-ident | dotted-ident
 unambiguous-ident :=
     ((identifier-char - digit - sign - '.') identifier-char*)
-    - disallowed-keyword-strings
+    - disallowed-keyword-identifiers
 signed-ident :=
     sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident :=
