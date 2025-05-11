@@ -1,7 +1,7 @@
 # KDL Query Language Spec
 
 The KDL Query Language is a small language specially tailored for querying KDL
-documents to extract nodes and even specific data. It is loosely based on CSS
+documents to extract nodes. It is loosely based on CSS
 selectors for familiarity and ease of use. Think of it as CSS Selectors or
 XPath, but for KDL!
 
