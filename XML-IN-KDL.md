@@ -25,7 +25,7 @@ XML elements and KDL nodes have a direct correspondence. In XiK, an XML element 
 * making the attributes into KDL properties
 * making the child nodes as KDL child nodes
 
-For example, the XML `<element foo="bar"><child baz="qux" /></element>` is encoded into XiK as `element foo=bar { child baz=quux }`.
+For example, the XML `<element foo="bar"><child baz="quux" /></element>` is encoded into XiK as `element foo=bar { child baz=quux }`.
 
 XML namespaces are encoded the same as XML: the node name simply contains a `:` character. Note that KDL identifier syntax allows `:` directly in an ident, so a name like `xml:space` or `xlink:href` is a valid node or property name.
 
