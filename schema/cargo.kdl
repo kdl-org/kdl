@@ -1,0 +1,172 @@
+@kdl:schema "https://github.com/kdl-org/kdl/blob/main/schema/kdl-schema.kdl"
+
+metadata {
+    // TODO: update this link when we're ready to release something.
+    link "https://github.com/kdl-org/kdl/blob/main/schema/cargo.kdl" rel=self
+    title "Cargo Schema" lang=en
+    description "KDL-based translation of the Cargo.toml schema." lang=en
+    author "Kat Marchán" {
+        link "https://github.com/zkat" rel=self
+    }
+    link "https://github.com/kdl-org/kdl" rel=documentation
+    link "https://doc.rust-lang.org/cargo/reference/manifest.html" rel=documentation
+    license "Creative Commons Attribution-ShareAlike 4.0 International License" spdx=CC-BY-SA-4.0 {
+        link "https://creativecommons.org/licenses/by-sa/4.0/" lang=en
+    }
+}
+
+children {
+    node package title="Describes a package" {
+        children {
+            node name title="The name of the package" {
+                required
+                arg {
+                    type string
+                    pattern #"^[a-zA-Z0-0\-_]+$"#
+                }
+            }
+            node version title="The version of the package." {
+                arg {
+                    type string
+                    // From https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+                    pattern #"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"#
+                }
+            }
+            node authors title="The authors of the package." {
+                repeatable
+                args {
+                    distinct
+                    type string
+                }
+                children {
+                    node - {
+                        repeatable
+                        arg title="Name" {
+                            type string
+                        }
+                        prop email title="Email address" {
+                            type string
+                            format email
+                        }
+                        prop about title="Brief note about author (role, etc)" {
+                            type string
+                        }
+                    }
+                }
+            }
+            node edition title="The Rust edition." {
+                arg {
+                    type string
+                    enum "2015" "2018" "2021" "2024"
+                }
+            }
+            node rust-version title="The minimal supported Rust version." {
+                arg {
+                    type string
+                }
+            }
+            node description title="A description of the package." {
+                arg {
+                    type string
+                }
+            }
+            node documentation title="URL of the package documentation." {
+                arg {
+                    type string
+                    format url
+                }
+            }
+            node readme title="Path to the package’s README file." {
+                arg {
+                    type string #boolean
+                }
+            }
+            node homepage title="URL of the package homepage." {
+                arg {
+                    type string
+                    format url
+                }
+            }
+            node repository title="URL of the package source repository." {
+                arg {
+                    type string
+                    format url
+                }
+            }
+            node license title="The package license." {
+                arg {
+                    type string
+                }
+            }
+            node license-file title="Path to the text of the license." {
+                arg {
+                    type string
+                }
+            }
+            node keywords title="Keywords for the package." {
+                args {
+                    type string
+                    // No pattern because keyword restrictions are only on
+                    // crates.io
+                }
+            }
+            node categories title="Categories of the package." {
+                args {
+                    type string
+                    // No pattern because category restrictions are only on
+                    // crates.io
+                }
+            }
+            node workspace title="Path to the workspace for the package." {
+                arg {
+                    type string
+                }
+            }
+            node build title="Path to the package build script." {
+                arg {
+                    type string boolean
+                }
+            }
+            node links title="Name of the native library the package links with." {
+                arg {
+                    type string
+                }
+            }
+            node exclude title="Files to exclude when publishing." {
+                args {
+                    type string
+                }
+            }
+            node include title="Files to include when publishing." {
+                args {
+                    type string
+                }
+            }
+            node publish title="Can be used to prevent publishing the package." {
+                // TODO: This is a good example of where we might need smarter
+                // comstraints ("either a single boolean, or 1+ strings")
+                args {
+                    type string boolean
+                }
+            ]
+            node metadata title="Extra settings for external tools." {
+                repeat
+                args
+                props {
+                    allow-others
+                }
+            }
+            node default-run title="The default binary to run by cargo run." {
+                arg {
+                    type string
+                }
+            }
+            node no-autolib title="Disables library auto discovery."
+            node no-autobins title="Disables binary auto discovery."
+            node no-autoexamples title="Disables example auto discovery."
+            node no-autotests title="Disables test auto discovery."
+            node no-autobenches title="Disables bench auto discovery."
+            node resolver title="Sets the dependency resolver to use."
+        }
+    }
+}
