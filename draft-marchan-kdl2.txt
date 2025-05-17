@@ -5,7 +5,7 @@
 KDL Community                                                 K. Marchán
                                                                Microsoft
                                                         KDL Contributors
-                                                              9 May 2025
+                                                             17 May 2025
 
 
                        The KDL Document Language
