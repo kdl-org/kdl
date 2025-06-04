@@ -31,12 +31,12 @@ oficial version of the language, see https://kdl.dev/spec.
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
-    lxml 5.3.0
-    platformdirs 4.3.7
+    lxml 5.3.1
+    platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.3
-    setuptools 70.3.0
+    setuptools 80.9.0
     wcwidth 0.2.13
 -->
 <link href="draft-marchan-kdl2.xml" rel="alternate" type="application/rfc+xml">
@@ -1056,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left"></td>
 <td class="center">KDL</td>
-<td class="right">May 2025</td>
+<td class="right">June 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Marchán &amp; KDL Contributors</td>
@@ -1071,7 +1071,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">KDL Community</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-17" class="published">17 May 2025</time>
+<time datetime="2025-06-04" class="published">4 June 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -2792,10 +2792,11 @@ type := '(' node-space* string node-space* ')'
 // Strings
 string := identifier-string | quoted-string | raw-string ¶
 
-identifier-string := unambiguous-ident | signed-ident | dotted-ident
-unambiguous-ident :=
-    ((identifier-char - digit - sign - '.') identifier-char*)
+identifier-string :=
+    (unambiguous-ident | signed-ident | dotted-ident)
     - disallowed-keyword-identifiers
+unambiguous-ident :=
+    (identifier-char - digit - sign - '.') identifier-char*
 signed-ident :=
     sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident :=
