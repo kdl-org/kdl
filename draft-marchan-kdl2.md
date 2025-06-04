@@ -970,10 +970,11 @@ type := '(' node-space* string node-space* ')'
 // Strings
 string := identifier-string | quoted-string | raw-string ¶
 
-identifier-string := unambiguous-ident | signed-ident | dotted-ident
+identifier-string :=
+    (unambiguous-ident | signed-ident | dotted-ident)
+    - disallowed-keyword-identifiers 
 unambiguous-ident :=
-    ((identifier-char - digit - sign - '.') identifier-char*)
-    - disallowed-keyword-identifiers
+    (identifier-char - digit - sign - '.') identifier-char*
 signed-ident :=
     sign ((identifier-char - digit - '.') identifier-char*)?
 dotted-ident :=
