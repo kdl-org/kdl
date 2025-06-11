@@ -1,0 +1,912 @@
+// TODO:
+// * examples
+// * dependentRequired
+// * dependentSchema
+// * if-then-else
+// * composition (anyOf, allOf, oneOf, not, etc: https://json-schema.org/understanding-json-schema/reference/combining)
+// * something like `xsd:group` for the above, instead? Including `xsd:sequence` stuff.
+// * something to configure semanticTokens with
+
+@ksl:schema "https://github.com/kdl-org/kdl/blob/main/examples/ksl-schema.kdl"
+
+metadata {
+    // TODO: update this link when we're ready to release something.
+    id "https://github.com/kdl-org/kdl/blob/main/examples/ksl-schema.kdl"
+    title "KDL Schema"
+    description "KDL Schema schema using KDL Schema"
+    author "Kat Marchán" {
+        link "https://github.com/zkat"
+    }
+    contributor "Lars Willighagen" {
+        link "https://github.com/larsgw"
+    }
+    link "https://github.com/kdl-org/kdl" rel=documentation
+    license "Creative Commons Attribution-ShareAlike 4.0 International License" spdx=CC-BY-SA-4.0 {
+        link "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+    published "2021-08-31"
+    modified "2021-09-01"
+}
+
+document {
+    node example about="""
+        An example document validated by this schema
+
+        The `example` node is completely inert, and may contain any KDL content. It should include an illustrative example of a document one might validate using this schema.
+        """ {
+        repeatable
+        ref about-mixin
+        arg about="Example filename" {
+            type string
+        }
+    }
+    node metadata about="""
+        Schema metadata
+
+        Contains metadata about the schema itself.
+        """ {
+        required
+        children {
+            node id about="""
+                Schema identifier
+
+                The unique identifier for this schema. MUST be a valid URL/IRL. Implementations MAY attempt to visit it, but MUST NOT assume it is valid.
+                """ {
+                arg {
+                    type string
+                    format url irl
+                }
+            }
+            node title about="""
+                Schema title
+
+                The title of the schema or the format it describes.
+                """ {
+                arg about="The title text" {
+                    type string
+                }
+            }
+            node description about="""
+                Schema description
+
+                A description of the schema or the format it validates, which
+                may include its purposes, its usage, and even examples.
+                """ {
+                arg about="Description text" {
+                    type string
+                }
+            }
+            node author about="""
+                Schema author
+
+                An author for the schema.
+                """ {
+                ref person-mixin
+                repeatable
+            }
+            node contributor about="""
+                Schema contributor
+
+                A contributor to the schema might not be considered an author.
+                """ {
+                ref person-mixin
+                repeatable
+            }
+            node link about="""
+                External link
+
+                Link to an external resource of some sort, such as the
+                containing item itself (`rel=self`, the default) or
+                documentation (`rel=documentation`). Implementations MAY visit
+                the URL, but MUST NOT assume it is valid.
+                """ {
+                ref link-mixin
+                repeatable
+                arg about="Link URL\n\nA URL that the link points to." {
+                    type string
+                    format url irl
+                }
+                prop rel about="Link relationship\n\nThe relation between the current entity and the URL." {
+                    type string
+                    enum self documentation disallow-others=#false
+                }
+            }
+            node license about="""
+                Schema license
+
+                The license(s) that the schema is licensed under.
+                """ {
+                repeatable
+                arg description="Name of the used license" {
+                    type string
+                }
+                prop spdx description="An SPDX license identifier" {
+                    type string
+                    // TODO: validation?
+                }
+                prop path about="Path to a local license file" {
+                    type string
+                }
+                prop url about="URL to an externally-stored license" {
+                    type string
+                    format url url-reference irl irl-reference
+                }
+                children {
+                    node link about="Link to license" {
+                        ref link-mixin
+                    }
+                }
+            }
+            node published about="""
+                Schema publication date
+
+                Date or data+time when the schema was published.
+                """ {
+                arg about="Publication date" {
+                    type string
+                    format date date-time
+                }
+            }
+            node modified about="""
+                Schema modification date
+
+                When the schema was modified. If used multiple times, the most
+                recent date will be considered 'latest'.
+                """ {
+                repeatable
+                args about="Modification date" {
+                    type string
+                    format date date-time
+                }
+            }
+            node version about="""
+                Schema semver version
+
+                The version number of this version of the schema, in semver
+                format.
+                """ {
+                arg about="Semver version number" {
+                    type string
+                    // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string.
+                    pattern #"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"#
+                }
+            }
+        }
+    }
+    node definitions about="""
+        Inert validation definitions
+
+        An optional set of definitions that may be referenced elsewhere in the
+        schema. They will be inert (that is, not directly apply to the document)
+        unless referenced by another node inside `document`.
+        """
+    }
+    node document {
+        ref children-node
+        /-default {
+            node @ksl:schema about="""
+                Schema reference
+
+                Reference(s) for the schema(s) describing this document. They
+                MUST be properly-formatted URLs. Implementations MAY attempt to
+                visit them, but MUST NOT assume they are valid.
+
+                If multiple URLs are provided, or if multiple `@ksl:schema`
+                nodes are present, ALL schemas MUST successfully validate in
+                order for the document to validate, unless `warn-only` is
+                `#true`.
+
+                In such a case, implementations SHOULD warn that validation has
+                failed and report which schema failed to pass--they SHOULD
+                include more details about what the specific failure was, but
+                MAY simply indicate that certain schema(s) failed to validate.
+                """ {
+                repeatable
+                prop warn-only {
+                    type boolean
+                    default #false
+                }
+                args {
+                    min 1
+                    type string
+                    format url url-reference irl irl-reference
+                }
+            }
+        }
+        children {
+            node children about="""
+                Node children
+
+                Validations and definitions used for all nodes in this scope.
+                Children are only allowed on nodes (or the toplevel document) if
+                at least one `children` node is present in their definitions.
+                """ {
+                children {
+                    node names about="""
+                        Child node name validations
+
+                        String validations to apply to all node names in this scope.
+                        """ {
+                        ref string-validations
+                        ref about-mixin
+                        repeatable
+                    }
+                    node disallow-others about="""
+                        Disallow other children
+
+                        If present/`#true`, blocks child nodes in this scope
+                        other than the ones explicitly listed and those allowed
+                        by `names`.
+                        """ {
+                        arg {
+                            type boolean
+                            default #false
+                        }
+                    }
+                    node node about="""
+                        A KDL node
+
+                        Declares a KDL node belonging either to the top-level
+                        document or to another `node`'s children.
+                        """ {
+                        ref about-mixin
+                        repeatable
+                        arg about="Node name\n\nThe name of the node." {
+                            type string
+                        }
+                        prop id about="Node identifier\n\nA schema-unique ID/anchor for this node." {
+                            type string
+                        }
+                        children {
+                            node ref about="""
+                                A reference to a node defined elsewhere.
+
+                                Each `ref` child will be interpreted in order of
+                                appearance. Any overlapping definitions will replace
+                                preceding instances, with each subsequent `ref`
+                                replacing any duplicate node components.
+
+                                The replacement rules are as follows, and apply recursively:
+                                * node properties MUST by replaced by key.
+                                * node arguments MUST be replaced by order of appearance.
+                                * `prop` definitions MUST be replaced by key (their first argument)
+                                * `arg` definitions MUST be replaced based on _order of
+                                   appearance_. That is, the first `arg` in ref `B` till be
+                                   merged into the first `arg` in preceding ref `A`.
+                                * For all other components:
+                                    * If the definition specified is marked as
+                                      `repeatable`, then all definitions using that node
+                                      will be concatenated, with later `ref`s
+                                      concatenating definitions after the previous `ref`'s
+                                      definitions.
+                                    * If the definition is NOT marked as `repeatable`,
+                                      it will be replaced by subsequent `ref`s.
+
+                                Once all `ref` children are resolved, the containing
+                                node's own items will override anything defined by
+                                `ref`s, using the same rules as above (essentially, the
+                                current node is treated as a 'final `ref`').
+
+                                If both an ID argument and a `path` are provided,
+                                the ID will take precedence and, if not found, fall
+                                back to the path. For `id` and `path` children,
+                                precedence is in order of appearance, regardless of
+                                whether the child is an `id` or a `path`.
+
+                                If no items resolve into a valid ref, validation
+                                MUST error, unless the ref is configured as
+                                `optional`, in which case validation MAY warn, but
+                                MUST NOT fail.
+                                """ {
+                                repeatable
+                                arg about="KPath-based reference to another node" {
+                                    type string
+                                    format kpath
+                                }
+                                prop base about="""
+                                    Base schema
+
+                                    The schema to resolve references against. If not
+                                    provided, the base schema SHALL be the one
+                                    defined in `metadata > id` for the current
+                                    schema.
+
+                                    Relative schema references SHALL be resolved
+                                    against `metadata > id`.
+                                    """ {
+                                    type string
+                                    format url-reference irl-reference
+                                }
+                                children {
+                                    node path about="KPath-based reference to another node." {
+                                        repeatable
+                                        arg {
+                                            type string
+                                            format kpath
+                                        }
+                                    }
+                                }
+                            }
+                            node undefine about="Undefine a node with this name" {
+                                arg {
+                                    optional
+                                    type boolean
+                                    default #true
+                                }
+                            }
+                            node required about="""
+                                Node is required
+
+                                By default, all declared child nodes are
+                                optional. Including this option will require
+                                that this node always appear in its parent's
+                                children block.
+                                """ {
+                                arg {
+                                    type boolean
+                                    default #true
+                                }
+                            }
+                            node repeatable about="""
+                                Node is repeatable
+
+                                By default, each node in a `children` block may
+                                only appear once in its scope. When this option
+                                is present, the node will be allowed to have
+                                multiple instances within the same scope.
+                                """ {
+                                prop min about="""
+                                    Minimum node count
+
+                                    Minimum number of repeated instances of this
+                                    node that must appear in the same scope.
+                                    """ {
+                                    arg {
+                                        gte 0
+                                        type integer
+                                    }
+                                }
+                                prop max about="""
+                                    Maximum node count
+
+                                    Maximum numbers of repeated instances of
+                                    this node that may appear in the same scope.
+                                    """ {
+                                    arg {
+                                        gte 0
+                                        type integer
+                                    }
+                                }
+                            }
+                            node deprecated about="""
+                                Mark node as deprecated
+
+                                When present, this node will be considered a
+                                deprecated part of the API. You may optionally
+                                supply a message, and/or a reference to a node
+                                that should be used instead.
+                                """ {
+                                arg {
+                                    optional
+                                    type boolean
+                                    default #true
+                                }
+                                prop message about="""
+                                    Deprecation message
+
+                                    A helpful deprecation message that may
+                                    explain why the node was deprecated and
+                                    other information, such as when the node
+                                    will be removed altogether. Users SHOULD use
+                                    `by=` and `by-kpath` to specify what node
+                                    this will be replaced with instead of
+                                    including it in the `message` itself.
+                                    """ {
+                                    type string
+                                }
+                                prop by about="Deprecated by this node `id`" {
+                                    type string
+                                }
+                                prop by-kpath about="Deprecated by this node KPath" {
+                                    type string
+                                    format kpath
+                                }
+                            }
+                            node annotations about="""
+                                Node type annotations
+
+                                Validations to apply specifically to arbitrary
+                                node type annotation names.
+                                """ {
+                                ref about-mixin
+                                ref string-validations
+                                repeatable
+                            }
+                            node prop about="""
+                                Node property
+
+                                A node property key/value pair. Properties
+                                declared with `prop` are always optional, unless
+                                marked as `required` or included in
+                                `props:required`.
+                                """ {
+                                ref about-mixin
+                                ref value-validations
+                                repeatable
+                                arg about="The property key" {
+                                    type string
+                                }
+                                children about="Property-specific validations" {
+                                    node required about="Whether this property is required in the node." {
+                                        arg {
+                                            optional
+                                            type boolean
+                                            default #true
+                                        }
+                                    }
+                                }
+                            }
+                            node props about="""
+                                General property validations
+
+                                Validations to apply to all properties of this
+                                node.
+                                """ {
+                                ref about-mixin
+                                ref value-validations
+                                children {
+                                    node names about="Validations to apply to all property names." {
+                                        ref string-validations
+                                        repeatable
+                                    }
+                                    node min about="""
+                                        Minimum property count
+
+                                        Minimum number of properties this node
+                                        must have.
+                                        """ {
+                                        arg {
+                                            gte 0
+                                            type integer
+                                        }
+                                    }
+                                    node max about="""
+                                        Maximum property count
+
+                                        Maximum number of properties this node
+                                        may have.
+                                        """ {
+                                        arg {
+                                            gte 0
+                                            type integer
+                                        }
+                                    }
+                                    node required about="""
+                                        List of required props
+
+                                        List of property names that must be
+                                        present on the node. Individual `prop`
+                                        nodes may specify additional required
+                                        properties beyond those specified in
+                                        this list. Properties listed here which
+                                        already have a `prop` node marked as
+                                        `required` are allowed, but are
+                                        redundant.
+                                        """ {
+                                        args {
+                                            min 1
+                                            type string
+                                        }
+                                    }
+                                    node disallow-others about="""
+                                        Disallow other properties
+
+                                        If present, block properties that don't
+                                        match this validator.
+                                        """ {
+                                        arg {
+                                            type boolean
+                                            default #true
+                                        }
+                                    }
+                                }
+                            }
+                            node arg about="""
+                                Defines an individual, ordered argument
+
+                                Each nth instance of this node will specify
+                                validations for the corresponding nth instance
+                                of the arg. Every specified `arg` is required,
+                                in the given order, unless marked as `optional`.
+                                """ {
+                                ref about-mixin
+                                ref value-validations
+                                repeatable
+                                children {
+                                    node optional about="""
+                                        Argument is not required
+
+                                        Specified `arg`s are required by
+                                        default.
+
+                                        `optional` only applies to *presence*:
+                                        an existing argument in an optional
+                                        `arg` \"slot\" that fails validation
+                                        will fail normally, even though it is
+                                        optional. As such, `optional` is only
+                                        really useful if it is on the last
+                                        `arg`, or is only followed by optional
+                                        `arg`s.
+                                        """ {
+                                        arg {
+                                            type boolean
+                                            default #true
+                                        }
+                                    }
+                                }
+                            }
+                            // TODO: add a feature that will let us specify that `args`
+                            // MUST be after any existing `arg` nodes in the current
+                            // scope. i.e. you can't do `node x { args; arg }`
+                            node args about="""
+                                Validations for all args
+
+                                Specifies validations for all arguments. Can be
+                                used in conjunction with `arg`. If this node is
+                                not present, and if there are no `arg` nodes, no
+                                arguments will be allowed on the node at all
+                                """ {
+                                ref about-mixin
+                                ref value-validation
+                                children {
+                                    // TODO: opportunity for mutual requirements here
+                                    node min about="""
+                                        Minimum argument count
+
+                                        Minimum number of arguments that must be
+                                        present in a node. Must be less than or
+                                        equal to `max`, if the latter is
+                                        present.
+                                        """ {
+                                        arg {
+                                            gte 0
+                                            type integer
+                                        }
+                                    }
+                                    node max about="""
+                                    Maximum argument count
+
+                                    Maximum number of arguments that may be
+                                    present in a node. Must be greater than or
+                                    equal to `max`, if the latter is present.
+                                    """ {
+                                        arg {
+                                            gte 0
+                                            type integer
+                                        }
+                                    }
+                                    node distinct about="""
+                                        All arguments must be distinct
+
+                                        If present, all of this node's arguments
+                                        need to be distinct values.
+                                        """ {
+                                        arg {
+                                            type boolean
+                                            default #true
+                                        }
+                                    }
+                                }
+                            }
+                            node children {
+                                ref children
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+definitions {
+    node link-mixin about="""
+        External link
+
+        Link to an external resource of some sort, such as the schema
+        itself (`rel=self`) or documentation (`rel=documentation`).
+        Implementations MAY visit the URL, but MUST NOT assume it is
+        valid.
+        """ {
+        repeatable
+        arg about="Link URL\n\nA URL that the link points to." {
+            type string
+            format url irl
+        }
+        prop rel about="Link relationship\n\nThe relation between the current entity and the URL." {
+            type string
+            default self
+            enum self documentation disallow-others=#false
+        }
+    }
+    node person-mixin {
+        arg description="Person name" {
+            optional
+            type string
+        }
+        prop orcid description="The ORCID of the person" {
+            type string
+            pattern #"\d{4}-\d{4}-\d{4}-\d{4}"#
+        }
+        children {
+            node link {
+                ref metadata-link
+            }
+        }
+    }
+    node lang-mixin {
+        prop lang about="""
+            Content language
+
+            The (human) language of the text.
+            """ {
+            type string
+        }
+    }
+    node string-validations about="String-related validations" {
+        ref shared-validations
+        children {
+            node pattern about="""
+                Regex-based validations
+
+                Tests string values against a regular expression and passes if
+                the regular expression matches.
+
+                Implementations SHOULD use an EcmaScript-compatible regex engine. If they choose not to, this SHOULD be clearly documented.
+                """ {
+                args {
+                    min 1
+                    type string
+                }
+            }
+            node min-length about="""
+                Minimum string length
+
+                Minimum length of the value, if it's a string.
+                """ {
+                arg {
+                    gte 0
+                    type integer
+                }
+            }
+            node max-length about="""
+                Maximum string length
+
+                Maximum length of the value, if it's a string.
+                """ {
+                arg {
+                    gte 0
+                    type integer
+                }
+            }
+            node format about="""
+                Specifies the format of the value
+
+                Any supported type annotation from the KDL spec may be
+                specified. It is up to implementations whether they validate
+                this node. They SHOULD document the ones they support, if any.
+
+                Any format that the implementation supports MUST be compliant
+                with the specified reserved format in the KDL spec, and only
+                apply it to the specified data types (e.g. `u8` can only apply
+                to items of type `integer`, not to `string` or `number`). If the
+                checked value is not of an applicable type, the implementation
+                MUST skip applying this to the given type. It MAY choose to warn
+                about skipping the format check.
+
+                If a value specifies multiple `type`s, any `format`s are checked
+                as usual against the matrix of compatible `type`/`format`
+                values.
+
+                Implementations MAY choose either error or simply warn about
+                format violations. They SHOULD document the behavior, and MAY
+                provide configuration for it.
+                """
+                repeatable
+                args {
+                    min 1
+                    type string
+                    // https://json-schema.org/understanding-json-schema/reference/string.html#format
+                    // TODO: Make sure this is up to date with the types listed in the spec.
+                    enum disallow-others=#false \
+                        // String validations
+                        date-time date time duration decimal currency country-2 \
+                        country- country-subdivision email idn-email hostname \
+                        idn-hostname ipv4 ipv6 url url-reference irl \
+                        irl-reference url-template regex uuid kpath \
+
+                        // Number validations
+                        i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 isize usize f32 \
+                        f64 decimal64 decimal128
+                }
+            }
+            node media-type about="""
+                MIME type
+
+                MIME type of string value. May be applied to 'deserialized' data
+                if value format is base64/base85 or some other stringly binary
+                encoding.
+                """ {
+                repeatable
+                args {
+                    min 1
+                    type string
+                }
+            }
+        }
+    }
+    // Number-specific validations
+    node number-validations {
+        ref shared-validations
+        children {
+            node div about="
+                Divisible by
+
+                Constrains them to be multiples of the given number(s). Only
+                used for numeric values. If multiple numbers are given, _any_
+                match will pass. In order to say something like `divisible by 3
+                AND by 4`, use multiple `div` nodes: `div 3; div 4`.
+                """ {
+                repeatable
+                args {
+                    min 1
+                    type number
+                }
+            }
+            node gt about="""
+                Greater than
+
+                Only used for numeric values. Constrains them to be greater than
+                the given number.
+                """ {
+                arg {
+                    type number
+                }
+            }
+            node gte about="""
+                Greater than or equal to
+
+                Only used for numeric values. Constrains them to be greater than
+                or equal to the given number.
+                """ {
+                arg {
+                    type number
+                }
+            }
+            node lt about="""
+                Less than
+
+                Only used for numeric values. Constrains them to be less than
+                the given number.
+                """ {
+                arg {
+                    type number
+                }
+            }
+            node lte about="""
+                Less than or equal to
+
+                Only used for numeric values. Constrains them to be less than or
+                equal to the given number
+                """ {
+                arg {
+                    type number
+                }
+            }
+        }
+    }
+    // Validations shared across all types.
+    node shared-validations {
+        children {
+            node type about="The type for this value\n\nMultiple arguments signify a sum type." {
+                repeatable
+                args {
+                    min 1
+                    type string
+                    enum string boolean number integer #null
+                    distinct
+                }
+            }
+            // TODO: establish equality expectations.
+            node enum about="""
+                Enumeration of values
+
+                An enumeration of possible values
+                """ {
+                repeatable
+                args about="Enumeration choices" {
+                    min 1
+                }
+                prop disallow-others about="""
+                    Disallow other choices
+
+                    Whether other values than those explicitly enumerated
+                    may be provided, so long as they pass other validations
+                    in the node.
+
+                    While apparently redundant, this option may be useful in
+                    cases where there's a set of suggested values, but
+                    others are acceptable. This information can then be used
+                    by tooling to e.g. suggest completion items.
+                    """ {
+                    type boolean
+                    default #true
+                }
+                children {
+                    node - about="Enumeration choice" {
+                        ref about-mixin
+                        arg about="Enum value"
+                    }
+                }
+            }
+        }
+    }
+    // General value validations
+    node value-validations {
+        ref string-validations number-validations
+        children {
+            node annotations about="""
+                Validates value type annotations
+
+                String validations for the type annotations that can be applied
+                to this value.
+                """ {
+                ref string-validations
+            }
+            node default about="""
+                Default value
+
+                Sets a default value when optional. That is, it requires
+                `optional` for `arg` nodes, and doesn't do anything useful if a
+                `prop` is marked `required`, though it is not invalid to do so.
+                """ {
+                arg
+            }
+        }
+    }
+    node about-mixin {
+        prop about about="""
+            Description for this component.
+
+            By convention, the format of this value is intended to be similar to
+            git's commit message system: The first line is treated as a short
+            descriptor/summary, and any lines underneath it are treated as the
+            longer-form documentation. Tooling SHOULD only display some or all
+            of the first line in user interfaces that call for terseness, and
+            they SHOULD display both the short descriptor and the longer
+            explanation
+            """ {
+            type string
+        }
+        children {
+            node about about="""
+                Description for this component.
+
+                By convention, the format of this value is intended to be similar to
+                git's commit message system: The first line is treated as a short
+                descriptor/summary, and any lines underneath it are treated as the
+                longer-form documentation. Tooling SHOULD only display some or all
+                of the first line in user interfaces that call for terseness, and
+                they SHOULD display both the short descriptor and the longer
+                explanation
+
+                If both an `about` property and an `about` child node are
+                present in a definition, the child node's value MUST take
+                precedence.
+                """ {
+                arg {
+                    type string
+                }
+            }
+        }
+    }
+}
