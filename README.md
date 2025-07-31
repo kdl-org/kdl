@@ -93,6 +93,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 * [mise](https://mise.jdx.dev/) - dev tools, env vars, task runner
 * [Camping](https://github.com/camping/camping) - Ruby web microframework
 * [Iron Vault](https://ironvault.quest) - VTT (Virtual Tabletop) plugin for Obsidian for the Ironsworn family of games
+* [Microsoft TypeScript DOM Generator](https://github.com/microsoft/TypeScript-DOM-lib-generator) - Tool for generating DOM-related TypeScript and JavaScript library files
 * You?
 
 ## Implementations
