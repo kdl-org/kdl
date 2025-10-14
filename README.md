@@ -46,7 +46,7 @@ package {
 
 For more details, see the [overview below](#overview).
 
-There's a living [specification](https://kdl-org.github.io/kdl/#go.draft-marchan-kdl2.html), as well as various
+There's a living [specification](https://kdl.dev/spec/), as well as various
 [implementations](#implementations). You can also check out the [FAQ](#faq) to
 answer all your burning questions!
 
