@@ -1,17 +1,16 @@
-# KDL Schema Specification
+# KDL Schema Language Specification
 
-The KDL Schema specification describes a schema language for use with KDL,
-written in KDL itself. A schema language allows users to describe and
-constrain the allowed semantics of a KDL document. This can be used for many
-purposes: documentation for users, automated verification, or even automated
-generation of bindings!
+The KDL Schema Language specification describes a schema language for use with
+KDL. A schema language allows users to describe and constrain the allowed
+semantics of a document. This can be used for many purposes: documentation for
+users, automated verification, or even automated generation of bindings!
 
-This document describes KDL Schema version `1.0.0`. It was released on September 11, 2021.
+This document describes KDL Schema version `2.0.0`. It is unreleased.
 
 ## The Formal Schema
 
-For the full KDL Schema schema itself, see
-[examples/kdl-schema.kdl](./examples/kdl-schema.kdl).
+For the full KDL Schema Language schema itself, see
+[schema/ksl-schema.kdl](./schema/ksl-schema.kdl).
 
 ## Definition
 
@@ -38,6 +37,14 @@ None.
 * [`tag`](#tag-node) - zero or more toplevel tags for nodes in the KDL document that this schema describes.
 * `tag-names` (optional): [Validations](#validation-nodes) to apply to the _names_ of tags of child nodes.
 * `other-tags-allowed` (optional): Whether to allow node tags other than the ones explicitly listed here. Defaults to `#false`.
+
+#### Example
+
+```kdl
+document {
+    
+}
+```
 
 ### `info` node
 
