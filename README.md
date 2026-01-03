@@ -114,6 +114,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 | Go | [gokdl](https://github.com/lunjon/gokdl) | ✅ | ✖️ | |
 | Go | [kdl-go](https://github.com/sblinch/kdl-go) | ✅ | ✖️ | |
 | Haskell | [Hustle](https://github.com/fuzzypixelz/Hustle) | ✅ | ✖️ | |
+| Haskell | [kdl-hs](https://github.com/brandonchinn178/kdl-hs) | ✅ | ✖️ | Includes some v2 syntax |
 | Java | [kdl4j](https://github.com/kdl-org/kdl4j) | ✅ | ✅ | |
 | JavaScript | [@bgotink/kdl](https://github.com/bgotink/kdl) | ✅ | ✅ | Format/comment-preserving parser |
 | JavaScript | [@virtualstate/kdl](https://github.com/virtualstate/kdl) | ✅ | ✖️ | query only, JSX based |
