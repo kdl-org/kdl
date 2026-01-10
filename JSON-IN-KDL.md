@@ -43,7 +43,7 @@ Arguments and children can be mixed, if desired. The preceding example could als
 
 Two otherwise-ambiguous cases must be manually annotated with an `(array)` type annotation:
 
-* A single-element array (such as `[1]`) written using arguments (as `- 1`) would be ambiguous with a literal node. 
+* A single-element array (such as `[1]`) written using arguments (as `- 1`) would be ambiguous with a literal node.
 	To indicate this is an array, it must be written as `(array)- 1`
 	(Or rewritten to use child nodes, like `- { - 1 }`.)
 * An empty array (JSON `[]`) must use the `(array)` type annotation, like `(array)-`.
@@ -57,7 +57,7 @@ JSON objects are represented in JiK as a node with any nodename, with zero or mo
 Properties can encode literals - for example, the JSON `{"foo": 1, "bar": true}` can be written in JiK as `- foo=1 bar=#true`.
 
 Children can encode literals and/or nested arrays and objects,
-using the nodename for the item's key. 
+using the nodename for the item's key.
 
 For example, the JSON `{"foo": 1, "bar": [2, {"baz": 3}], "qux":4}` can be written in JiK as:
 
@@ -98,7 +98,7 @@ The properties and/or children of the node represent the items of the object,
 with the property names and child nodenames as each item's key.
 All "keys" in an object node must be unique.
 
-As with arrays, there are two ambiguous cases that must be manually annoted with the `(object)` type annotation:
+As with arrays, there are two ambiguous cases that must be manually annotated with the `(object)` type annotation:
 
 * An object containing a single item whose key is "-" (like `{"-": 1}`) written using children (like `- { - 1 }`)
 	would be ambiguous with an array node.
@@ -129,7 +129,7 @@ For simplicity, this document uses `-` for all such nodenames
 but this means it is possible to write a JiK object as meaningful KDL
 and embed it within a larger KDL document.
 
-Here's a fictitious example describing an HTTP request with a JSON body, 
+Here's a fictitious example describing an HTTP request with a JSON body,
 where the `body` node is an embedded JiK node
 that nevertheless reads as fairly natural KDL.
 
