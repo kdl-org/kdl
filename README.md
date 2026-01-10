@@ -410,7 +410,7 @@ some restrictions about data representation. KDL is very similar in many ways, e
   seemed like they could be improved.
 * There is only one "number" type. KDL does not prescribe representations, but
   does have keywords for NaN, infinity, and negative infinity if decimal numbers
-  are intended to be represtented as IEEE754 floats.
+  are intended to be represented as IEEE754 floats.
 * Slashdash (`/-`) comments are great and useful!
 * Quoteless "identifier" strings (e.g. `node foo=bar`, vs `node foo="bar"`).
 * KDL does not have first-class date or binary data types. Instead, it

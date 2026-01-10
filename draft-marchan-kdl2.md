@@ -40,7 +40,7 @@ This is the formal specification for KDL, including the intended data model and
 the grammar.
 
 This document describes an unreleased minor change to KDL. For the latest
-oficial version of the language, see https://kdl.dev/spec.
+official version of the language, see https://kdl.dev/spec.
 
 <!--
 This document describes KDL version KDL 2.0.0. It was released on 2024-12-21. It
@@ -530,7 +530,7 @@ contain (if any). They do not have to start with the same whitespace prefix
 that other lines do; all characters on the line are ignored.
 
 Multi-line Strings that do not immediately start with a Newline and whose final
-`"""` is not preceeded by optional whitespace and a Newline are illegal. This
+`"""` is not preceded by optional whitespace and a Newline are illegal. This
 also means that `"""` may not be used for a single-line String (e.g.
 `"""foo"""`).
 
@@ -802,7 +802,7 @@ They must be written with at least one integer digit, like `0.1`.
 
 ### Keyword Numbers
 
-There are three special "keyword" numbers included in KDL to accomodate the
+There are three special "keyword" numbers included in KDL to accommodate the
 widespread use of [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floats:
 
 - `#inf` - floating point positive infinity.

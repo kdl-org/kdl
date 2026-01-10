@@ -268,7 +268,7 @@ and property names when the `node-names` or `prop-names` options are activated.
 
 * `tag`: [Validations](#validation-nodes) to apply to the tag of the value.
 * `type`: A string denoting the type of the property value.
-* `enum`: A specific list of allowed values for this property. May be heterogenous as long as it agrees with the `type`, if specified.
+* `enum`: A specific list of allowed values for this property. May be heterogeneous as long as it agrees with the `type`, if specified.
 
 #### String validations
 
