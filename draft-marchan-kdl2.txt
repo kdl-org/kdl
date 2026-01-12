@@ -5,7 +5,7 @@
 KDL Community                                                 K. Marchán
                                                                Microsoft
                                                         KDL Contributors
-                                                            11 June 2025
+                                                         12 January 2026
 
 
                        The KDL Document Language
@@ -22,7 +22,7 @@ Abstract
    model and the grammar.
 
    This document describes an unreleased minor change to KDL.  For the
-   latest oficial version of the language, see https://kdl.dev/spec.
+   latest official version of the language, see https://kdl.dev/spec.
 
 About This Document
 
@@ -633,7 +633,7 @@ Table of Contents
    line are ignored.
 
    Multi-line Strings that do not immediately start with a Newline and
-   whose final """ is not preceeded by optional whitespace and a Newline
+   whose final """ is not preceded by optional whitespace and a Newline
    are illegal.  This also means that """ may not be used for a single-
    line String (e.g. """foo""").
 
@@ -886,7 +886,7 @@ Table of Contents
 3.14.1.  Keyword Numbers
 
    There are three special "keyword" numbers included in KDL to
-   accomodate the widespread use of IEEE 754
+   accommodate the widespread use of IEEE 754
    (https://en.wikipedia.org/wiki/IEEE_754) floats:
 
    *  #inf - floating point positive infinity.

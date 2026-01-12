@@ -14,30 +14,29 @@ language, and a data exchange or storage format, if you so choose.
        This is the formal specification for KDL, including the intended data model and
 the grammar. 
        This document describes an unreleased minor change to KDL. For the latest
-oficial version of the language, see https://kdl.dev/spec. 
+official version of the language, see https://kdl.dev/spec. 
        
 
 
 
     " name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="Document-Language" name="keyword">
 <meta content="Configuration" name="keyword">
 <meta content="draft-marchan-kdl2-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
-    Python 3.12.10
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.3.8
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
-    requests 2.32.3
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    PyYAML 6.0.3
+    requests 2.32.5
+    wcwidth 0.2.14
 -->
 <link href="draft-marchan-kdl2.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1056,7 +1055,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left"></td>
 <td class="center">KDL</td>
-<td class="right">June 2025</td>
+<td class="right">January 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Marchán &amp; KDL Contributors</td>
@@ -1071,7 +1070,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">KDL Community</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-11" class="published">11 June 2025</time>
+<time datetime="2026-01-12" class="published">12 January 2026</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1094,7 +1093,7 @@ language, and a data exchange or storage format, if you so choose.<a href="#sect
 <p id="section-abstract-2">This is the formal specification for KDL, including the intended data model and
 the grammar.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 <p id="section-abstract-3">This document describes an unreleased minor change to KDL. For the latest
-oficial version of the language, see https://kdl.dev/spec.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+official version of the language, see https://kdl.dev/spec.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -2058,7 +2057,7 @@ empty lines in the string value, regardless of what whitespace they
 contain (if any). They do not have to start with the same whitespace prefix
 that other lines do; all characters on the line are ignored.<a href="#section-3.12-5" class="pilcrow">¶</a></p>
 <p id="section-3.12-6">Multi-line Strings that do not immediately start with a Newline and whose final
-<code>"""</code> is not preceeded by optional whitespace and a Newline are illegal. This
+<code>"""</code> is not preceded by optional whitespace and a Newline are illegal. This
 also means that <code>"""</code> may not be used for a single-line String (e.g.
 <code>"""foo"""</code>).<a href="#section-3.12-6" class="pilcrow">¶</a></p>
 <div id="newline-normalization">
@@ -2395,7 +2394,7 @@ They must be written with at least one integer digit, like <code>0.1</code>.
           <h4 id="name-keyword-numbers">
 <a href="#section-3.14.1" class="section-number selfRef">3.14.1. </a><a href="#name-keyword-numbers" class="section-name selfRef">Keyword Numbers</a>
           </h4>
-<p id="section-3.14.1-1">There are three special "keyword" numbers included in KDL to accomodate the
+<p id="section-3.14.1-1">There are three special "keyword" numbers included in KDL to accommodate the
 widespread use of <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> floats:<a href="#section-3.14.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.14.1-2.1">
