@@ -991,7 +991,7 @@ quoted-string :=
     (multi-line-string-body newline)?
     (unicode-space | ws-escape)* '"""'
 single-line-string-body := (string-character - newline)*
-multi-line-string-body := ('"' | '""' | string-character)*?
+multi-line-string-body := ('"' ^'"' | '""' ^'"' | string-character)*?
 string-character :=
     '\\' (["\\bfnrts] |
     'u{' hex-unicode '}') |
