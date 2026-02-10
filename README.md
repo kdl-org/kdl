@@ -131,6 +131,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 | Rust | [knus](https://crates.io/crates/knus/) | ✅ | ✖️ | Serde-_style_ derive macros (not actual Serde) |
 | Swift | [kdl-swift](https://github.com/danini-the-panini/kdl-swift) | ✅ | ✖️ | |
 | XSLT | [xml2kdl](https://github.com/Devasta/XML2KDL) | ✅ | ✖️ | |
+| Zig | [zig-kdl](https://codeberg.org/desttinghim/zig-kdl) | ✅ | ✅ | Format/comment-preserving parser |
 
 ## Compatibility Test Suite
 
