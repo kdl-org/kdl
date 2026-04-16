@@ -115,6 +115,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 | Elixir | [kuddle](https://github.com/IceDragon200/kuddle) | ✅ | ✅ | |
 | Go | [gokdl](https://github.com/lunjon/gokdl) | ✅ | ✖️ | |
 | Go | [kdl-go](https://github.com/sblinch/kdl-go) | ✅ | ✖️ | |
+| Go | [gokdl2](https://github.com/njreid/gokdl2) | ✅ | ✅ | Friendly errors & arena allocator |
 | Haskell | [Hustle](https://github.com/fuzzypixelz/Hustle) | ✅ | ✖️ | |
 | Haskell | [kdl-hs](https://github.com/brandonchinn178/kdl-hs) | ✅ | ✅ | Format/comment-preserving parser |
 | Java | [kdl4j](https://github.com/kdl-org/kdl4j) | ✅ | ✅ | |
