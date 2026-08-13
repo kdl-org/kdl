@@ -1,6 +1,6 @@
 # KDL Query Language Spec
 
-The KDL Query Language is a small language specially tailored for querying KDL
+The KDL Query Language (KQL) is a small language specially tailored for querying KDL
 documents to extract nodes and even specific data. It is loosely based on CSS
 selectors for familiarity and ease of use. Think of it as CSS Selectors or
 XPath, but for KDL!
@@ -19,8 +19,8 @@ lack of `*` (use `[]` instead), the specific syntax for descendants and siblings
 * `a >> b || a >> c`: Selects all `b` and `c` elements that are descendants of an `a` element. Any selector may be on either side of the `||`. Multiple `||` are supported.
 * `a + b`: Selects any `b` element that is placed immediately after a sibling `a` element.
 * `a ++ b`: Selects any `b` element that follows an `a` element as a sibling, either immediately or later.
-* `[accessor()]`: Selects any element, filtered by [an accessor](#accessors). (`accessor()` is a placeholder, not an actual accessor)
-* `a[accessor()]`: Selects any `a` element, filtered by an accessor.
+* `[attrmatcher()]`: Selects any element, filtered by an attribute matcher (`attrmatcher()` is a placeholder, not an actual matcher)
+* `a[attrmatcher()]`: Selects any `a` element, filtered by an attribute matcher.
 * `[]`: Selects any element.
 
 ## Matchers
