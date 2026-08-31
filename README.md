@@ -157,6 +157,15 @@ entirety, but in the future, may be required to in order to be included here.
 
 \* Supports KDL 2.0.0
 
+## Tools
+
+| Tool | Application | v1 | v2 | Notes |
+|---|---|---|---|---|
+| Formatter | [kdlfmt](https://github.com/hougesen/kdlfmt) | ✅ | ✅ | |
+| Formatter | [kdl-fmt](https://github.com/dj95/kdl-fmt) | ✅ | ✅ | |
+| Formatter | [kdlf](https://codeberg.org/shimeoki/kdlf) | ✖️ | ✅ | |
+| Language Server | [kdl-lsp](https://github.com/kdl-org/kdl-rs) | ✅ | ✅ | Included in kdl-rs |
+
 ## Overview
 
 ### Basics
