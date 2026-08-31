@@ -107,7 +107,7 @@ of some examples of KDL in the wild (either v1, v2, or both):
 |---|---|---|---|---|
 | C | [ckdl](https://github.com/tjol/ckdl) | ✅ | ✅ | |
 | C#/.NET | [Kadlet](https://github.com/oledfish/Kadlet) | ✅ | ✖️ | |
-| C#/.NET | [KadSharp](https://github.com/AndreyAkinshin/KdlSharp) | ✅ | ✅ | .NET Std: 2.1+, .NET 6+, .NET FW 4.7.2+, Mono, Xamarin |
+| C#/.NET | [KdlSharp](https://github.com/AndreyAkinshin/KdlSharp) | ✅ | ✅ | .NET Std: 2.1+, .NET 6+, .NET FW 4.7.2+, Mono, Xamarin |
 | C++ | [kdlpp](https://github.com/tjol/ckdl) | ✅ | ✅ | part of ckdl, requires C++20 |
 | Common Lisp | [kdlcl](https://github.com/chee/kdlcl) | ✅ | ✖️ | |
 | Crystal | [kdl-cr](https://github.com/danini-the-panini/kdl-cr) | ✅ | ✖️ | |
