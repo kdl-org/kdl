@@ -117,10 +117,11 @@ Being a node-oriented language means that the real core component of any KDL
 document is the "node". Every node must have a name, which must be a
 String ({{string}}).
 
-The name may be preceded by a Type Annotation ({{type-annotation}}) to further
-clarify its type, particularly in relation to its parent node. (For example,
-clarifying that a particular `date` child node is for the _publication_ date,
-rather than the last-modified date, with `(published)date`.)
+The name may be preceded by a Prefix Type Annotation
+({{prefix-type-annotation}}) to further clarify its type, particularly in
+relation to its parent node. (For example, clarifying that a particular `date`
+child node is for the _publication_ date, rather than the last-modified date,
+with `(published)date`.)
 
 Following the name are zero or more Arguments ({{argument}}) or
 Properties ({{property}}), separated by either whitespace ({{whitespace}}) or a
@@ -247,28 +248,124 @@ Values _MUST_ be either Arguments ({{argument}}) or values of
 Properties ({{property}}). Only String ({{string}}) values may be used as
 Node ({{node}}) names or Property ({{property}}) keys.
 
-Values (both as arguments and in properties) _MAY_ be prefixed by a single
-Type Annotation ({{type-annotation}}).
+Values (both as arguments and in properties) _MAY_ include a single Type
+Annotation ({{type-annotation}}).
 
 ## Type Annotation
 
-A type annotation is a prefix to any Node Name ({{node}}) or Value ({{value}}) that
-includes a _suggestion_ of what type the value is _intended_ to be treated as,
-or as a _context-specific elaboration_ of the more generic type the node name
-indicates.
-
-Type annotations are written as a set of `(` and `)` with a single
-String ({{string}}) in it. It may contain Whitespace after the `(` and before
-the `)`, and may be separated from its target by Whitespace.
+A type annotation is a String ({{string}}) value attached to any Node Name
+({{node}}) or Value ({{value}}) that includes a _suggestion_ of what type the
+value is _intended_ to be treated as, or as a _context-specific elaboration_ of
+the more generic type the node name indicates.
 
 KDL does not specify any restrictions on what implementations might do with
 these annotations. They are free to ignore them, or use them to make decisions
-about how to interpret a value.
+about how to interpret a value. That said, KDL does reserve certain well-known
+strings for what would be their intended purpose, for the sake of
+interoperability ({{reserved-type-annotations}}).
+
+There are two kinds of Type Annotation syntaxes in KDL: Prefix Type Annotations
+({{prefix-type-annotation}}) and Suffix Type Annotations
+({{suffix-type-annotation}}).
+
+### Examples
+
+~~~kdl
+node 123u8
+node 0#b 20b 50GiB
+node prop=(regex).*
+(published)date "1970-01-01"
+(contributor)person name="Foo McBar"
+~~~
+
+### Prefix Type Annotation
+
+Prefix Type Annotations are written as a set of `(` and `)` with a single String
+({{string}}) in it. It may contain Whitespace after the `(` and before the `)`,
+and may be separated from its target by Whitespace. Unlike the other annotation
+types, any String type may be used.
+
+### Suffix Type Annotation
+
+When a Value ({{value}}) is a Number ({{number}}), it's possible to attach the
+type annotation as a "suffix", instead of prepending it between `(` and `)`.
+This makes it possible to, for example, write `10px`, `10.5%`, `512GiB`, etc.,
+which are equivalent to `(px)10`, `(%)5`, and `(GiB)512`, respectively.
+
+Most suffixes can be appended directly to the number (a Bare Suffix Type
+Annotation ({{bare-suffix-type-annotation}})), as shown in the previous
+paragraph. To avoid parsing ambiguity, there are some restrictions on this; an
+Explicit Suffix Type Annotation ({{explicit-suffix-type-annotation}}) avoids all
+these restrictions by using an additional `#` to explicitly indicate it. For
+example, `0bytes` is invalid, but `0#bytes` is valid and equivalent to
+`(bytes)0`. See Bare Suffix Type Annotation ({{bare-suffix-type-annotation}})
+for the full list of restrictions.
+
+An implementation that finds BOTH a parenthesized Prefix Type Annotation
+({{prefix-type-annotation}}) and a Suffix Type Annotation
+({{suffix-type-annotation}}) on the same Number ({{number}}) MUST yield a syntax
+error.
+
+Suffixes MUST BE plain Identifier Strings ({{identifier-string}}). No other
+String ({{string}}) syntax is acceptable.
+
+#### Bare Suffix Type Annotation
+
+When a Value ({{value}}) is a Number ({{number}}) that meets certain criteria,
+it's possible to append an Identifier String ({{identifier-string}}), and ONLY
+an Identifier String, as a suffix directly to the Number, as its Type Annotation
+({{type-annotation}}). The criteria are as follows:
+
+* The Number MUST be a Decimal (that is, it MUST NOT start with `0b`, `0o`, or
+  `0x`). Additionally, the tokens `0b`, `0o`, and `0x` MUST be treated as syntax
+  errors (incomplete non-decimal numbers).
+* It MUST NOT have an exponent part (e.g. `5.2e+3`).
+* The Identifier String used for the type itself MUST NOT start with either `.` or `,`.
+* As part of the exponential restriction, the suffix MUST NOT match
+  `[eE]([-+]|[0-9])` (e.g. `5.2e+` SHOULD be considered a "bad exponential", and
+  MUST NOT parse as `(e+)5.2`).
+
+For example, the following are all illegal:
+
+* `10,000` (suffix would start with `,`)
+* `10e0n` (suffix on an exponential)
+* `0xyz` (starts with reserved hexadecimal prefix)
+* `0b` (starts with reserved binary prefix)
+* `5e+oops` (looks too close to an exponential)
+* `1.2.3-abc` (suffix would start with `.` AND Identifier Strings can't start
+  with `.<digit>`)
+
+Whereas the following are all legal:
+
+* `0u8` = `(u8)0`
+* `5em` = `(em)5`, the `e` is not followed by a digit.
+* `1xyz` = `(xyz)1`, no longer starts with `0` as above.
+* `20b` = `(b)20`, "20 bytes", no longer starts with just `0` as above.
+
+If the desired suffix would violate any of the above rules, either Prefix Type
+Annotations ({{prefix-type-annotation}}) or Explicit Suffix Type Annotations
+({{explicit-suffix-type-annotation}}) may be used.
+
+#### Explicit Suffix Type Annotation
+
+Any Number ({{number}}) may have a `#` appended to it, followed by any valid
+Identifier String ({{identifier-string}}). This is an Explicit Suffix Type
+Annotation ({{suffix-type-annotation}}) syntax without any of the added
+restrictions of Bare Suffix Type Annotations ({{bare-suffix-type-annotation}}),
+which can be a useful escape hatch. For example: `0#b` is invalid syntax without
+the `#` prefix.
+
+Note that, unlike Bare Suffix Type Annotations
+({{bare-suffix-type-annotation}}), Explicit Suffixes may be used with ALL Number
+({{number}}) formats (hexadecimal, decimal, octal, and binary). For example,
+`0x1234#u32` is valid.
+
+### Reserved Type Annotations
+
+#### For Numbers Without Decimal Parts
 
 Additionally, the following type annotations MAY be recognized by KDL parsers
-and, if used, SHOULD interpret these types as follows:
-
-### Reserved Type Annotations for Numbers Without Decimals:
+and, if used, SHOULD interpret these types as follows.
 
 Signed integers of various sizes (the number is the bit size):
 
@@ -291,7 +388,7 @@ Platform-dependent integer types, both signed and unsigned:
 - `isize`
 - `usize`
 
-### Reserved Type Annotations for Numbers With Decimals:
+#### For Numbers With Decimal Parts
 
 IEEE 754 floating point numbers, both single (32) and double (64) precision:
 
@@ -303,7 +400,7 @@ IEEE 754-2008 decimal floating point numbers
 - `decimal64`
 - `decimal128`
 
-### Reserved Type Annotations for Strings:
+#### For Strings
 
 - `date-time`: ISO8601 date/time format.
 - `time`: "Time" section of ISO8601.
@@ -330,15 +427,6 @@ IEEE 754-2008 decimal floating point numbers
 - `regex`: Regular expression. Specific patterns may be implementation-dependent.
 - `base64`: A Base64-encoded string, denoting arbitrary binary data.
 - `base85`: An [Ascii85](https://en.wikipedia.org/wiki/Ascii85)-encoded string, denoting arbitrary binary data.
-
-### Examples
-
-~~~kdl
-node (u8)123
-node prop=(regex).*
-(published)date "1970-01-01"
-(contributor)person name="Foo McBar"
-~~~
 
 ## String
 
@@ -964,8 +1052,9 @@ node-children := '{' nodes final-node? '}'
 node-terminator := single-line-comment | newline | ';' | eof
 
 prop := string node-space* '=' node-space* value
-value := type? node-space* (string | number | keyword)
+value := normal-value | suffixed-decimal
 type := '(' node-space* string node-space* ')'
+normal-value := type? node-space* (string | number | keyword)
 
 // Strings
 string := identifier-string | quoted-string | raw-string ¶
@@ -1027,11 +1116,25 @@ multi-line-raw-string-body :=
 // Numbers
 number := keyword-number | hex | octal | binary | decimal
 
-decimal := sign? integer ('.' integer)? exponent?
+decimal := significand exponent?
+suffixed-decimal := significand (
+    bare-type-suffix
+    | (exponent? explicit-type-suffix)
+)
+significand := sign? significand-initial integer? ('.' integer)?
 exponent := ('e' | 'E') sign? integer
 integer := digit (digit | '_')*
+significand-initial = digit
+    - '0b'
+    - '0o'
+    - '0x'
 digit := [0-9]
 sign := '+' | '-'
+
+bare-type-suffix := unambiguous-bare-type-suffix | e-bare-type-suffix
+unambiguous-bare-type-suffix := (identifier-char - ('.' | ',' | 'e' | 'E')) identifier-char*
+e-bare-type-suffix := 'e' | 'E' | ( ((identifier-char - ('.' | ',')) identifier-char) - (('e' | 'E') (sign | digit)) ) identifier-char*
+explicit-type-suffix := '#' identifier-string
 
 hex := sign? '0x' hex-digit (hex-digit | '_')*
 octal := sign? '0o' [0-7] [0-7_]*
