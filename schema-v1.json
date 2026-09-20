@@ -1,0 +1,63 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://kdl.dev/schema-v1.json",
+    "$ref": "#/$defs/nodes",
+    "$defs": {
+        "nodes": {
+            "type": ["array", "null"],
+            "items": {
+                "$ref": "#/$defs/node"
+            }
+        },
+        "value": {
+            "type": "object",
+            "required": ["data"],
+            "properties": {
+                "data": {
+                    "type": "string"
+                },
+                "literal": {
+                    "type": ["boolean", "null"]
+                }
+            }
+        },
+        "entry": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": ["string", "null"]
+                },
+                "value": {
+                    "$ref": "#/$defs/value"
+                }
+            }
+        },
+        "node": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+                "type": {
+                    "type": ["string", "null"]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "args": {
+                    "type": ["array", "null"],
+                    "items": {
+                        "$ref": "#/$defs/entry"
+                    }
+                },
+                "props": {
+                    "type": ["object", "null"],
+                    "additionalProperties": {
+                        "$ref": "#/$defs/entry"
+                    }
+                },
+                "nodes": {
+                    "$ref": "#/$defs/nodes"
+                }
+            }
+        }
+    }
+}
