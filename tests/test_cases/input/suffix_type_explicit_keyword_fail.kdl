@@ -1,0 +1,1 @@
+node 123#true 456#false 789#null 012#nan 345#inf 678#-inf
